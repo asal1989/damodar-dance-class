@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Damodar House of Dance | Concept 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;700;800;900&family=Playfair+Display:ital,wght@0,600;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #101114;
+    --panel: #181a20;
+    --paper: #f7f0e2;
+    --muted: #b9af9d;
+    --gold: #d5a64f;
+    --red: #d85a43;
+    --green: #23b36b;
+    --line: rgba(247,240,226,0.16);
+    --dark-line: rgba(16,17,20,0.14);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--ink); color: var(--paper); font-family: Inter, sans-serif; overflow-x: hidden; }
+  a { color: inherit; }
+
+  .topbar {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 16px clamp(20px, 4vw, 56px);
+    border-bottom: 1px solid var(--line);
+    background: rgba(16,17,20,0.78);
+    backdrop-filter: blur(18px);
+  }
+
+  .brand { display: flex; align-items: center; gap: 16px; text-decoration: none; }
+  .brand img { width: 86px; height: 86px; border-radius: 16px; object-fit: contain; border: 1px solid rgba(213,166,79,0.45); background: var(--paper); padding: 4px; }
+  .brand span { font-family: Anton, sans-serif; text-transform: uppercase; letter-spacing: 1.4px; font-size: 20px; line-height: 1; }
+  .nav { display: flex; gap: clamp(12px, 2vw, 28px); align-items: center; }
+  .nav a { text-decoration: none; color: rgba(247,240,226,0.72); font-size: 12px; font-weight: 900; letter-spacing: 1.4px; text-transform: uppercase; }
+  .nav a:hover { color: var(--gold); }
+
+  .btn {
+    display: inline-flex;
+    min-height: 46px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    border: 1px solid var(--gold);
+    background: var(--gold);
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+  .btn:hover { transform: translateY(-2px); background: var(--paper); }
+  .btn.ghost { background: transparent; color: var(--paper); border-color: rgba(247,240,226,0.32); }
+  .cream .btn.ghost, .contact-card .btn.ghost { color: var(--ink); border-color: var(--ink); }
+
+  .whatsapp-float {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    z-index: 30;
+    width: 58px;
+    height: 58px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    background: var(--green);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 900;
+    box-shadow: 0 18px 44px rgba(35,179,107,0.36);
+  }
+
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(380px, 0.92fr);
+    padding-top: 74px;
+    background:
+      linear-gradient(90deg, rgba(16,17,20,0.8), rgba(16,17,20,0.24)),
+      url('https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=1800&q=82') center/cover;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(247,240,226,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(247,240,226,0.06) 1px, transparent 1px);
+    background-size: 68px 68px;
+    mask-image: linear-gradient(90deg, #000, transparent 74%);
+  }
+
+  .hero-copy, .hero-panel { position: relative; z-index: 1; }
+  .hero-copy { display: flex; flex-direction: column; justify-content: center; padding: clamp(70px, 9vw, 130px) clamp(24px, 5vw, 70px); }
+  .eyebrow { color: var(--gold); font-size: 12px; font-weight: 900; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 24px; }
+  h1 { font-family: Anton, sans-serif; font-size: clamp(72px, 13vw, 180px); line-height: 0.82; letter-spacing: 2px; text-transform: uppercase; max-width: 920px; }
+  h1 span { display: block; color: transparent; -webkit-text-stroke: 1.5px var(--paper); }
+  .hero-sub { margin-top: 28px; max-width: 650px; color: rgba(247,240,226,0.78); font: italic clamp(22px, 3vw, 38px)/1.15 "Playfair Display", serif; }
+  .actions { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 34px; }
+
+  .hero-panel { display: grid; align-content: end; padding: clamp(22px, 4vw, 46px); border-left: 1px solid var(--line); background: rgba(16,17,20,0.56); backdrop-filter: blur(10px); }
+  .booking-card { background: var(--paper); color: var(--ink); padding: 28px; box-shadow: 0 28px 80px rgba(0,0,0,0.34); }
+  .booking-card h2 { font-family: Anton, sans-serif; font-size: 44px; letter-spacing: 1px; margin-bottom: 10px; text-transform: uppercase; }
+  .booking-card p { color: #62594a; line-height: 1.7; margin-bottom: 22px; }
+  .quick-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--dark-line); margin-top: 20px; }
+  .quick-stat { background: #fffaf0; padding: 16px; }
+  .quick-stat strong { display: block; font-family: Anton, sans-serif; font-size: 30px; color: var(--red); }
+  .quick-stat span { font-size: 11px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; }
+
+  section { padding: clamp(72px, 10vw, 130px) clamp(20px, 5vw, 70px); }
+  .cream { background: var(--paper); color: var(--ink); }
+  .cream .eyebrow { color: var(--red); }
+  .section-head { display: grid; grid-template-columns: 0.82fr 1.18fr; gap: 36px; align-items: end; margin-bottom: 46px; }
+  .section-title { font-family: Anton, sans-serif; font-size: clamp(46px, 8vw, 108px); line-height: 0.9; letter-spacing: 1.5px; text-transform: uppercase; }
+  .section-copy, .card p, .review-card p, .faq-item p { color: var(--muted); line-height: 1.8; max-width: 680px; }
+  .cream .section-copy, .cream .faq-item p { color: #635a4b; }
+
+  .space-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 18px; }
+  .photo { min-height: 560px; background: url('https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&w=1200&q=82') center/cover; position: relative; overflow: hidden; }
+  .photo.small { min-height: 270px; background-image: url('https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=82'); }
+  .photo.alt { background-image: url('https://images.unsplash.com/photo-1508807526345-15e9b5f4eaff?auto=format&fit=crop&w=900&q=82'); }
+  .photo-label { position: absolute; left: 22px; bottom: 22px; padding: 12px 16px; background: rgba(16,17,20,0.78); color: var(--paper); font-size: 12px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; }
+  .tile-stack { display: grid; gap: 18px; }
+  .service-tile { min-height: 170px; background: var(--panel); color: var(--paper); padding: 26px; display: flex; flex-direction: column; justify-content: space-between; }
+  .service-tile strong, .card h3, .coach-body h3 { font-family: Anton, sans-serif; font-size: 32px; letter-spacing: 1px; text-transform: uppercase; }
+
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .card, .coach-card, .review-card, .faq-item { border: 1px solid var(--line); background: var(--panel); }
+  .card { min-height: 360px; padding: 26px; display: flex; flex-direction: column; gap: 18px; position: relative; overflow: hidden; }
+  .card::before { content: attr(data-no); position: absolute; right: -8px; top: -20px; font-family: Anton, sans-serif; font-size: 112px; color: rgba(247,240,226,0.045); }
+  .meta { margin-top: auto; display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill { border: 1px solid rgba(213,166,79,0.3); color: var(--gold); padding: 8px 10px; font-size: 11px; font-weight: 900; letter-spacing: 0.7px; text-transform: uppercase; }
+  .price { font-family: Anton, sans-serif; font-size: 34px; }
+  .price span { font-family: Inter, sans-serif; font-size: 12px; color: var(--muted); font-weight: 800; }
+
+  .coach-card { overflow: hidden; background: #12141a; }
+  .coach-photo { aspect-ratio: 4 / 3; background: url('https://images.unsplash.com/photo-1535525153412-5a42439a210d?auto=format&fit=crop&w=800&q=82') center/cover; }
+  .coach-card:nth-child(2) .coach-photo { background-image: url('https://images.unsplash.com/photo-1516731415730-0c607149933a?auto=format&fit=crop&w=800&q=82'); }
+  .coach-card:nth-child(3) .coach-photo { background-image: url('https://images.unsplash.com/photo-1524594152303-9fd13543fe6e?auto=format&fit=crop&w=800&q=82'); }
+  .coach-body, .review-card, .faq-item { padding: 24px; }
+  .coach-role { color: var(--gold); font-size: 12px; font-weight: 900; letter-spacing: 1.1px; text-transform: uppercase; margin: 8px 0 14px; }
+
+  .schedule-wrap { overflow-x: auto; background: #fffaf0; border: 1px solid var(--dark-line); }
+  table { width: 100%; min-width: 860px; border-collapse: collapse; }
+  th, td { text-align: left; padding: 18px; border-bottom: 1px solid var(--dark-line); }
+  th { color: var(--red); font-size: 11px; font-weight: 900; letter-spacing: 1.3px; text-transform: uppercase; }
+  td { color: #28231d; font-weight: 700; }
+
+  .contact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .contact-card, .form-card { background: var(--paper); color: var(--ink); padding: clamp(28px, 5vw, 52px); }
+  .contact-card h2, .form-card h2 { font-family: Anton, sans-serif; font-size: clamp(42px, 6vw, 76px); line-height: 0.92; text-transform: uppercase; margin-bottom: 24px; }
+  .contact-line { border-top: 1px solid var(--dark-line); padding: 18px 0; line-height: 1.7; }
+  .contact-line span { display: block; color: var(--red); font-size: 11px; font-weight: 900; letter-spacing: 1.4px; text-transform: uppercase; margin-bottom: 7px; }
+  .contact-line a { color: var(--ink); text-decoration: none; font-weight: 900; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  input, select, textarea { width: 100%; min-height: 48px; border: 1px solid var(--dark-line); background: #fffaf0; padding: 13px 14px; color: var(--ink); font: inherit; }
+  textarea { min-height: 112px; resize: vertical; grid-column: 1 / -1; }
+  .form-card .btn { width: 100%; margin-top: 14px; background: var(--ink); border-color: var(--ink); color: var(--paper); }
+
+  .faq-list { display: grid; gap: 12px; }
+  .faq-item h3 { margin-bottom: 12px; font-size: 18px; }
+  footer { display: flex; justify-content: space-between; gap: 24px; padding: 34px clamp(20px, 5vw, 70px); border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+
+  @media (max-width: 1000px) {
+    .nav { display: none; }
+    .hero, .section-head, .space-grid, .contact-layout { grid-template-columns: 1fr; }
+    .hero-panel { border-left: none; }
+    .grid-3 { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 640px) {
+    .brand img { width: 64px; height: 64px; border-radius: 12px; }
+    .brand span { font-size: 16px; }
+    .topbar .btn { display: none; }
+    .hero { min-height: auto; }
+    h1 { font-size: clamp(64px, 21vw, 108px); }
+    .quick-stats, .grid-3, .form-grid { grid-template-columns: 1fr; }
+    .photo, .photo.small { min-height: 360px; }
+    footer { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<a class="whatsapp-float" href="https://wa.me/917892310080" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">WA</a>
+
+<header class="topbar">
+  <a class="brand" href="#home">
+    <img src="damodar-house-of-dance-logo.png" alt="Damodar House of Dance logo">
+    <span>Damodar House of Dance</span>
+  </a>
+  <nav class="nav" aria-label="Main navigation">
+    <a href="#space">Space</a>
+    <a href="#classes">Classes</a>
+    <a href="#coaches">Coaches</a>
+    <a href="#schedule">Schedule</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <a class="btn" href="#contact">Book Demo</a>
+</header>
+
+<main>
+  <section class="hero" id="home">
+    <div class="hero-copy">
+      <div class="eyebrow">Bengaluru Creator's Dance Space</div>
+      <h1>Dance <span>Create</span> Perform</h1>
+      <p class="hero-sub">Classes, workshops, rehearsals, rentals, and stage-ready training under one roof.</p>
+      <div class="actions">
+        <a class="btn" href="#classes">Explore Classes</a>
+        <a class="btn ghost" href="https://wa.me/917892310080" target="_blank" rel="noopener">WhatsApp Us</a>
+      </div>
+    </div>
+    <aside class="hero-panel">
+      <div class="booking-card">
+        <h2>Book a free demo</h2>
+        <p>Step into the studio, meet the coaches, and try a real class before joining a batch.</p>
+        <a class="btn" href="#contact">Start Your Journey</a>
+        <div class="quick-stats">
+          <div class="quick-stat"><strong>2</strong><span>Studio floors</span></div>
+          <div class="quick-stat"><strong>6+</strong><span>Dance styles</span></div>
+          <div class="quick-stat"><strong>500+</strong><span>Students trained</span></div>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <section class="cream" id="space">
+    <div class="section-head">
+      <div><div class="eyebrow">Creator's Space</div><h2 class="section-title">More Than A Class</h2></div>
+      <p class="section-copy">Damodar House of Dance is built for dancers, teachers, performers, and creators who need more than a timetable. Learn a style, rehearse a set, shoot a reel, attend a guest workshop, or prepare for a showcase in a studio that feels alive.</p>
+    </div>
+    <div class="space-grid">
+      <div class="photo"><div class="photo-label">In-house and online dance classes</div></div>
+      <div class="tile-stack">
+        <div class="service-tile"><strong>Dance Classes</strong><p>Hip-hop, contemporary, Bollywood, freestyle, kids batches, and performance training.</p></div>
+        <div class="photo small alt"><div class="photo-label">Workshops and masterclasses</div></div>
+        <div class="service-tile"><strong>Studio Rental</strong><p>Bright rehearsal floors and clean corners for practice, teaching, auditions, and content shoots.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="classes">
+    <div class="section-head">
+      <div><div class="eyebrow">In-House / Online</div><h2 class="section-title">Dance Classes</h2></div>
+      <p class="section-copy">Learn different styles and cultures of dance from working artists, with beginner-friendly and performance-focused batches.</p>
+    </div>
+    <div class="grid-3">
+      <article class="card" data-no="01"><h3>Hip-Hop</h3><p>Old-school foundations, new-gen grooves, freestyle drills, and choreography for rhythm, confidence, and stage presence.</p><div class="meta"><span class="pill">60 min</span><span class="pill">Age 8+</span><span class="pill">Mon / Wed / Fri</span></div><div class="price">₹1,500 <span>/ month</span></div></article>
+      <article class="card" data-no="02"><h3>Contemporary & Bollywood</h3><p>Fluid movement, floorwork, expressive storytelling, and high-energy Bollywood choreography.</p><div class="meta"><span class="pill">75 min</span><span class="pill">Age 12+</span><span class="pill">Tue / Thu / Sat</span></div><div class="price">₹1,800 <span>/ month</span></div></article>
+      <article class="card" data-no="03"><h3>Freestyle Choreography</h3><p>Open-style choreography, musicality, transitions, and camera-ready combinations across genres.</p><div class="meta"><span class="pill">90 min</span><span class="pill">Age 15+</span><span class="pill">Sat / Sun</span></div><div class="price">₹2,500 <span>/ month</span></div></article>
+      <article class="card" data-no="04"><h3>Kids Groovezone</h3><p>A fun introduction to dance for young movers, focused on rhythm, coordination, and confidence.</p><div class="meta"><span class="pill">45 min</span><span class="pill">Age 5-10</span><span class="pill">Sat Morning</span></div><div class="price">₹1,200 <span>/ month</span></div></article>
+      <article class="card" data-no="05"><h3>The Stage</h3><p>Dance battles, showcase rehearsals, formations, confidence training, and stagecraft.</p><div class="meta"><span class="pill">2 hrs</span><span class="pill">Intermediate+</span><span class="pill">Sun</span></div><div class="price">₹3,000 <span>/ month</span></div></article>
+      <article class="card" data-no="06"><h3>Workshops</h3><p>Monthly guest sessions across freestyle, choreography, movement meditation, fitness, and performance craft.</p><div class="meta"><span class="pill">3 hrs</span><span class="pill">All levels</span><span class="pill">Monthly</span></div><div class="price">₹800 <span>/ session</span></div></article>
+    </div>
+  </section>
+
+  <section class="cream" id="coaches">
+    <div class="section-head">
+      <div><div class="eyebrow">Our Experts</div><h2 class="section-title">Meet The Team</h2></div>
+      <p class="section-copy">Students are guided by coaches who understand technique, performance, confidence, and the energy of a real studio community.</p>
+    </div>
+    <div class="grid-3">
+      <article class="coach-card"><div class="coach-photo"></div><div class="coach-body"><h3>Arjun Damodar</h3><div class="coach-role">Founder & Head Coach - Hip-Hop</div><p class="section-copy">Street dance experience, breaking, popping, locking, freestyle, and battle preparation.</p></div></article>
+      <article class="coach-card"><div class="coach-photo"></div><div class="coach-body"><h3>Priya Menon</h3><div class="coach-role">Senior Instructor - Contemporary</div><p class="section-copy">Somatic technique, floorwork, improvisation, fusion, and expressive movement vocabulary.</p></div></article>
+      <article class="coach-card"><div class="coach-photo"></div><div class="coach-body"><h3>Kiran Raj</h3><div class="coach-role">Youth Coach - Groovezone</div><p class="section-copy">Kids batches with games, rhythm challenges, confidence building, and freestyle circles.</p></div></article>
+    </div>
+  </section>
+
+  <section class="cream" id="schedule">
+    <div class="section-head">
+      <div><div class="eyebrow">Weekly Timetable</div><h2 class="section-title">Class Schedule</h2></div>
+      <p class="section-copy">Morning, evening, and weekend batches are available. Confirm current seats on WhatsApp before visiting.</p>
+    </div>
+    <div class="schedule-wrap">
+      <table>
+        <thead><tr><th>Day</th><th>Time</th><th>Class</th><th>Instructor</th><th>Level</th><th>Seats</th></tr></thead>
+        <tbody>
+          <tr><td>Monday</td><td>06:00 - 07:00 AM</td><td>Hip-Hop</td><td>Coach Arjun</td><td>Beginner</td><td>12 left</td></tr>
+          <tr><td>Monday</td><td>06:00 - 07:15 PM</td><td>Contemporary & Bollywood</td><td>Ms. Priya</td><td>Intermediate</td><td>8 left</td></tr>
+          <tr><td>Wednesday</td><td>05:30 - 07:00 PM</td><td>Freestyle Choreography</td><td>Priya & Arjun</td><td>Advanced</td><td>5 left</td></tr>
+          <tr><td>Thursday</td><td>04:00 - 04:45 PM</td><td>Kids Groovezone</td><td>Coach Kiran</td><td>Kids</td><td>6 left</td></tr>
+          <tr><td>Saturday</td><td>11:00 AM - 01:00 PM</td><td>The Stage</td><td>Coach Arjun</td><td>Advanced</td><td>6 left</td></tr>
+          <tr><td>Sunday</td><td>10:00 AM - 12:00 PM</td><td>Workshops</td><td>Guest Faculty</td><td>All Levels</td><td>8 left</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="reviews">
+    <div class="section-head">
+      <div><div class="eyebrow">Student Stories</div><h2 class="section-title">What They Say</h2></div>
+      <p class="section-copy">Real outcomes from students and parents: confidence, consistency, stage readiness, and a studio they enjoy returning to.</p>
+    </div>
+    <div class="grid-3">
+      <article class="review-card"><p>Joining DHOD was the best decision I made last year. The Hip-Hop classes changed how I move and hear music.</p><div class="coach-role">Rohan Krishnamurthy</div></article>
+      <article class="review-card"><p>My daughter has been in Groovezone for six months and the transformation in her confidence is remarkable.</p><div class="coach-role">Lakshmi Iyer</div></article>
+      <article class="review-card"><p>The Hosapalaya location is convenient, the studio is well maintained, and the warmth keeps me coming back.</p><div class="coach-role">Deepa Chandrasekaran</div></article>
+    </div>
+  </section>
+
+  <section class="cream" id="contact">
+    <div class="contact-layout">
+      <div class="contact-card">
+        <div class="eyebrow">Visit The Studio</div>
+        <h2>Start Your Journey</h2>
+        <div class="contact-line"><span>Address</span>50, 11th Main Rd, beside Ganesh cycle shop, Hosapalaya, Muneshwara Nagar, Bengaluru, Karnataka 560068</div>
+        <div class="contact-line"><span>Call / WhatsApp</span><a href="https://wa.me/917892310080" target="_blank" rel="noopener">+91 78923 10080</a></div>
+        <div class="contact-line"><span>Studio Hours</span>Mon - Sun: 6 AM - 8 PM</div>
+        <div class="actions">
+          <a class="btn" href="https://wa.me/917892310080" target="_blank" rel="noopener">Chat on WhatsApp</a>
+          <a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=50%2C%2011th%20Main%20Rd%2C%20beside%20Ganesh%20cycle%20shop%2C%20Hosapalaya%2C%20Muneshwara%20Nagar%2C%20Bengaluru%2C%20Karnataka%20560068" target="_blank" rel="noopener">Open Map</a>
+        </div>
+      </div>
+      <form class="form-card">
+        <div class="eyebrow">Book Demo</div>
+        <h2>Join Us Today</h2>
+        <div class="form-grid">
+          <input type="text" placeholder="Name" aria-label="Name">
+          <input type="tel" placeholder="+91 78923 10080" aria-label="Phone">
+          <input type="email" placeholder="Email" aria-label="Email">
+          <select aria-label="Course"><option>Select Course</option><option>Hip-Hop</option><option>Contemporary & Bollywood</option><option>Freestyle Choreography</option><option>Kids Groovezone</option><option>The Stage</option><option>Workshops</option></select>
+          <textarea placeholder="Message" aria-label="Message"></textarea>
+        </div>
+        <button class="btn" type="button">Submit Enquiry</button>
+      </form>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="section-head">
+      <div><div class="eyebrow">Quick Answers</div><h2 class="section-title">FAQs</h2></div>
+      <p class="section-copy">Short answers for students and parents before they book a demo class.</p>
+    </div>
+    <div class="faq-list">
+      <article class="faq-item"><h3>Do I need prior dance experience?</h3><p>No. Beginner batches are designed for absolute beginners, and we place students in the right batch after the demo class.</p></article>
+      <article class="faq-item"><h3>What should I wear?</h3><p>Wear comfortable clothing and clean indoor sneakers or dance shoes. Bring a water bottle and travel light.</p></article>
+      <article class="faq-item"><h3>How do I get directions?</h3><p>Call or WhatsApp +91 78923 10080. The studio is beside Ganesh cycle shop in Hosapalaya, Muneshwara Nagar.</p></article>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>© 2026 Damodar House of Dance. All Rights Reserved.</p>
+  <p>Concept 2 website design for customer presentation.</p>
+</footer>
+</body>
+</html>

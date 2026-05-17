@@ -1,0 +1,2548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Damodar House of Dance | Hip-Hop & Contemporary</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #fbfbf7;
+    --dark: #eef6f2;
+    --card: #ffffff;
+    --gold: #b78120;
+    --gold-light: #d89a2f;
+    --gold-dim: rgba(183,129,32,0.12);
+    --white: #1f2421;
+    --grey: #65685f;
+    --border: rgba(31,36,33,0.13);
+    --accent: #0f766e;
+    --accent-soft: rgba(15,118,110,0.11);
+    --coral: #cf5f48;
+    --shadow: 0 24px 70px rgba(31,36,33,0.1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  @media (pointer: fine) {
+    body { cursor: none; }
+  }
+
+  /* Custom Cursor */
+  .cursor {
+    position: fixed;
+    width: 10px; height: 10px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s;
+    mix-blend-mode: normal;
+    box-shadow: 0 0 0 3px rgba(183,129,32,0.15);
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: all 0.18s ease;
+    opacity: 0.6;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 24px 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: linear-gradient(to bottom, rgba(251,251,247,0.96), rgba(251,251,247,0.82), transparent);
+    transition: background 0.3s, box-shadow 0.3s;
+  }
+  nav.scrolled { background: rgba(251,251,247,0.97); border-bottom: 1px solid var(--border); box-shadow: 0 12px 34px rgba(31,36,33,0.06); }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 2.5px;
+    color: var(--gold);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .nav-logo span { color: var(--white); }
+
+  .nav-links { display: flex; gap: clamp(12px, 1.55vw, 24px); list-style: none; }
+  .nav-links a {
+    color: rgba(31,36,33,0.68);
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    transition: color 0.3s;
+    font-weight: 400;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-links a:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+
+  .nav-cta {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 10px 18px;
+    font-size: 12px;
+    letter-spacing: 1.7px;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.3s;
+    cursor: none;
+  }
+  .nav-cta:hover { background: var(--gold); color: var(--white); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding: 0 60px;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: 
+      radial-gradient(ellipse 60% 80% at 82% 48%, rgba(15,118,110,0.12) 0%, transparent 68%),
+      radial-gradient(ellipse 42% 58% at 22% 80%, rgba(207,95,72,0.1) 0%, transparent 62%),
+      radial-gradient(ellipse 48% 52% at 54% 30%, rgba(183,129,32,0.08) 0%, transparent 68%),
+      var(--black);
+  }
+
+  /* Animated grid lines */
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: 
+      linear-gradient(rgba(31,36,33,0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(31,36,33,0.045) 1px, transparent 1px);
+    background-size: 80px 80px;
+    animation: gridShift 20s linear infinite;
+  }
+  @keyframes gridShift { 0% { transform: translateY(0); } 100% { transform: translateY(80px); } }
+
+  .hero-visual {
+    position: absolute;
+    top: 13vh;
+    right: clamp(28px, 6vw, 92px);
+    width: min(42vw, 620px);
+    height: min(68vh, 660px);
+    z-index: 1;
+    pointer-events: none;
+    animation: fadeInVisual 1s 0.35s ease both;
+  }
+
+  .hero-visual::before {
+    content: '';
+    position: absolute;
+    inset: 9% 2% 6% 12%;
+    border: 1px solid rgba(183,129,32,0.24);
+    transform: rotate(-4deg);
+  }
+
+  .hero-visual::after {
+    content: 'DANCE';
+    position: absolute;
+    right: -22px;
+    bottom: 12%;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 10vw, 148px);
+    line-height: 0.8;
+    letter-spacing: 7px;
+    color: rgba(31,36,33,0.035);
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+
+  .hero-photo {
+    position: absolute;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    box-shadow: var(--shadow);
+  }
+
+  .hero-photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(251,251,247,0.02), rgba(31,36,33,0.18)),
+      linear-gradient(90deg, rgba(15,118,110,0.18), rgba(183,129,32,0.08));
+    mix-blend-mode: multiply;
+  }
+
+  .hero-photo-main {
+    top: 3%;
+    right: 10%;
+    width: 62%;
+    height: 64%;
+    background-image: url('https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&w=900&q=82');
+    transform: rotate(2.5deg);
+  }
+
+  .hero-photo-side {
+    left: 4%;
+    bottom: 6%;
+    width: 46%;
+    height: 38%;
+    background-image: url('https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=720&q=82');
+    transform: rotate(-5deg);
+  }
+
+  .hero-photo-accent {
+    right: 4%;
+    bottom: 4%;
+    width: 32%;
+    height: 24%;
+    background-image: url('https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=620&q=82');
+    transform: rotate(5deg);
+  }
+
+  .hero-mark {
+    position: absolute;
+    left: 0;
+    top: 19%;
+    width: 128px;
+    height: 128px;
+    border-radius: 50%;
+    border: 1px solid rgba(15,118,110,0.24);
+  }
+
+  .hero-mark::before,
+  .hero-mark::after {
+    content: '';
+    position: absolute;
+    inset: 18px;
+    border: 1px solid rgba(183,129,32,0.22);
+    border-radius: 50%;
+  }
+
+  .hero-mark::after {
+    inset: 46px;
+    background: var(--gold);
+    border: none;
+  }
+
+  @keyframes fadeInVisual {
+    from { opacity: 0; transform: translate(24px, 18px) scale(0.98); }
+    to { opacity: 1; transform: translate(0, 0) scale(1); }
+  }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    max-width: 900px;
+  }
+
+  .hero-tag {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid var(--border);
+    padding: 8px 20px;
+    margin-bottom: 40px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 10vw, 140px);
+    line-height: 1.0;
+    letter-spacing: 4px;
+    color: var(--white);
+    margin-bottom: 12px;
+    animation: fadeUp 0.8s 0.15s ease both;
+  }
+  .hero-title .gold { color: var(--gold); }
+  .hero-title .outline {
+    -webkit-text-stroke: 1px var(--gold);
+    color: transparent;
+  }
+
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(20px, 2.5vw, 32px);
+    font-style: italic;
+    color: var(--grey);
+    margin-bottom: 48px;
+    max-width: 640px;
+    line-height: 1.25;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  .hero-actions {
+    display: flex; gap: 20px; align-items: center;
+    animation: fadeUp 0.8s 0.45s ease both;
+  }
+
+  .btn-primary {
+    background: var(--gold);
+    color: var(--white);
+    padding: 16px 36px;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s;
+    cursor: none;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-3px); box-shadow: 0 12px 32px rgba(183,129,32,0.22); }
+  .btn-primary:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+
+  .btn-secondary {
+    color: var(--white);
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: flex; align-items: center; gap: 12px;
+    transition: color 0.3s;
+    cursor: none;
+  }
+  .btn-secondary::after {
+    content: '→';
+    font-size: 18px;
+    transition: transform 0.3s;
+  }
+  .btn-secondary:hover { color: var(--gold); }
+  .btn-secondary:hover::after { transform: translateX(6px); }
+
+  /* Floating stats */
+  .hero-stats {
+    position: absolute;
+    right: 60px; bottom: 80px;
+    display: flex; flex-direction: column; gap: 32px;
+    z-index: 2;
+    animation: fadeUp 0.8s 0.6s ease both;
+  }
+  .stat-item { text-align: right; }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    line-height: 1;
+    color: var(--gold);
+    letter-spacing: 2px;
+  }
+  .stat-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--grey);
+  }
+
+  /* Scroll indicator */
+  .scroll-indicator {
+    position: absolute;
+    bottom: 40px; left: 60px;
+    display: flex; align-items: center; gap: 16px;
+    z-index: 2;
+    animation: fadeUp 0.8s 0.75s ease both;
+  }
+  .scroll-line {
+    width: 60px; height: 1px;
+    background: var(--gold);
+    position: relative;
+    overflow: hidden;
+  }
+  .scroll-line::after {
+    content: '';
+    position: absolute; top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: var(--white);
+    animation: scrollAnim 2s ease infinite;
+  }
+  @keyframes scrollAnim { 0% { left: -100%; } 100% { left: 100%; } }
+  .scroll-text {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--grey);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SECTION BASE */
+  section { padding: 120px 60px; }
+
+  .studio-intro {
+    position: relative;
+    padding: 0;
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .studio-intro-inner {
+    display: grid;
+    grid-template-columns: 0.95fr 1.35fr;
+    min-height: 520px;
+  }
+
+  .studio-intro-copy {
+    padding: 96px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .studio-intro-copy p {
+    color: var(--grey);
+    font-size: 16px;
+    line-height: 1.9;
+    max-width: 560px;
+  }
+
+  .studio-intro-media {
+    position: relative;
+    min-height: 520px;
+    background:
+      linear-gradient(90deg, rgba(251,251,247,0.08), rgba(251,251,247,0.34)),
+      url('https://images.unsplash.com/photo-1519925610903-381054cc2a1c?auto=format&fit=crop&w=1200&q=82') center/cover;
+    overflow: hidden;
+  }
+
+  .studio-intro-media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(251,251,247,0.16) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(251,251,247,0.16) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+
+  .intro-tiles {
+    position: absolute;
+    left: 40px;
+    right: 40px;
+    bottom: 40px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    z-index: 1;
+  }
+
+  .intro-tile {
+    background: rgba(251,251,247,0.92);
+    border: 1px solid rgba(255,255,255,0.58);
+    padding: 22px;
+    min-height: 150px;
+    backdrop-filter: blur(14px);
+    box-shadow: 0 18px 48px rgba(31,36,33,0.12);
+  }
+
+  .intro-tile span {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+
+  .intro-tile h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 30px;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+  }
+
+  .intro-tile p {
+    color: var(--grey);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .section-tag {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 6vw, 80px);
+    letter-spacing: 3px;
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+
+  .divider {
+    width: 60px; height: 1px;
+    background: var(--gold);
+    margin-bottom: 48px;
+  }
+
+  /* ABOUT */
+  .about {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 80px;
+    align-items: center;
+    background: var(--dark);
+  }
+
+  .about-proof {
+    background: var(--card);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    padding: 42px;
+    min-height: 520px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .proof-kicker {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .proof-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(30px, 4vw, 54px);
+    line-height: 1.05;
+    color: var(--white);
+    margin: 48px 0;
+  }
+
+  .proof-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--border);
+    border-left: 1px solid var(--border);
+  }
+
+  .proof-item {
+    padding: 22px;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .proof-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    line-height: 1;
+    letter-spacing: 2px;
+    color: var(--gold);
+  }
+
+  .proof-label {
+    margin-top: 8px;
+    color: var(--grey);
+    font-size: 12px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+  }
+
+  .about-text p {
+    color: var(--grey);
+    line-height: 1.9;
+    margin-bottom: 20px;
+    font-size: 16px;
+  }
+
+  .about-features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 40px;
+  }
+
+  .feature-item {
+    border-left: 2px solid var(--gold);
+    padding-left: 16px;
+  }
+
+  .feature-item h4 {
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: var(--white);
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+
+  .feature-item p {
+    font-size: 12px;
+    color: var(--grey);
+    margin-bottom: 0;
+    line-height: 1.4;
+  }
+
+  /* TRAINING METHOD */
+  .method {
+    background:
+      linear-gradient(90deg, rgba(15,118,110,0.08), transparent 42%),
+      var(--black);
+    display: grid;
+    grid-template-columns: 0.9fr 1.4fr;
+    gap: 70px;
+    align-items: stretch;
+  }
+
+  .method-lead {
+    border-left: 1px solid var(--border);
+    padding-left: 28px;
+  }
+
+  .method-lead p {
+    color: var(--grey);
+    line-height: 1.9;
+    font-size: 16px;
+    max-width: 460px;
+  }
+
+  .method-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.72);
+    box-shadow: var(--shadow);
+  }
+
+  .method-step {
+    min-height: 310px;
+    padding: 34px 28px;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .method-step:last-child { border-right: none; }
+
+  .method-step::after {
+    content: '';
+    position: absolute;
+    right: -50px;
+    top: -50px;
+    width: 130px;
+    height: 130px;
+    border: 1px solid rgba(15,118,110,0.16);
+    border-radius: 50%;
+  }
+
+  .method-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 58px;
+    line-height: 0.9;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(15,118,110,0.55);
+  }
+
+  .method-step h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 34px;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 14px;
+  }
+
+  .method-step p {
+    color: var(--grey);
+    font-size: 14px;
+    line-height: 1.75;
+  }
+
+  .method-note {
+    margin-top: 28px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .method-pill {
+    border: 1px solid var(--border);
+    color: var(--gold);
+    background: var(--gold-dim);
+    padding: 8px 14px;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  /* CLASSES */
+  .classes { background: var(--black); }
+
+  .classes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 60px;
+  }
+
+  .classes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  .class-card {
+    background: var(--card);
+    padding: 48px 36px;
+    border: 1px solid transparent;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    cursor: none;
+  }
+
+  .class-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+  }
+
+  .class-card:hover { border-color: rgba(15,118,110,0.32); background: #fffaf0; box-shadow: 0 14px 46px rgba(31,36,33,0.1); }
+  .class-card:hover::before { transform: scaleX(1); }
+
+  .class-icon {
+    width: 56px; height: 56px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 28px;
+    font-size: 22px;
+  }
+
+  .class-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+
+  .class-desc {
+    color: var(--grey);
+    font-size: 14px;
+    line-height: 1.8;
+    margin-bottom: 32px;
+  }
+
+  .class-meta {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+
+  .meta-item {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px;
+    color: var(--gold);
+    letter-spacing: 1px;
+  }
+
+  .class-fee {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: var(--gold);
+    letter-spacing: 2px;
+  }
+
+  .class-fee span {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--grey);
+    font-weight: 300;
+    letter-spacing: 1px;
+  }
+
+  /* SCHEDULE TABLE */
+  .schedule { background: var(--dark); }
+
+  .schedule-shell {
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.74);
+    box-shadow: var(--shadow);
+    overflow-x: auto;
+  }
+
+  .schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0;
+    min-width: 760px;
+  }
+
+  .schedule-table th {
+    padding: 16px 24px;
+    text-align: left;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    border-bottom: 1px solid var(--border);
+    font-weight: 400;
+  }
+
+  .schedule-table td {
+    padding: 20px 24px;
+    font-size: 14px;
+    color: var(--grey);
+    border-bottom: 1px solid rgba(31,36,33,0.07);
+    transition: background 0.2s;
+  }
+
+  .schedule-table tr:hover td { background: rgba(15,118,110,0.06); color: var(--white); }
+
+  .badge {
+    display: inline-block;
+    padding: 4px 12px;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: var(--gold-dim);
+    color: var(--gold);
+    border: 1px solid var(--border);
+  }
+
+  /* ENQUIRY FORM */
+  .enquiry {
+    background: var(--dark);
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 100px;
+    align-items: start;
+  }
+
+  .enquiry-info { padding-top: 20px; }
+
+  .enquiry-info p {
+    color: var(--grey);
+    line-height: 1.9;
+    margin-bottom: 48px;
+    font-size: 16px;
+  }
+
+  .enquiry-contact-items { display: flex; flex-direction: column; gap: 24px; }
+
+  .contact-row {
+    display: flex; align-items: center; gap: 16px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .contact-icon {
+    width: 40px; height: 40px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .contact-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+
+  .contact-value {
+    font-size: 15px;
+    color: var(--white);
+  }
+
+  .contact-value a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .whatsapp-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--white);
+    text-decoration: none;
+  }
+
+  .whatsapp-link::before {
+    content: 'WA';
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #25d366;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0;
+    box-shadow: 0 8px 18px rgba(37,211,102,0.22);
+  }
+
+  .whatsapp-link:hover {
+    color: var(--gold);
+  }
+
+  .whatsapp-float {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 1001;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #25d366;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 16px 38px rgba(37,211,102,0.34);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .whatsapp-float:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 46px rgba(37,211,102,0.4);
+  }
+
+  .whatsapp-float svg {
+    width: 29px;
+    height: 29px;
+    fill: currentColor;
+  }
+
+  /* Form */
+  .form-group { margin-bottom: 24px; }
+
+  .form-label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.86);
+    border: 1px solid var(--border);
+    color: var(--white);
+    padding: 14px 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    transition: border-color 0.3s;
+    outline: none;
+    appearance: none;
+  }
+
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--gold);
+    background: rgba(15,118,110,0.05);
+  }
+
+  .form-select option { background: var(--dark); }
+  .form-textarea { resize: vertical; min-height: 120px; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .form-submit {
+    background: var(--gold);
+    color: var(--white);
+    border: none;
+    padding: 16px 40px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 500;
+    cursor: none;
+    width: 100%;
+    transition: all 0.3s;
+    margin-top: 8px;
+  }
+
+  .form-submit:hover { background: var(--gold-light); box-shadow: 0 8px 24px rgba(183,129,32,0.18); }
+  .form-submit:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+
+  /* SUCCESS MESSAGE */
+  .form-success {
+    display: none;
+    text-align: center;
+    padding: 40px;
+    border: 1px solid var(--border);
+    background: var(--gold-dim);
+  }
+  .form-success h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .form-success p { color: var(--grey); font-size: 14px; }
+
+  /* MAP / CONTACT */
+  .contact { background: var(--black); padding: 0; }
+
+  .contact-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 400px;
+  }
+
+  .contact-details {
+    padding: 80px 60px;
+    background: var(--dark);
+    border-top: 1px solid var(--border);
+  }
+
+  .contact-details h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    letter-spacing: 3px;
+    margin-bottom: 40px;
+  }
+
+  .map-placeholder {
+    background: var(--card);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+    border-left: 1px solid var(--border);
+    border-top: 1px solid var(--border);
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .map-grid-bg {
+    position: absolute; inset: 0;
+    background-image: 
+      linear-gradient(rgba(15,118,110,0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(15,118,110,0.08) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .map-pin {
+    position: relative; z-index: 2;
+    text-align: center;
+  }
+
+  .map-pin-icon {
+    width: 56px; height: 56px;
+    background: var(--gold);
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    margin: 0 auto 20px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .map-pin-icon::after {
+    content: '📍';
+    transform: rotate(45deg);
+    font-size: 20px;
+    display: block;
+  }
+
+  .map-address {
+    position: relative; z-index: 2;
+    text-align: center;
+    font-size: 15px;
+    color: var(--grey);
+    line-height: 1.8;
+  }
+
+  .map-address strong {
+    display: block;
+    color: var(--gold);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  .map-btn {
+    position: relative; z-index: 2;
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 28px;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s;
+    cursor: none;
+  }
+  .map-btn:hover { background: var(--gold); color: var(--white); }
+
+  /* FOOTER */
+  footer {
+    background: var(--black);
+    border-top: 1px solid var(--border);
+    padding: 60px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 60px;
+  }
+
+  .footer-brand {}
+
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .footer-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--grey);
+    font-size: 16px;
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+
+  .social-links { display: flex; gap: 12px; }
+
+  .social-link {
+    width: 36px; height: 36px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    color: var(--grey);
+    text-decoration: none;
+    transition: all 0.3s;
+    cursor: none;
+  }
+  .social-link:hover { border-color: var(--gold); color: var(--gold); }
+
+  .footer-col h4 {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+  }
+
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 12px; }
+  .footer-col ul li a {
+    color: var(--grey);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s;
+    cursor: none;
+  }
+  .footer-col ul li a:hover { color: var(--white); }
+
+  .footer-bottom {
+    background: var(--black);
+    border-top: 1px solid var(--border);
+    padding: 24px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-bottom p {
+    font-size: 12px;
+    color: var(--grey);
+    letter-spacing: 1px;
+  }
+
+  /* MOBILE MENU */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: none;
+    padding: 4px;
+  }
+  .hamburger span {
+    display: block;
+    width: 24px; height: 1px;
+    background: var(--gold);
+    transition: all 0.3s;
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 40px; right: 40px;
+    background: var(--gold);
+    color: var(--white);
+    padding: 16px 28px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    z-index: 9999;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.4s ease;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  @media (max-width: 900px) {
+    nav { padding: 20px 24px; }
+    .nav-links, .nav-cta { display: none; }
+    .hamburger { display: flex; }
+    section { padding: 80px 24px; }
+    .hero { padding: 0 24px; }
+    .hero-stats { right: 24px; bottom: 80px; }
+    .hero-stats { flex-direction: row; bottom: 40px; }
+    .stat-num { font-size: 32px; }
+    .about { grid-template-columns: 1fr; gap: 40px; }
+    .classes-grid { grid-template-columns: 1fr; }
+    .enquiry { grid-template-columns: 1fr; gap: 48px; }
+    .contact-inner { grid-template-columns: 1fr; }
+    .contact-details { padding: 60px 24px; }
+    .map-placeholder { min-height: 300px; }
+    footer { grid-template-columns: 1fr; gap: 40px; padding: 60px 24px; }
+    .footer-bottom { padding: 20px 24px; flex-direction: column; gap: 8px; text-align: center; }
+    .form-row { grid-template-columns: 1fr; }
+    .scroll-indicator { left: 24px; }
+    .instructors-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .faq-header-row { flex-direction: column; gap: 16px; align-items: flex-start; }
+  }
+
+  /* ── INSTRUCTORS ── */
+  .instructors { background: var(--dark); }
+
+  .instructors-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 60px;
+  }
+
+  .instructor-card {
+    background: var(--card);
+    padding: 48px 36px;
+    border: 1px solid transparent;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+  }
+
+  .instructor-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+
+  .instructor-card:hover { border-color: rgba(15,118,110,0.25); background: #fffaf0; box-shadow: 0 14px 42px rgba(31,36,33,0.09); }
+  .instructor-card:hover::after { transform: scaleX(1); }
+
+  .instructor-avatar {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: var(--gold-dim);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 28px;
+    font-size: 32px;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .instructor-avatar::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(15,118,110,0.18), transparent 60%);
+  }
+
+  .instructor-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+
+  .instructor-role {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+
+  .instructor-bio {
+    font-size: 14px;
+    color: var(--grey);
+    line-height: 1.85;
+    margin-bottom: 28px;
+  }
+
+  .instructor-tags {
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+
+  .instructor-tag {
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border: 1px solid var(--border);
+    color: var(--gold);
+    background: var(--gold-dim);
+  }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials { background: var(--black); }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 60px;
+  }
+
+  .testimonial-card {
+    background: var(--card);
+    padding: 40px 36px;
+    border: 1px solid transparent;
+    position: relative;
+    transition: all 0.4s ease;
+  }
+
+  .testimonial-card:hover { border-color: rgba(15,118,110,0.22); background: #fffaf0; }
+
+  .testimonial-quote {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px;
+    color: var(--gold);
+    opacity: 0.25;
+    line-height: 0.7;
+    margin-bottom: 16px;
+    display: block;
+    user-select: none;
+  }
+
+  .testimonial-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: var(--white);
+    line-height: 1.75;
+    margin-bottom: 32px;
+  }
+
+  .testimonial-author {
+    display: flex; align-items: center; gap: 14px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  .testimonial-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--gold-dim);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .testimonial-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--white);
+    letter-spacing: 1px;
+  }
+
+  .testimonial-detail {
+    font-size: 12px;
+    color: var(--grey);
+    margin-top: 2px;
+    letter-spacing: 0.5px;
+  }
+
+  .testimonial-stars {
+    margin-left: auto;
+    color: var(--gold);
+    font-size: 13px;
+    letter-spacing: 2px;
+  }
+
+  /* ── FAQ ── */
+  .faq { background: var(--dark); }
+
+  .faq-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 60px;
+  }
+
+  .faq-list { max-width: 860px; }
+
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .faq-question {
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 28px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    cursor: pointer;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    transition: color 0.3s;
+  }
+
+  .faq-question:hover { color: var(--gold); }
+  .faq-question:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+
+  .faq-icon {
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    color: var(--gold);
+    transition: transform 0.35s ease, background 0.3s;
+    line-height: 1;
+  }
+
+  .faq-item.open .faq-icon { transform: rotate(45deg); background: var(--gold-dim); }
+  .faq-item.open .faq-question { color: var(--gold); }
+
+  .faq-answer {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+  }
+
+  .faq-answer-inner {
+    padding-bottom: 28px;
+    color: var(--grey);
+    font-size: 15px;
+    line-height: 1.9;
+  }
+
+  .faq-item.open .faq-answer { max-height: 400px; }
+
+  @media (max-width: 1100px) {
+    .method {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .studio-intro-inner {
+      grid-template-columns: 1fr;
+    }
+    .studio-intro-copy {
+      padding: 80px 24px 48px;
+    }
+    .studio-intro-media {
+      min-height: 560px;
+    }
+    .intro-tiles {
+      grid-template-columns: 1fr;
+      left: 24px;
+      right: 24px;
+    }
+    .hero {
+      min-height: 92vh;
+      align-items: flex-start;
+      padding-top: 140px;
+      padding-bottom: 160px;
+    }
+    .hero-visual {
+      top: auto;
+      right: 0;
+      bottom: 86px;
+      width: 86vw;
+      height: 48vh;
+      opacity: 0.38;
+    }
+    .hero-photo-main { width: 58%; height: 68%; right: 4%; }
+    .hero-photo-side { width: 42%; height: 40%; left: 6%; bottom: 4%; }
+    .hero-photo-accent { display: none; }
+    .hero-mark { width: 92px; height: 92px; top: 11%; }
+    .hero-content { max-width: 680px; }
+    .hero-actions { flex-wrap: wrap; }
+    .method-grid { grid-template-columns: 1fr; }
+    .method-step {
+      min-height: 230px;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+    }
+    .method-step:last-child { border-bottom: none; }
+    .instructors-grid { grid-template-columns: 1fr 1fr; gap: 2px; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 640px) {
+    .nav-logo {
+      font-size: 22px;
+      letter-spacing: 2px;
+    }
+    .nav-logo span { display: none; }
+    .hero-title { font-size: clamp(68px, 22vw, 96px); }
+    .hero-tag {
+      letter-spacing: 2px;
+      max-width: 100%;
+    }
+    .hero-visual {
+      width: 100vw;
+      height: 42vh;
+      right: -12vw;
+      bottom: 92px;
+      opacity: 0.28;
+    }
+    .hero-visual::before { inset: 11% 8% 10% 18%; }
+    .hero-visual::after { display: none; }
+    .hero-mark { display: none; }
+    .hero-stats {
+      left: 24px;
+      right: 24px;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .stat-item { text-align: left; }
+    .stat-label {
+      font-size: 9px;
+      letter-spacing: 1px;
+    }
+    .method-lead { padding-left: 18px; }
+    .method-step { padding: 28px 22px; }
+    .instructors-grid { grid-template-columns: 1fr; }
+    .testimonial-author {
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .testimonial-stars {
+      width: 100%;
+      margin-left: 58px;
+    }
+    .schedule-shell {
+      margin-left: -24px;
+      margin-right: -24px;
+      border-left: none;
+      border-right: none;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Toast -->
+<div class="toast" id="toast">✓ Enquiry sent successfully!</div>
+
+<a class="whatsapp-float" href="https://wa.me/917892310080" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <svg viewBox="0 0 32 32" aria-hidden="true">
+    <path d="M16.02 3.2A12.7 12.7 0 0 0 5.08 22.36L3.6 28.8l6.58-1.54A12.7 12.7 0 1 0 16.02 3.2Zm0 22.92c-1.95 0-3.75-.55-5.3-1.5l-.38-.23-3.9.91.88-3.8-.25-.4a10.18 10.18 0 1 1 8.95 5.02Zm5.78-7.62c-.32-.16-1.87-.92-2.16-1.03-.29-.1-.5-.16-.72.16-.21.32-.82 1.03-1 1.24-.19.21-.37.24-.69.08-.32-.16-1.35-.5-2.57-1.58-.95-.85-1.59-1.89-1.78-2.21-.19-.32-.02-.49.14-.65.14-.14.32-.37.48-.56.16-.19.21-.32.32-.53.11-.21.05-.4-.03-.56-.08-.16-.72-1.73-.98-2.37-.26-.62-.52-.54-.72-.55h-.61c-.21 0-.56.08-.85.4-.29.32-1.11 1.08-1.11 2.64s1.14 3.06 1.3 3.27c.16.21 2.24 3.42 5.43 4.79.76.33 1.35.52 1.81.67.76.24 1.45.21 2 .13.61-.09 1.87-.76 2.14-1.5.27-.74.27-1.37.19-1.5-.08-.13-.29-.21-.61-.37Z"/>
+  </svg>
+</a>
+
+<!-- NAV -->
+<nav id="navbar" aria-label="Main navigation">
+  <a href="#home" class="nav-logo">DAMODAR<span> HOUSE OF DANCE</span></a>
+  <ul id="navLinks" class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#space">Space</a></li>
+    <li><a href="#instructors">Instructors</a></li>
+    <li><a href="#classes">Classes</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#enquiry" class="nav-cta">Free Trial</a>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navLinks">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-visual" aria-hidden="true">
+    <div class="hero-mark"></div>
+    <div class="hero-photo hero-photo-main"></div>
+    <div class="hero-photo hero-photo-side"></div>
+    <div class="hero-photo hero-photo-accent"></div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-tag">Bengaluru Creator's Dance Space</div>
+    <h1 class="hero-title">
+      DANCE<br>
+      <span class="outline">CREATE</span><br>
+      <span class="gold">PERFORM</span>
+    </h1>
+    <p class="hero-subtitle">Classes, workshops, rehearsals, rentals, and stage-ready training under one roof.</p>
+    <div class="hero-actions">
+      <a href="#classes" class="btn-primary">Explore Classes</a>
+      <a href="#enquiry" class="btn-secondary">Book Demo</a>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-num">2</div>
+      <div class="stat-label">Studio Floors</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">6+</div>
+      <div class="stat-label">Dance Styles</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">500+</div>
+      <div class="stat-label">Students Trained</div>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    <span class="scroll-text">Scroll to discover</span>
+  </div>
+</section>
+
+<!-- CREATOR SPACE -->
+<section class="studio-intro" id="space">
+  <div class="studio-intro-inner">
+    <div class="studio-intro-copy">
+      <div class="section-tag">Creator's Space</div>
+      <h2 class="section-title">Classes.<br>Workshops.<br>Stage.</h2>
+      <div class="divider"></div>
+      <p>Damodar House of Dance is built for dancers, teachers, performers, and creators who need more than a class timetable. Learn a style, rehearse a set, shoot a reel, attend a guest workshop, or prepare for a showcase in a studio that feels alive.</p>
+    </div>
+    <div class="studio-intro-media">
+      <div class="intro-tiles">
+        <div class="intro-tile">
+          <span>In-House / Online</span>
+          <h3>Dance Classes</h3>
+          <p>Hip-hop, contemporary, Bollywood, freestyle, kids batches, and performance training.</p>
+        </div>
+        <div class="intro-tile">
+          <span>Monthly Artists</span>
+          <h3>Workshops</h3>
+          <p>Guest faculty sessions for choreography, freestyle, stagecraft, battles, and camera work.</p>
+        </div>
+        <div class="intro-tile">
+          <span>Studio Rental</span>
+          <h3>Creator Floors</h3>
+          <p>Bright rehearsal floors and clean corners for practice, teaching, auditions, and content shoots.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-proof">
+    <div>
+      <div class="proof-kicker">Inside The Studio</div>
+      <p class="proof-quote">"Technique gives movement its clarity. Community gives it courage."</p>
+    </div>
+    <div class="proof-grid">
+      <div class="proof-item">
+        <div class="proof-num">6</div>
+        <div class="proof-label">Weekly Batches</div>
+      </div>
+      <div class="proof-item">
+        <div class="proof-num">3</div>
+        <div class="proof-label">Core Coaches</div>
+      </div>
+      <div class="proof-item">
+        <div class="proof-num">45</div>
+        <div class="proof-label">Min Starter Class</div>
+      </div>
+      <div class="proof-item">
+        <div class="proof-num">1:12</div>
+        <div class="proof-label">Coaching Ratio</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-text">
+    <div class="section-tag">⬡ About The Studio</div>
+    <h2 class="section-title">A Space To<br>Dance In</h2>
+    <div class="divider"></div>
+    <p>Damodar House of Dance is a one-of-a-kind dance studio and creator space for students, artists, choreographers, and content makers. The studio is designed for learning, practice, teaching, shooting, and performance preparation.</p>
+    <p>Our classes stay structured and welcoming, while workshops and showcases keep the learning alive beyond the weekly batch. From beginners finding rhythm to trained dancers preparing for stage, every mover gets room to grow.</p>
+
+    <div class="about-features">
+      <div class="feature-item">
+        <h4>Expert Instructors</h4>
+        <p>Professionally trained, competition-experienced coaches</p>
+      </div>
+      <div class="feature-item">
+        <h4>All Age Groups</h4>
+        <p>Kids (6+), teens, and adult batches available</p>
+      </div>
+      <div class="feature-item">
+        <h4>Creator-Friendly Floors</h4>
+        <p>Spacious rehearsal zones for practice, teaching, and shoots</p>
+      </div>
+      <div class="feature-item">
+        <h4>Workshops & Stage</h4>
+        <p>Guest sessions, dance battles, quarterly showcases, and annual performances</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- METHOD -->
+<section class="method" id="method">
+  <div class="method-lead">
+    <div class="section-tag">Studio Method</div>
+    <h2 class="section-title">Train Like<br>An Artist</h2>
+    <div class="divider"></div>
+    <p>Every batch follows a clear progression: technique first, expression next, then performance under real studio pressure. Students know what they are building each month and why it matters on stage.</p>
+    <div class="method-note">
+      <span class="method-pill">Monthly Progress Reviews</span>
+      <span class="method-pill">Small Batch Coaching</span>
+      <span class="method-pill">Showcase Ready</span>
+    </div>
+  </div>
+
+  <div class="method-grid">
+    <div class="method-step">
+      <div class="method-number">01</div>
+      <div>
+        <h3>Foundation</h3>
+        <p>Build posture, rhythm, footwork, isolations, stamina, and clean movement habits before choreography gets complex.</p>
+      </div>
+    </div>
+    <div class="method-step">
+      <div class="method-number">02</div>
+      <div>
+        <h3>Expression</h3>
+        <p>Turn steps into choices with musicality drills, freestyle prompts, floor work, and guided improvisation.</p>
+      </div>
+    </div>
+    <div class="method-step">
+      <div class="method-number">03</div>
+      <div>
+        <h3>Performance</h3>
+        <p>Rehearse entries, formations, stage presence, camera confidence, and cypher etiquette for real audiences.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INSTRUCTORS -->
+<section class="instructors" id="instructors">
+  <div class="section-tag">⬡ Meet The Team</div>
+  <h2 class="section-title">Your<br>Coaches</h2>
+  <div class="divider"></div>
+  <div class="instructors-grid">
+
+    <div class="instructor-card">
+      <div class="instructor-avatar">🕺</div>
+      <div class="instructor-name">Arjun Damodar</div>
+      <div class="instructor-role">Founder & Head Coach — Hip-Hop</div>
+      <p class="instructor-bio">With over 14 years of street dance experience and a decade of competitive battling across South Asia, Arjun brings raw energy and technical precision to every class. Trained in breaking, popping, and locking, he's competed at Red Bull BC One qualifiers and mentored three national-level champions.</p>
+      <div class="instructor-tags">
+        <span class="instructor-tag">Hip-Hop</span>
+        <span class="instructor-tag">Breaking</span>
+        <span class="instructor-tag">Battle Prep</span>
+      </div>
+    </div>
+
+    <div class="instructor-card">
+      <div class="instructor-avatar">💃</div>
+      <div class="instructor-name">Priya Menon</div>
+      <div class="instructor-role">Senior Instructor — Contemporary</div>
+      <p class="instructor-bio">Priya trained at the Chennai School of Arts and spent three years with a contemporary dance company in Mumbai before returning to teach. Her classes blend somatic technique, floor work, and improvisation, helping students develop a deeply personal movement vocabulary.</p>
+      <div class="instructor-tags">
+        <span class="instructor-tag">Contemporary</span>
+        <span class="instructor-tag">Fusion</span>
+        <span class="instructor-tag">Kids</span>
+      </div>
+    </div>
+
+    <div class="instructor-card">
+      <div class="instructor-avatar">🎵</div>
+      <div class="instructor-name">Kiran Raj</div>
+      <div class="instructor-role">Youth Coach — Groovezone</div>
+      <p class="instructor-bio">Kiran specialises in making dance accessible and fun for younger students aged 5–15. His high-energy Kids Groovezone sessions use games, rhythm challenges, and freestyle circles to build confidence alongside coordination. Parent favourite for three consecutive years.</p>
+      <div class="instructor-tags">
+        <span class="instructor-tag">Kids</span>
+        <span class="instructor-tag">Rhythm</span>
+        <span class="instructor-tag">Freestyle</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CLASSES & FEES -->
+<section class="classes" id="classes">
+  <div class="classes-header">
+    <div>
+      <div class="section-tag">⬡ In-House / Online</div>
+      <h2 class="section-title">Dance Classes</h2>
+      <div class="divider"></div>
+    </div>
+    <p style="color:var(--grey); max-width:320px; font-size:14px; line-height:1.8; text-align:right;">Learn different styles and cultures of dance from working artists, with beginner-friendly and performance-focused batches.</p>
+  </div>
+
+  <div class="classes-grid">
+    <div class="class-card">
+      <div class="class-icon">🔥</div>
+      <div class="class-name">Hip-Hop</div>
+      <p class="class-desc">Old-school foundations, new-gen grooves, freestyle drills, and choreography for dancers who want rhythm, confidence, and stage presence.</p>
+      <div class="class-meta">
+        <div class="meta-item">⏱ 60 min</div>
+        <div class="meta-item">👤 Age 8+</div>
+        <div class="meta-item">📅 Mon / Wed / Fri</div>
+      </div>
+      <div class="class-fee">₹1,500 <span>/ month</span></div>
+    </div>
+
+    <div class="class-card">
+      <div class="class-icon">🌊</div>
+      <div class="class-name">Contemporary & Bollywood</div>
+      <p class="class-desc">Fluid movement, floorwork, expressive storytelling, and high-energy Bollywood choreography for fitness, performance, and personal style.</p>
+      <div class="class-meta">
+        <div class="meta-item">⏱ 75 min</div>
+        <div class="meta-item">👤 Age 12+</div>
+        <div class="meta-item">📅 Tue / Thu / Sat</div>
+      </div>
+      <div class="class-fee">₹1,800 <span>/ month</span></div>
+    </div>
+
+    <div class="class-card">
+      <div class="class-icon">⚡</div>
+      <div class="class-name">Freestyle Choreography</div>
+      <p class="class-desc">Open-style choreography, musicality, transitions, and camera-ready combinations for dancers who want to move across genres with ease.</p>
+      <div class="class-meta">
+        <div class="meta-item">⏱ 90 min</div>
+        <div class="meta-item">👤 Age 15+</div>
+        <div class="meta-item">📅 Sat / Sun</div>
+      </div>
+      <div class="class-fee">₹2,500 <span>/ month</span></div>
+    </div>
+
+    <div class="class-card">
+      <div class="class-icon">🌟</div>
+      <div class="class-name">Kids Groovezone</div>
+      <p class="class-desc">A fun, energetic introduction to dance for young movers. We focus on rhythm, coordination, and confidence-building through age-appropriate Hip-Hop routines and movement games.</p>
+      <div class="class-meta">
+        <div class="meta-item">⏱ 45 min</div>
+        <div class="meta-item">👤 Age 5–10</div>
+        <div class="meta-item">📅 Sat Morning</div>
+      </div>
+      <div class="class-fee">₹1,200 <span>/ month</span></div>
+    </div>
+
+    <div class="class-card">
+      <div class="class-icon">🎭</div>
+      <div class="class-name">The Stage</div>
+      <p class="class-desc">Dance battles, showcase rehearsals, formations, confidence training, and stagecraft for students ready to perform in front of a crowd.</p>
+      <div class="class-meta">
+        <div class="meta-item">⏱ 2 hrs</div>
+        <div class="meta-item">👤 Intermediate+</div>
+        <div class="meta-item">📅 Sun</div>
+      </div>
+      <div class="class-fee">₹3,000 <span>/ month</span></div>
+    </div>
+
+    <div class="class-card">
+      <div class="class-icon">🏆</div>
+      <div class="class-name">Workshops</div>
+      <p class="class-desc">Monthly sessions with guest choreographers and working artists across freestyle, choreography, movement meditation, fitness, and performance craft.</p>
+      <div class="class-meta">
+        <div class="meta-item">⏱ 3 hrs</div>
+        <div class="meta-item">👤 All Levels</div>
+        <div class="meta-item">📅 Monthly</div>
+      </div>
+      <div class="class-fee">₹800 <span>/ session</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SCHEDULE -->
+<section class="schedule" id="schedule">
+  <div class="section-tag">⬡ Weekly Timetable</div>
+  <h2 class="section-title">Class Schedule</h2>
+  <div class="divider"></div>
+
+  <div class="schedule-shell">
+  <table class="schedule-table">
+    <thead>
+      <tr>
+        <th>Day</th>
+        <th>Time</th>
+        <th>Class</th>
+        <th>Instructor</th>
+        <th>Level</th>
+        <th>Seats</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Monday</td>
+        <td>06:00 – 07:00 AM</td>
+        <td>Hip-Hop Fundamentals</td>
+        <td>Coach Arjun</td>
+        <td><span class="badge">Beginner</span></td>
+        <td>12 left</td>
+      </tr>
+      <tr>
+        <td>Monday</td>
+        <td>06:00 – 07:15 PM</td>
+        <td>Contemporary Flow</td>
+        <td>Ms. Priya</td>
+        <td><span class="badge">Intermediate</span></td>
+        <td>8 left</td>
+      </tr>
+      <tr>
+        <td>Tuesday</td>
+        <td>06:00 – 07:00 AM</td>
+        <td>Hip-Hop Fundamentals</td>
+        <td>Coach Arjun</td>
+        <td><span class="badge">Beginner</span></td>
+        <td>10 left</td>
+      </tr>
+      <tr>
+        <td>Wednesday</td>
+        <td>05:30 – 07:00 PM</td>
+        <td>Advanced Fusion</td>
+        <td>Ms. Priya & Coach Arjun</td>
+        <td><span class="badge">Advanced</span></td>
+        <td>5 left</td>
+      </tr>
+      <tr>
+        <td>Thursday</td>
+        <td>04:00 – 04:45 PM</td>
+        <td>Kids Groovezone</td>
+        <td>Coach Arjun</td>
+        <td><span class="badge">Kids</span></td>
+        <td>6 left</td>
+      </tr>
+      <tr>
+        <td>Saturday</td>
+        <td>09:00 – 10:00 AM</td>
+        <td>Kids Groovezone</td>
+        <td>Ms. Priya</td>
+        <td><span class="badge">Kids</span></td>
+        <td>4 left</td>
+      </tr>
+      <tr>
+        <td>Saturday</td>
+        <td>11:00 AM – 01:00 PM</td>
+        <td>Advanced Fusion</td>
+        <td>Coach Arjun</td>
+        <td><span class="badge">Advanced</span></td>
+        <td>6 left</td>
+      </tr>
+      <tr>
+        <td>Sunday</td>
+        <td>10:00 AM – 12:00 PM</td>
+        <td>Battle Prep</td>
+        <td>Coach Arjun</td>
+        <td><span class="badge">Intermediate+</span></td>
+        <td>8 left</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="testimonials">
+  <div class="section-tag">⬡ Student Stories</div>
+  <h2 class="section-title">What They<br>Say</h2>
+  <div class="divider"></div>
+  <div class="testimonials-grid">
+
+    <div class="testimonial-card">
+      <span class="testimonial-quote">"</span>
+      <p class="testimonial-text">Joining DHOD was the best decision I made last year. Arjun's Hip-Hop classes completely changed how I move — and how I think about music. The community here is unlike anything I've experienced at other studios.</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">👦</div>
+        <div>
+          <div class="testimonial-name">Rohan Krishnamurthy</div>
+          <div class="testimonial-detail">Hip-Hop Fundamentals · 1 year</div>
+        </div>
+        <div class="testimonial-stars">★★★★★</div>
+      </div>
+    </div>
+
+    <div class="testimonial-card">
+      <span class="testimonial-quote">"</span>
+      <p class="testimonial-text">My daughter has been in Kiran's Groovezone for six months and the transformation in her confidence is remarkable. She performs in front of her school now — something she'd never have done before. The coaches genuinely care.</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">👩</div>
+        <div>
+          <div class="testimonial-name">Lakshmi Iyer</div>
+          <div class="testimonial-detail">Parent · Kids Groovezone</div>
+        </div>
+        <div class="testimonial-stars">★★★★★</div>
+      </div>
+    </div>
+
+    <div class="testimonial-card">
+      <span class="testimonial-quote">"</span>
+      <p class="testimonial-text">Priya's Contemporary Flow sessions are exactly what I needed after years of classical Bharatanatyam. She helped me unlearn rigidity and find freedom in movement. I look forward to every single class.</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">👧</div>
+        <div>
+          <div class="testimonial-name">Ananya Subramanian</div>
+          <div class="testimonial-detail">Contemporary Flow · 8 months</div>
+        </div>
+        <div class="testimonial-stars">★★★★★</div>
+      </div>
+    </div>
+
+    <div class="testimonial-card">
+      <span class="testimonial-quote">"</span>
+      <p class="testimonial-text">I came in with zero experience, nervous about looking foolish. The free trial put me completely at ease. Three months later I was performing in the annual showcase. DHOD meets you exactly where you are.</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">🧑</div>
+        <div>
+          <div class="testimonial-name">Vikram Nair</div>
+          <div class="testimonial-detail">Advanced Fusion · 3 months</div>
+        </div>
+        <div class="testimonial-stars">★★★★★</div>
+      </div>
+    </div>
+
+    <div class="testimonial-card">
+      <span class="testimonial-quote">"</span>
+      <p class="testimonial-text">The Battle Prep programme is serious. Arjun breaks down musicality and cypher etiquette in a way I've never seen taught before. Competed in my first local battle after two months — placed third. Couldn't believe it.</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">👦</div>
+        <div>
+          <div class="testimonial-name">Aditya Palani</div>
+          <div class="testimonial-detail">Battle Prep · 5 months</div>
+        </div>
+        <div class="testimonial-stars">★★★★★</div>
+      </div>
+    </div>
+
+    <div class="testimonial-card">
+      <span class="testimonial-quote">"</span>
+      <p class="testimonial-text">The Hosapalaya location is super convenient and the studio itself is well-maintained with great mirrors and sound. But honestly it's the warmth of the team that keeps me coming back every week without fail.</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">👩</div>
+        <div>
+          <div class="testimonial-name">Deepa Chandrasekaran</div>
+          <div class="testimonial-detail">Contemporary Flow · 2 years</div>
+        </div>
+        <div class="testimonial-stars">★★★★★</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ENQUIRY FORM -->
+<section class="enquiry" id="enquiry">
+  <div class="enquiry-info">
+    <div class="section-tag">⬡ Get In Touch</div>
+    <h2 class="section-title">Join The<br>Studio</h2>
+    <div class="divider"></div>
+    <p>Ready to begin your dance journey? Fill out the enquiry form and we'll get back to you within 24 hours to schedule your free trial class.</p>
+
+    <div class="enquiry-contact-items">
+      <div class="contact-row">
+        <div class="contact-icon">📞</div>
+        <div>
+          <div class="contact-label">Phone / WhatsApp</div>
+          <div class="contact-value"><a class="whatsapp-link" href="https://wa.me/917892310080" target="_blank" rel="noopener">+91 78923 10080</a></div>
+        </div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-icon">✉️</div>
+        <div>
+          <div class="contact-label">Email</div>
+          <div class="contact-value">hello@damodarhouseofdance.in</div>
+        </div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-icon">🕐</div>
+        <div>
+          <div class="contact-label">Studio Hours</div>
+          <div class="contact-value">Mon – Sun: 6 AM – 8 PM</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <form id="enquiryForm">
+      <div id="formError" role="alert" aria-live="assertive" style="display:none;color:#c0392b;margin-bottom:12px;font-size:0.9rem;"></div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="first-name">First Name *</label>
+          <input type="text" id="first-name" name="first-name" class="form-input" placeholder="Rahul" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="last-name">Last Name *</label>
+          <input type="text" id="last-name" name="last-name" class="form-input" placeholder="Kumar">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="phone">Phone Number *</label>
+          <input type="tel" id="phone" name="phone" class="form-input" placeholder="+91 78923 10080" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address</label>
+          <input type="email" id="email" name="email" class="form-input" placeholder="rahul@email.com">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="age-group">Age Group *</label>
+          <select id="age-group" name="age-group" class="form-select" required>
+            <option value="" disabled selected>Select age group</option>
+            <option>5–10 years (Kids)</option>
+            <option>11–15 years (Junior)</option>
+            <option>16–20 years (Teen)</option>
+            <option>21+ years (Adult)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="class-interest">Interested Class *</label>
+          <select id="class-interest" name="class-interest" class="form-select" required>
+            <option value="" disabled selected>Select class</option>
+            <option>Hip-Hop Fundamentals</option>
+            <option>Contemporary Flow</option>
+            <option>Advanced Fusion</option>
+            <option>Kids Groovezone</option>
+            <option>Battle Prep</option>
+            <option>Workshop Series</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="batch-timing">Preferred Batch Timing</label>
+        <select id="batch-timing" name="batch-timing" class="form-select">
+          <option value="" disabled selected>Select preferred timing</option>
+          <option>Morning (6 AM – 8 AM)</option>
+          <option>Afternoon (12 PM – 3 PM)</option>
+          <option>Evening (4 PM – 8 PM)</option>
+          <option>Weekend Only</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="message">Tell Us About Yourself</label>
+        <textarea id="message" name="message" class="form-textarea" placeholder="Any prior dance experience? What are your goals? Any questions for us?"></textarea>
+      </div>
+
+      <button type="submit" class="form-submit">Submit Enquiry →</button>
+    </form>
+
+    <div class="form-success" id="formSuccess" role="alert" aria-live="polite">
+      <h3>Thank You!</h3>
+      <p>Your enquiry has been received. Our team will contact you within 24 hours to schedule your free trial class.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="faq-header-row">
+    <div>
+      <div class="section-tag">⬡ Quick Answers</div>
+      <h2 class="section-title">FAQs</h2>
+      <div class="divider"></div>
+    </div>
+    <a href="#enquiry" class="btn-primary" style="white-space:nowrap">Still have questions? →</a>
+  </div>
+
+  <div class="faq-list" role="list">
+
+    <div class="faq-item" role="listitem">
+      <button class="faq-question" aria-expanded="false">
+        Do I need any prior dance experience to join?
+        <span class="faq-icon" aria-hidden="true">+</span>
+      </button>
+      <div class="faq-answer" role="region">
+        <div class="faq-answer-inner">Not at all. Most of our batches — Hip-Hop Fundamentals, Contemporary Flow, and Kids Groovezone — are designed to welcome absolute beginners. We assess where you are in your free trial class and place you in the right batch. Experience is an advantage in Battle Prep and Advanced Fusion, but even there, strong beginners are welcome if they're committed.</div>
+      </div>
+    </div>
+
+    <div class="faq-item" role="listitem">
+      <button class="faq-question" aria-expanded="false">
+        What is the free trial class?
+        <span class="faq-icon" aria-hidden="true">+</span>
+      </button>
+      <div class="faq-answer" role="region">
+        <div class="faq-answer-inner">Your first class at DHOD is completely free with no obligation. It's a full-length session — not a taster — so you'll get a real feel for the coaching style, the energy of the batch, and whether it's the right fit for you. Just fill in the enquiry form and we'll schedule it around your availability.</div>
+      </div>
+    </div>
+
+    <div class="faq-item" role="listitem">
+      <button class="faq-question" aria-expanded="false">
+        What should I wear and bring?
+        <span class="faq-icon" aria-hidden="true">+</span>
+      </button>
+      <div class="faq-answer" role="region">
+        <div class="faq-answer-inner">Wear comfortable, breathable clothing that gives you full range of motion — track pants, joggers, or shorts work well. For footwear, clean indoor sneakers or dance shoes are recommended (avoid slippers or hard-sole shoes). Bring a water bottle; we have changing rooms but no lockers, so travel light.</div>
+      </div>
+    </div>
+
+    <div class="faq-item" role="listitem">
+      <button class="faq-question" aria-expanded="false">
+        How are fees structured and when do I pay?
+        <span class="faq-icon" aria-hidden="true">+</span>
+      </button>
+      <div class="faq-answer" role="region">
+        <div class="faq-answer-inner">Fees are charged monthly and are due on the 1st of each month. We accept UPI, bank transfer, and cash. The monthly fee covers all classes within your chosen batch for that month. Workshop Series and one-off masterclasses are priced separately. There is no registration fee beyond the first month's payment.</div>
+      </div>
+    </div>
+
+    <div class="faq-item" role="listitem">
+      <button class="faq-question" aria-expanded="false">
+        Is DHOD suitable for children? What age do you accept?
+        <span class="faq-icon" aria-hidden="true">+</span>
+      </button>
+      <div class="faq-answer" role="region">
+        <div class="faq-answer-inner">Yes — Kids Groovezone is specifically designed for children aged 5 to 15. Classes are structured around age-appropriate games and exercises that build rhythm, coordination, and confidence in a safe, supervised environment. Parents are welcome to observe the first class. All youth coaches are background-verified.</div>
+      </div>
+    </div>
+
+    <div class="faq-item" role="listitem">
+      <button class="faq-question" aria-expanded="false">
+        What is your refund and cancellation policy?
+        <span class="faq-icon" aria-hidden="true">+</span>
+      </button>
+      <div class="faq-answer" role="region">
+        <div class="faq-answer-inner">Monthly fees are non-refundable once the month has started. If you need to take a break, you can freeze your membership for up to 30 days once per year — fees don't apply during the freeze. Classes missed due to personal reasons cannot be made up, but classes cancelled by the studio are rescheduled at no extra charge.</div>
+      </div>
+    </div>
+
+    <div class="faq-item" role="listitem">
+      <button class="faq-question" aria-expanded="false">
+        How do I get to the studio from the metro?
+        <span class="faq-icon" aria-hidden="true">+</span>
+      </button>
+      <div class="faq-answer" role="region">
+        <div class="faq-answer-inner">We're located at 50, 11th Main Rd, beside Ganesh cycle shop, Hosapalaya, Muneshwara Nagar, Bengaluru, Karnataka 560068. Call or WhatsApp +91 78923 10080 if you need directions before your class.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT & MAP -->
+<div class="contact" id="contact">
+  <div class="contact-inner">
+    <div class="contact-details">
+      <div class="section-tag">⬡ Find Us</div>
+      <h2 class="section-title" style="font-size:48px;">Visit The Studio</h2>
+      <div class="divider"></div>
+
+      <div style="display:flex; flex-direction:column; gap:24px;">
+        <div class="contact-row">
+          <div class="contact-icon">📍</div>
+          <div>
+            <div class="contact-label">Address</div>
+            <div class="contact-value">50, 11th Main Rd, beside Ganesh cycle shop<br>Hosapalaya, Muneshwara Nagar, Bengaluru, Karnataka 560068</div>
+          </div>
+        </div>
+        <div class="contact-row">
+          <div class="contact-icon">☎</div>
+          <div>
+            <div class="contact-label">Call / WhatsApp</div>
+            <div class="contact-value"><a class="whatsapp-link" href="https://wa.me/917892310080" target="_blank" rel="noopener">+91 78923 10080</a></div>
+          </div>
+        </div>
+        <div class="contact-row">
+          <div class="contact-icon">🅿️</div>
+          <div>
+            <div class="contact-label">Parking</div>
+            <div class="contact-value">Free parking available on premises</div>
+          </div>
+        </div>
+        <div class="contact-row" style="border:none;">
+          <div class="contact-icon">📱</div>
+          <div>
+            <div class="contact-label">Follow Us</div>
+            <div style="display:flex; gap:12px; margin-top:8px;">
+              <a href="#" class="social-link">📘</a>
+              <a href="#" class="social-link">📸</a>
+              <a href="#" class="social-link">▶️</a>
+              <a href="#" class="social-link">🎵</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="map-placeholder">
+      <div class="map-grid-bg"></div>
+      <div class="map-pin">
+        <div class="map-pin-icon"></div>
+      </div>
+      <div class="map-address">
+        <strong>Damodar House of Dance</strong>
+        50, 11th Main Rd, beside Ganesh cycle shop<br>
+        Hosapalaya, Muneshwara Nagar, Bengaluru, Karnataka 560068
+      </div>
+      <a href="https://www.google.com/maps/search/?api=1&query=50%2C%2011th%20Main%20Rd%2C%20beside%20Ganesh%20cycle%20shop%2C%20Hosapalaya%2C%20Muneshwara%20Nagar%2C%20Bengaluru%2C%20Karnataka%20560068" target="_blank" rel="noopener" class="map-btn">Open in Google Maps →</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <div class="footer-logo" style="font-size:22px;letter-spacing:2px;">DAMODAR HOUSE OF DANCE</div>
+    <p class="footer-tagline">Where every step tells a story.<br>Hip-Hop & Contemporary Dance Academy — Damodar House of Dance.</p>
+    <div class="social-links">
+      <a href="https://wa.me/917892310080" target="_blank" rel="noopener" class="social-link" aria-label="WhatsApp">wa</a>
+      <a href="#" class="social-link">in</a>
+      <a href="#" class="social-link">yt</a>
+      <a href="#" class="social-link">tt</a>
+    </div>
+  </div>
+
+  <div class="footer-col">
+    <h4>Quick Links</h4>
+    <ul>
+      <li><a href="#about">About Us</a></li>
+      <li><a href="#classes">Classes & Fees</a></li>
+      <li><a href="#schedule">Schedule</a></li>
+      <li><a href="#enquiry">Free Trial</a></li>
+    </ul>
+  </div>
+
+  <div class="footer-col">
+    <h4>Classes</h4>
+    <ul>
+      <li><a href="#classes">Hip-Hop Fundamentals</a></li>
+      <li><a href="#classes">Contemporary Flow</a></li>
+      <li><a href="#classes">Advanced Fusion</a></li>
+      <li><a href="#classes">Kids Groovezone</a></li>
+      <li><a href="#classes">Battle Prep</a></li>
+    </ul>
+  </div>
+</footer>
+
+<div class="footer-bottom">
+  <p>© 2025 Damodar House of Dance. All Rights Reserved.</p>
+  <p>Designed with ♥ for the love of dance</p>
+</div>
+
+<script>
+  // Custom Cursor
+  const cursor = document.getElementById('cursor');
+  const cursorRing = document.getElementById('cursorRing');
+
+  let rafPending = false;
+  document.addEventListener('mousemove', (e) => {
+    if (rafPending) return;
+    rafPending = true;
+    requestAnimationFrame(() => {
+      cursor.style.left = e.clientX - 5 + 'px';
+      cursor.style.top = e.clientY - 5 + 'px';
+      cursorRing.style.left = e.clientX - 18 + 'px';
+      cursorRing.style.top = e.clientY - 18 + 'px';
+      rafPending = false;
+    });
+  });
+
+  document.querySelectorAll('a, button, .class-card, .method-step').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'scale(2)';
+      cursorRing.style.transform = 'scale(1.5)';
+      cursorRing.style.opacity = '1';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'scale(1)';
+      cursorRing.style.transform = 'scale(1)';
+      cursorRing.style.opacity = '0.6';
+    });
+  });
+
+  // Navbar scroll
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('navbar');
+    if (window.scrollY > 60) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  });
+
+  // Form submit with validation
+  document.getElementById('enquiryForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const errorEl = document.getElementById('formError');
+    const firstName = document.getElementById('first-name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const ageGroup = document.getElementById('age-group').value;
+    const classInterest = document.getElementById('class-interest').value;
+
+    if (!firstName || !phone || !ageGroup || !classInterest) {
+      errorEl.textContent = 'Please fill in all required fields (First Name, Phone, Age Group, Interested Class).';
+      errorEl.style.display = 'block';
+      return;
+    }
+    errorEl.style.display = 'none';
+    this.style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 4000);
+  });
+
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.class-card, .feature-item, .contact-row, .instructor-card, .testimonial-card, .faq-item, .method-step').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(openItem => {
+        openItem.classList.remove('open');
+        openItem.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  // Mobile menu toggle
+  function toggleMenu() {
+    const links = document.getElementById('navLinks');
+    const btn = document.querySelector('.hamburger');
+    if (!links) return;
+    const isOpen = links.style.display === 'flex';
+    if (isOpen) {
+      links.style.display = 'none';
+      btn.setAttribute('aria-expanded', 'false');
+    } else {
+      links.style.display = 'flex';
+      links.style.flexDirection = 'column';
+      links.style.position = 'fixed';
+      links.style.top = '70px';
+      links.style.left = '0';
+      links.style.right = '0';
+      links.style.zIndex = '1000';
+      links.style.background = 'rgba(251,251,247,0.98)';
+      links.style.padding = '24px';
+      links.style.gap = '20px';
+      links.style.borderBottom = '1px solid rgba(31,36,33,0.13)';
+      btn.setAttribute('aria-expanded', 'true');
+    }
+  }
+
+  // Close mobile menu when a nav link is clicked
+  document.querySelectorAll('#navLinks a').forEach(link => {
+    link.addEventListener('click', () => {
+      const links = document.getElementById('navLinks');
+      const btn = document.querySelector('.hamburger');
+      links.style.display = 'none';
+      btn.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // Close mobile menu on Escape key or outside click
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      const links = document.getElementById('navLinks');
+      const btn = document.querySelector('.hamburger');
+      if (links && links.style.display === 'flex') {
+        links.style.display = 'none';
+        btn.setAttribute('aria-expanded', 'false');
+        btn.focus();
+      }
+    }
+  });
+
+  document.addEventListener('click', e => {
+    const links = document.getElementById('navLinks');
+    const btn = document.querySelector('.hamburger');
+    if (links && links.style.display === 'flex' && !links.contains(e.target) && !btn.contains(e.target)) {
+      links.style.display = 'none';
+      btn.setAttribute('aria-expanded', 'false');
+    }
+  });
+</script>
+</body>
+</html>

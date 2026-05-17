@@ -1,0 +1,13 @@
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Editor
+*.bak
+*.swp
+*~
+.vscode/
+
+# Dependencies
+node_modules/
