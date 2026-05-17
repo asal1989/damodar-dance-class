@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "powershell",
+            "command": "if ((git status --porcelain) -ne $null) { git add -A; git commit -m 'auto: changes from Claude' | Out-Null; git push 2>&1 | Out-Null; Write-Output 'auto-committed & pushed' } else { Write-Output 'no changes to commit' }",
+            "async": true,
+            "timeout": 60,
+            "statusMessage": "Auto-commit & push to GitHub"
+          }
+        ]
+      }
+    ]
+  }
+}
