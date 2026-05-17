@@ -1121,17 +1121,25 @@
           <a class="btn ghost" href="https://www.google.com/maps/search/?api=1&amp;query=50%2C%2011th%20Main%20Rd%2C%20beside%20Ganesh%20cycle%20shop%2C%20Hosapalaya%2C%20Muneshwara%20Nagar%2C%20Bengaluru%2C%20Karnataka%20560068" target="_blank" rel="noopener">Open Map</a>
         </div>
       </div>
-      <form class="form-card reveal" onsubmit="event.preventDefault(); alert('Thanks! We will reach out shortly.');">
+      <form class="form-card reveal" id="bookingForm">
         <div class="eyebrow">Book Demo</div>
         <h2>Join Us Today</h2>
         <div class="form-grid">
-          <input type="text" placeholder="Name" aria-label="Name" required>
-          <input type="tel" placeholder="+91 78923 10080" aria-label="Phone" required>
-          <input type="email" placeholder="Email" aria-label="Email">
-          <select aria-label="Course"><option>Select Course</option><option>Hip-Hop</option><option>Contemporary &amp; Bollywood</option><option>Freestyle Choreography</option><option>Kids Groovezone</option><option>The Stage</option><option>Workshops</option></select>
-          <textarea placeholder="Message" aria-label="Message"></textarea>
+          <input type="text" name="name" placeholder="Name" aria-label="Name" required>
+          <input type="tel" name="phone" placeholder="+91 78923 10080" aria-label="Phone" required>
+          <input type="email" name="email" placeholder="Email" aria-label="Email">
+          <select name="course" aria-label="Course">
+            <option value="">Select Course</option>
+            <option>Hip-Hop</option>
+            <option>Contemporary &amp; Bollywood</option>
+            <option>Freestyle Choreography</option>
+            <option>Kids Groovezone</option>
+            <option>The Stage</option>
+            <option>Workshops</option>
+          </select>
+          <textarea name="message" placeholder="Anything you'd like us to know?" aria-label="Message"></textarea>
         </div>
-        <button class="btn" type="submit">Submit Enquiry</button>
+        <button class="btn" type="submit">Send Enquiry via WhatsApp</button>
       </form>
     </div>
   </section>
@@ -1274,6 +1282,35 @@
     window.addEventListener('scroll', () => {
       if (!ticking) { requestAnimationFrame(update); ticking = true; }
     }, { passive: true });
+  })();
+
+  // Booking form → opens WhatsApp with a pre-filled message
+  (function () {
+    const form = document.getElementById('bookingForm');
+    if (!form) return;
+    const PHONE = '917892310080';
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      const name = (data.get('name') || '').toString().trim();
+      const phone = (data.get('phone') || '').toString().trim();
+      const email = (data.get('email') || '').toString().trim();
+      const course = (data.get('course') || '').toString().trim();
+      const message = (data.get('message') || '').toString().trim();
+      const lines = [
+        'Hi Damodar House of Dance,',
+        '',
+        "I'd like to book a free demo class.",
+        '',
+        `Name: ${name}`,
+        `Phone: ${phone}`,
+      ];
+      if (email) lines.push(`Email: ${email}`);
+      if (course) lines.push(`Course: ${course}`);
+      if (message) { lines.push('', `Message: ${message}`); }
+      const url = `https://wa.me/${PHONE}?text=${encodeURIComponent(lines.join('\n'))}`;
+      window.open(url, '_blank', 'noopener');
+    });
   })();
 
   // Mouse parallax — hero rings react to cursor
