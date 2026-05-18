@@ -35,7 +35,7 @@
 <link rel="preconnect" href="https://images.unsplash.com">
 <link rel="dns-prefetch" href="https://wa.me">
 
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
 <!-- LocalBusiness Structured Data -->
 <script type="application/ld+json">
@@ -68,24 +68,25 @@
 
 <style>
   :root {
-    --ink: #1c1d22;
-    --ink-2: #25262c;
-    --panel: #2a2c33;
-    --panel-2: #34363e;
-    --paper: #f5f5f5;
-    --paper-2: #ffffff;
-    --muted: #9e9e9e;
-    --muted-2: #5a5a5a;
-    --gold: #c5a572;
-    --gold-bright: #e8c884;
-    --gold-deep: #8b7140;
-    --red: #c44432;
+    --ink: #0d0d12;
+    --ink-2: #16171f;
+    --panel: #1e1f28;
+    --panel-2: #272830;
+    --paper: #ffffff;
+    --paper-2: #f8f8f8;
+    --muted: #888888;
+    --muted-2: #555555;
+    --gold: #f5a623;
+    --gold-bright: #ffcc44;
+    --gold-deep: #c47d10;
+    --accent: #e8305a;
+    --red: #e8305a;
     --green: #1f9d5e;
-    --line: rgba(200,200,200,0.18);
-    --line-strong: rgba(197,165,114,0.32);
-    --dark-line: rgba(16,17,20,0.12);
-    --shadow-soft: 0 18px 60px rgba(0,0,0,0.42);
-    --shadow-card: 0 24px 80px rgba(0,0,0,0.55);
+    --line: rgba(255,255,255,0.10);
+    --line-strong: rgba(245,166,35,0.30);
+    --dark-line: rgba(0,0,0,0.10);
+    --shadow-soft: 0 18px 60px rgba(0,0,0,0.50);
+    --shadow-card: 0 24px 80px rgba(0,0,0,0.65);
     --gold-grad: linear-gradient(135deg, var(--gold-bright), var(--gold) 45%, var(--gold-deep));
   }
 
@@ -541,12 +542,12 @@
     margin-top: 30px;
     max-width: 620px;
     color: rgba(247,240,226,0.82);
-    font: italic clamp(20px, 2.4vw, 32px)/1.3 "Cormorant Garamond", "Playfair Display", serif;
+    font: italic clamp(20px, 2.4vw, 32px)/1.3 "Bebas Neue", Anton, sans-serif;
   }
   /* Hero tagline */
   .hero-tagline {
     margin-top: 16px;
-    font-family: "Cormorant Garamond", "Playfair Display", serif;
+    font-family: "Bebas Neue", Anton, sans-serif;
     font-size: clamp(15px, 1.5vw, 20px);
     font-style: italic;
     font-weight: 600;
@@ -1358,6 +1359,60 @@
     *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
     .reveal { opacity: 1; transform: none; }
   }
+
+  /* ===== COACHES SECTION ===== */
+  .coaches-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    margin-top: 48px;
+  }
+  .coach-card {
+    background: var(--panel);
+    border: 1px solid var(--line-strong);
+    border-radius: 20px;
+    padding: 36px 28px;
+    text-align: center;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+  .coach-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,0.5); border-color: var(--gold); }
+  .coach-avatar {
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    background: var(--gold-grad);
+    color: var(--ink);
+    font-family: Anton, sans-serif;
+    font-size: 38px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    box-shadow: 0 0 0 4px rgba(245,166,35,0.2);
+  }
+  .coach-card h3 { font-family: Anton, sans-serif; font-size: 22px; letter-spacing: 2px; text-transform: uppercase; color: var(--paper); margin-bottom: 6px; }
+  .coach-role { color: var(--gold); font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 14px; display: block; }
+  .coach-bio { color: var(--muted); font-size: 15px; line-height: 1.65; }
+  @media (max-width: 1000px) { .coaches-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px) { .coaches-grid { grid-template-columns: 1fr; } }
+
+  /* ===== SCHEDULE SECTION ===== */
+  .schedule-wrap {
+    overflow-x: auto;
+    margin-top: 40px;
+    border-radius: 16px;
+    border: 1px solid var(--dark-line);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  }
+  .schedule-table { width: 100%; border-collapse: collapse; min-width: 540px; }
+  .schedule-table thead tr { background: var(--ink); }
+  .schedule-table th { padding: 16px 22px; font-family: Anton, sans-serif; letter-spacing: 2.5px; font-size: 13px; text-align: left; color: var(--gold-bright); }
+  .schedule-table td { padding: 16px 22px; font-size: 15px; color: var(--ink); border-bottom: 1px solid var(--dark-line); font-weight: 500; }
+  .schedule-table tbody tr:last-child td { border-bottom: none; }
+  .schedule-table tbody tr:nth-child(odd) td { background: rgba(245,166,35,0.04); }
+  .schedule-table tbody tr:hover td { background: rgba(245,166,35,0.10); }
+  .schedule-note { text-align: center; color: var(--gold-deep); font-size: 13px; margin-top: 20px; letter-spacing: 0.5px; font-weight: 600; }
+
+  /* ===== MAP ===== */
+  .map-wrap { margin-top: 40px; border-radius: 18px; overflow: hidden; border: 1px solid var(--line-strong); box-shadow: var(--shadow-soft); }
+  .map-wrap iframe { display: block; }
 </style>
 </head>
 <body>
@@ -1370,6 +1425,8 @@
   </a>
   <nav class="nav" aria-label="Main navigation">
     <a href="#styles">Dance Styles</a>
+    <a href="#coaches">Coaches</a>
+    <a href="#schedule">Schedule</a>
     <a href="#pricing">Pricing</a>
     <a href="#contact">Contact</a>
   </nav>
@@ -1406,6 +1463,8 @@
 
 <div class="nav-overlay" id="navOverlay" aria-hidden="true">
   <a href="#styles">Dance Styles</a>
+  <a href="#coaches">Coaches</a>
+  <a href="#schedule">Schedule</a>
   <a href="#pricing">Pricing</a>
   <a href="#contact">Contact</a>
   <a class="btn" href="https://wa.me/917892310080?text=Hi%20Damodar%20House%20of%20Dance%2C%20I%27d%20like%20to%20book%20a%20free%20demo%20class.%20Please%20share%20available%20batches%2C%20timings%20and%20fees." target="_blank" rel="noopener">Book A Free Demo</a>
@@ -1507,6 +1566,56 @@
     </div>
   </section>
 
+
+  <!-- Coaches Section -->
+  <section id="coaches">
+    <div class="section-head reveal">
+      <div><div class="eyebrow">Meet The Team</div><h2 class="section-title">Our Coaches</h2></div>
+      <p class="section-copy">Passionate, certified instructors who've performed on stage and now live to train the next generation of dancers.</p>
+    </div>
+    <div class="coaches-grid">
+      <div class="coach-card tilt reveal">
+        <div class="coach-avatar">D</div>
+        <h3>Damodar</h3>
+        <span class="coach-role">Founder · Hip-Hop &amp; Freestyle</span>
+        <p class="coach-bio">Stage performer and choreographer with 10+ years of experience shaping dancers of all ages — from tiny feet to seasoned movers.</p>
+      </div>
+      <div class="coach-card tilt reveal">
+        <div class="coach-avatar">A</div>
+        <h3>Coach Asha</h3>
+        <span class="coach-role">Bollywood &amp; Folk</span>
+        <p class="coach-bio">Trained classical and Bollywood dancer bringing energy, grace, and authentic folk traditions to every batch she leads.</p>
+      </div>
+      <div class="coach-card tilt reveal">
+        <div class="coach-avatar">R</div>
+        <h3>Coach Rahul</h3>
+        <span class="coach-role">Contemporary &amp; Zumba</span>
+        <p class="coach-bio">Fitness-first instructor blending contemporary movement with high-energy Zumba — perfect for adults and teens alike.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Schedule Section -->
+  <section id="schedule" class="cream">
+    <div class="section-head reveal">
+      <div><div class="eyebrow">Batch Timings</div><h2 class="section-title">Class Schedule</h2></div>
+      <p class="section-copy">Six days a week, morning and evening slots — find the batch that fits your routine.</p>
+    </div>
+    <div class="schedule-wrap reveal">
+      <table class="schedule-table">
+        <thead>
+          <tr><th>Batch</th><th>Mon – Fri</th><th>Sat – Sun</th><th>Age Group</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Kids Batch</td><td>4:00 PM – 5:00 PM</td><td>9:00 AM – 10:00 AM</td><td>4 – 6 yrs</td></tr>
+          <tr><td>Mid Kids Batch</td><td>5:00 PM – 6:00 PM</td><td>10:00 AM – 11:00 AM</td><td>7 – 15 yrs</td></tr>
+          <tr><td>Adults Batch</td><td>6:00 AM – 7:00 AM</td><td>7:00 AM – 8:00 AM</td><td>16+ yrs</td></tr>
+          <tr><td>Zumba</td><td>7:00 PM – 8:00 PM</td><td>11:00 AM – 12:00 PM</td><td>All Ages</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="schedule-note reveal">★ Timings may vary. <a href="https://wa.me/917892310080?text=Hi%20Damodar%20House%20of%20Dance%2C%20please%20share%20the%20batch%20timings." target="_blank" rel="noopener" style="color:var(--gold-deep);text-decoration:underline;">WhatsApp us</a> to confirm your batch slot.</p>
+  </section>
 
   <section id="pricing">
     <div class="section-head reveal">
@@ -1626,6 +1735,16 @@
         </div>
         <button class="btn" type="submit">Send Enquiry via WhatsApp</button>
       </form>
+    </div>
+
+    <!-- Google Map -->
+    <div class="map-wrap reveal">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.592535211232!2d77.64142!3d12.9274!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae13e8a5000001%3A0x0!2s50%2C%2011th%20Main%20Rd%2C%20Hosapalaya%2C%20Muneshwara%20Nagar%2C%20Bengaluru%2C%20Karnataka%20560068!5e0!3m2!1sen!2sin!4v1716000000000!5m2!1sen!2sin"
+        width="100%" height="340" style="border:0;" allowfullscreen loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        title="Damodar House of Dance — Hosapalaya, Muneshwara Nagar, Bengaluru">
+      </iframe>
     </div>
   </section>
 
