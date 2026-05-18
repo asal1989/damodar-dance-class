@@ -612,16 +612,38 @@
   }
 
   /* Dance styles video */
-  .styles-video-wrap {
+  /* Video carousel */
+  .video-carousel-wrap {
+    position: relative;
     margin-top: 40px;
+  }
+  .video-carousel {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 10px 20px 20px;
+    cursor: grab;
+  }
+  .video-carousel::-webkit-scrollbar { display: none; }
+  .video-carousel.dragging { cursor: grabbing; }
+  .styles-video-wrap {
     position: relative;
     border-radius: 18px;
     overflow: hidden;
     border: 1px solid var(--line-strong);
-    box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.55);
     width: 160px;
     aspect-ratio: 9/16;
     flex-shrink: 0;
+    scroll-snap-align: start;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .styles-video-wrap:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.7);
   }
   .styles-video-wrap video {
     display: block;
@@ -630,6 +652,30 @@
     object-fit: cover;
     border-radius: 18px;
   }
+  /* Carousel arrow buttons */
+  .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: rgba(28,29,34,0.85);
+    border: 1px solid var(--line-strong);
+    color: var(--gold-bright);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    backdrop-filter: blur(8px);
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .carousel-btn:hover { background: var(--gold); color: var(--ink); transform: translateY(-50%) scale(1.1); }
+  .carousel-btn.prev { left: 0; }
+  .carousel-btn.next { right: 0; }
+  @media (max-width: 640px) { .carousel-btn { display: none; } }
   .styles-video-label {
     position: absolute;
     top: 16px;
@@ -1446,14 +1492,18 @@
     </div>
 
     <!-- Dance videos row -->
-    <div style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:40px;">
-      <div class="styles-video-wrap reveal" style="margin-top:0;"><video src="asa.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
-      <div class="styles-video-wrap reveal" style="margin-top:0;"><video src="IMG_1418.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
-      <div class="styles-video-wrap reveal" style="margin-top:0;"><video src="IMG_1420.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
-      <div class="styles-video-wrap reveal" style="margin-top:0;"><video src="IMG_1421.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
-      <div class="styles-video-wrap reveal" style="margin-top:0;"><video src="IMG_1422.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
-      <div class="styles-video-wrap reveal" style="margin-top:0;"><video src="IMG_1424.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
-      <div class="styles-video-wrap reveal" style="margin-top:0;"><video src="IMG_1425.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
+    <div class="video-carousel-wrap">
+      <button class="carousel-btn prev" id="carouselPrev" aria-label="Scroll left">&#8592;</button>
+      <div class="video-carousel" id="videoCarousel">
+        <div class="styles-video-wrap"><video src="asa.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
+        <div class="styles-video-wrap"><video src="IMG_1418.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
+        <div class="styles-video-wrap"><video src="IMG_1420.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
+        <div class="styles-video-wrap"><video src="IMG_1421.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
+        <div class="styles-video-wrap"><video src="IMG_1422.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
+        <div class="styles-video-wrap"><video src="IMG_1424.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
+        <div class="styles-video-wrap"><video src="IMG_1425.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
+      </div>
+      <button class="carousel-btn next" id="carouselNext" aria-label="Scroll right">&#8594;</button>
     </div>
   </section>
 
@@ -1669,6 +1719,23 @@
     const onScroll = () => topbar.classList.toggle('scrolled', window.scrollY > 24);
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
+  })();
+
+  // Video carousel — arrow buttons + drag to scroll
+  (function () {
+    const carousel = document.getElementById('videoCarousel');
+    const prevBtn  = document.getElementById('carouselPrev');
+    const nextBtn  = document.getElementById('carouselNext');
+    if (!carousel) return;
+    const scrollBy = 180;
+    prevBtn.addEventListener('click', () => carousel.scrollBy({ left: -scrollBy, behavior: 'smooth' }));
+    nextBtn.addEventListener('click', () => carousel.scrollBy({ left:  scrollBy, behavior: 'smooth' }));
+    // Drag to scroll
+    let isDown = false, startX, scrollLeft;
+    carousel.addEventListener('mousedown',  (e) => { isDown = true; carousel.classList.add('dragging'); startX = e.pageX - carousel.offsetLeft; scrollLeft = carousel.scrollLeft; });
+    carousel.addEventListener('mouseleave', ()  => { isDown = false; carousel.classList.remove('dragging'); });
+    carousel.addEventListener('mouseup',    ()  => { isDown = false; carousel.classList.remove('dragging'); });
+    carousel.addEventListener('mousemove',  (e) => { if (!isDown) return; e.preventDefault(); const x = e.pageX - carousel.offsetLeft; carousel.scrollLeft = scrollLeft - (x - startX); });
   })();
 
   // Scroll-reveal via IntersectionObserver
