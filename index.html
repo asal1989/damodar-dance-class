@@ -611,6 +611,40 @@
     color: var(--paper);
   }
 
+  /* Dance styles video */
+  .styles-video-wrap {
+    margin-top: 40px;
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid var(--line-strong);
+    box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .styles-video-wrap video {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 18px;
+  }
+  .styles-video-label {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(8px);
+    color: var(--gold-bright);
+    font-family: Anton, sans-serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: 1px solid rgba(197,165,114,0.3);
+  }
+
   .actions { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 38px; }
 
   .hero-panel {
@@ -1408,6 +1442,19 @@
         <div class="style-icon">🕺</div>
         <div class="style-name">Zumba</div>
       </div>
+    </div>
+
+    <!-- Dance video -->
+    <div class="styles-video-wrap reveal">
+      <div class="styles-video-label">Freestyle · In Session</div>
+      <video
+        src="freestyle.MP4"
+        controls
+        playsinline
+        preload="metadata"
+        poster=""
+        style="background:#000;"
+      ></video>
     </div>
   </section>
 
