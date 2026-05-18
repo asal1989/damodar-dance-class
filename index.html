@@ -340,8 +340,20 @@
   }
   .topbar.scrolled { padding: 10px clamp(20px, 4vw, 56px); background: rgba(28,29,34,0.92); }
   .brand { display: flex; align-items: center; gap: 16px; text-decoration: none; }
-  .brand img { width: 76px; height: 76px; border-radius: 16px; object-fit: contain; border: 1px solid var(--line-strong); background: var(--paper); padding: 4px; transition: transform 0.35s ease; }
-  .brand:hover img { transform: rotate(-4deg) scale(1.04); }
+  .brand img {
+    height: 64px;
+    width: auto;
+    max-width: 200px;
+    object-fit: contain;
+    border: none;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    transition: transform 0.35s ease, filter 0.35s ease;
+    filter: drop-shadow(0 4px 12px rgba(197,165,114,0.18));
+  }
+  .brand:hover img { transform: scale(1.06); filter: drop-shadow(0 6px 18px rgba(232,200,132,0.32)); }
+  .brand span { display: none; }
   .brand span {
     font-family: Anton, sans-serif;
     text-transform: uppercase;
@@ -1111,8 +1123,7 @@
     .glow-blob { width: 280px; height: 280px; }
   }
   @media (max-width: 640px) {
-    .brand img { width: 52px; height: 52px; border-radius: 10px; padding: 3px; }
-    .brand span { font-size: 14px; letter-spacing: 1.2px; max-width: 140px; line-height: 1.1; }
+    .brand img { height: 44px; max-width: 150px; }
     .topbar { padding: 10px 16px; gap: 12px; }
     .topbar .btn { display: none; }
     .menu-toggle { width: 42px; height: 42px; }
@@ -1190,7 +1201,7 @@
     .offer-banner strong { font-size: 20px; }
   }
   @media (max-width: 380px) {
-    .brand span { display: none; }
+    .brand img { height: 38px; max-width: 120px; }
     h1 { font-size: 44px; }
     .section-title { font-size: 34px; }
     .booking-card h2 { font-size: 26px; }
