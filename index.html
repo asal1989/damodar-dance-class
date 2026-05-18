@@ -931,61 +931,80 @@
   .gallery-item.square { grid-column: span 2; }
   .gallery-item.small { grid-column: span 2; }
 
-  /* PRICING */
-  .pricing-wrap {
-    background: var(--paper);
-    color: var(--ink);
-    padding: clamp(28px, 5vw, 56px);
-    position: relative;
-    overflow: hidden;
-    box-shadow: var(--shadow-card);
+  /* PRICING — card-grid layout (matches Classes section) */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+    perspective: 1400px;
   }
-  .pricing-wrap::before {
-    content: '';
+  .price-card { min-height: 380px; padding: 30px; display: flex; flex-direction: column; gap: 18px; position: relative; overflow: hidden; border: 1px solid var(--line); background: var(--panel); transition: transform 0.35s cubic-bezier(.2,.7,.2,1), border-color 0.35s ease, box-shadow 0.35s ease; }
+  .price-card::before {
+    content: attr(data-no);
     position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 4px;
-    background: var(--gold-grad);
-  }
-  .pricing-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    min-width: 720px;
-  }
-  .pricing-table thead th {
+    right: -10px;
+    top: -28px;
     font-family: Anton, sans-serif;
-    text-align: left;
-    padding: 18px 20px;
-    font-size: 16px;
-    letter-spacing: 1.8px;
+    font-size: 128px;
+    color: rgba(197,165,114,0.06);
+    line-height: 1;
+    transition: color 0.4s ease;
+  }
+  .price-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--line-strong);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(197,165,114,0.18) inset;
+  }
+  .price-card:hover::before { color: rgba(197,165,114,0.18); }
+  .price-card h3 {
+    font-family: Anton, sans-serif;
+    font-size: 30px;
+    letter-spacing: 1px;
     text-transform: uppercase;
-    color: var(--gold-deep);
-    border-bottom: 2px solid var(--gold);
-    background: rgba(197,165,114,0.08);
+    background: linear-gradient(180deg, var(--paper) 60%, var(--gold-bright));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
-  .pricing-table thead th:first-child { color: var(--ink); }
-  .pricing-table tbody td {
-    padding: 22px 20px;
-    border-bottom: 1px solid var(--dark-line);
-    font-size: 16px;
+  .price-card .desc { color: var(--muted); font-size: 14px; line-height: 1.65; }
+  .price-tiers {
+    margin-top: auto;
+    display: grid;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
   }
-  .pricing-table tbody td:first-child {
-    font-family: Anton, sans-serif;
-    letter-spacing: 1.4px;
+  .price-tier {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 14px 16px;
+    background: rgba(20,21,26,0.6);
+  }
+  .price-tier .label {
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 1.6px;
     text-transform: uppercase;
-    font-size: 17px;
-    color: var(--ink);
+    color: var(--muted);
   }
-  .pricing-table tbody td:not(:first-child) {
+  .price-tier .amount {
     font-family: Anton, sans-serif;
-    color: var(--gold-deep);
-    font-size: 22px;
+    font-size: 24px;
     letter-spacing: 0.5px;
+    background: var(--gold-grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
-  .pricing-table tbody tr:hover td { background: rgba(197,165,114,0.06); }
-  .pricing-table tbody tr:last-child td { border-bottom: none; }
-  .pricing-scroll { overflow-x: auto; }
+  .price-tier.popular { background: linear-gradient(90deg, rgba(197,165,114,0.14), rgba(197,165,114,0.04)); }
+  .price-tier.popular .label::after {
+    content: ' ★ Best';
+    color: var(--gold-bright);
+    -webkit-text-fill-color: var(--gold-bright);
+    letter-spacing: 1px;
+  }
+  .price-card .card-cta { margin-top: 4px; }
 
   .why-grid {
     display: grid;
@@ -1156,10 +1175,13 @@
       grid-column: span 1; grid-row: span 1;
     }
     .gallery-item .caption { font-size: 13px; opacity: 1; transform: none; bottom: 12px; left: 12px; right: 12px; }
-    /* Pricing */
-    .pricing-wrap { padding: 24px 18px; }
-    .pricing-table tbody td:not(:first-child) { font-size: 18px; }
-    .pricing-table thead th, .pricing-table tbody td { padding: 14px 12px; font-size: 14px; }
+    /* Pricing — stack to single column on phones */
+    .pricing-grid { grid-template-columns: 1fr; gap: 14px; }
+    .price-card { min-height: auto; padding: 24px; }
+    .price-card h3 { font-size: 26px; }
+    .price-tier { padding: 12px 14px; }
+    .price-tier .amount { font-size: 21px; }
+    .price-tier .label { font-size: 10px; letter-spacing: 1.4px; }
     .why-grid { grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 28px; }
     .why-card { padding: 22px 16px; }
     .why-card h4 { font-size: 17px; }
@@ -1388,30 +1410,59 @@
       </div>
       <p class="section-copy">Transparent pricing across all batches. Lock in a package and save — longer plans give better value per month. No registration fee on package plans.</p>
     </div>
-    <div class="pricing-wrap reveal">
-      <div class="pricing-scroll">
-        <table class="pricing-table">
-          <thead>
-            <tr>
-              <th>Dance Batch</th>
-              <th>Monthly</th>
-              <th>3 Months</th>
-              <th>6 Months</th>
-              <th>12 Months</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>Kids Batch</td><td>₹1,500</td><td>₹4,000</td><td>₹8,000</td><td>₹16,000</td></tr>
-            <tr><td>Mid Kids Batch</td><td>₹1,500</td><td>₹4,000</td><td>₹8,000</td><td>₹16,000</td></tr>
-            <tr><td>Adults Batch</td><td>₹1,800</td><td>₹4,900</td><td>₹9,800</td><td>₹19,600</td></tr>
-            <tr><td>Zumba</td><td>₹1,500</td><td>₹4,000</td><td>₹8,000</td><td>₹16,000</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="offer-banner">
-        <strong>★ Offer</strong>
-        <span>No registration fee for package plans · Note: no amount will be refundable once paid</span>
-      </div>
+    <div class="pricing-grid">
+      <article class="price-card reveal" data-no="01">
+        <h3>Kids Batch</h3>
+        <p class="desc">First-time movers, foundational rhythm, coordination, and confidence building for young dancers.</p>
+        <div class="price-tiers">
+          <div class="price-tier"><span class="label">Monthly</span><span class="amount">₹1,500</span></div>
+          <div class="price-tier"><span class="label">3 Months</span><span class="amount">₹4,000</span></div>
+          <div class="price-tier"><span class="label">6 Months</span><span class="amount">₹8,000</span></div>
+          <div class="price-tier popular"><span class="label">12 Months</span><span class="amount">₹16,000</span></div>
+        </div>
+        <a class="card-cta" href="https://wa.me/917892310080?text=Hi%20Damodar%20House%20of%20Dance%2C%20I%27d%20like%20to%20enrol%20in%20the%20Kids%20Batch.%20Please%20share%20available%20timings." target="_blank" rel="noopener">Enrol via WhatsApp →</a>
+      </article>
+
+      <article class="price-card reveal" data-no="02">
+        <h3>Mid Kids Batch</h3>
+        <p class="desc">Stepping-up batch for kids ready for choreography, formations, and stage-ready routines.</p>
+        <div class="price-tiers">
+          <div class="price-tier"><span class="label">Monthly</span><span class="amount">₹1,500</span></div>
+          <div class="price-tier"><span class="label">3 Months</span><span class="amount">₹4,000</span></div>
+          <div class="price-tier"><span class="label">6 Months</span><span class="amount">₹8,000</span></div>
+          <div class="price-tier popular"><span class="label">12 Months</span><span class="amount">₹16,000</span></div>
+        </div>
+        <a class="card-cta" href="https://wa.me/917892310080?text=Hi%20Damodar%20House%20of%20Dance%2C%20I%27d%20like%20to%20enrol%20in%20the%20Mid%20Kids%20Batch.%20Please%20share%20available%20timings." target="_blank" rel="noopener">Enrol via WhatsApp →</a>
+      </article>
+
+      <article class="price-card reveal" data-no="03">
+        <h3>Adults Batch</h3>
+        <p class="desc">Hip-hop, contemporary, Bollywood and freestyle for adults — fitness, expression, and performance training.</p>
+        <div class="price-tiers">
+          <div class="price-tier"><span class="label">Monthly</span><span class="amount">₹1,800</span></div>
+          <div class="price-tier"><span class="label">3 Months</span><span class="amount">₹4,900</span></div>
+          <div class="price-tier"><span class="label">6 Months</span><span class="amount">₹9,800</span></div>
+          <div class="price-tier popular"><span class="label">12 Months</span><span class="amount">₹19,600</span></div>
+        </div>
+        <a class="card-cta" href="https://wa.me/917892310080?text=Hi%20Damodar%20House%20of%20Dance%2C%20I%27d%20like%20to%20enrol%20in%20the%20Adults%20Batch.%20Please%20share%20available%20timings." target="_blank" rel="noopener">Enrol via WhatsApp →</a>
+      </article>
+
+      <article class="price-card reveal" data-no="04">
+        <h3>Zumba</h3>
+        <p class="desc">High-energy dance-fitness for stamina, mood, and full-body movement — open to all levels.</p>
+        <div class="price-tiers">
+          <div class="price-tier"><span class="label">Monthly</span><span class="amount">₹1,500</span></div>
+          <div class="price-tier"><span class="label">3 Months</span><span class="amount">₹4,000</span></div>
+          <div class="price-tier"><span class="label">6 Months</span><span class="amount">₹8,000</span></div>
+          <div class="price-tier popular"><span class="label">12 Months</span><span class="amount">₹16,000</span></div>
+        </div>
+        <a class="card-cta" href="https://wa.me/917892310080?text=Hi%20Damodar%20House%20of%20Dance%2C%20I%27d%20like%20to%20enrol%20in%20Zumba.%20Please%20share%20available%20timings." target="_blank" rel="noopener">Enrol via WhatsApp →</a>
+      </article>
+    </div>
+
+    <div class="offer-banner reveal">
+      <strong>★ Offer</strong>
+      <span>No registration fee for package plans · Note: no amount will be refundable once paid</span>
     </div>
     <div class="why-grid">
       <div class="why-card reveal">
@@ -1578,7 +1629,7 @@
     const noHover = window.matchMedia('(hover: none)').matches;
     const coarse = window.matchMedia('(pointer: coarse)').matches;
     if (reduced || noHover || coarse) return;
-    const targets = document.querySelectorAll('.card, .coach-card, .booking-card, .review-card');
+    const targets = document.querySelectorAll('.card, .coach-card, .booking-card, .review-card, .price-card');
     targets.forEach((el) => {
       el.classList.add('tilt');
       let rect = null;
