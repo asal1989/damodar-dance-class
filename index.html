@@ -349,11 +349,11 @@
     background: transparent;
     padding: 0;
     border-radius: 0;
-    mix-blend-mode: screen;
+    /* Make pure-black pixels in the logo PNG transparent (PNG ships with a black bg) */
+    filter: url(#blackToTransparent) drop-shadow(0 4px 18px rgba(180,120,200,0.32));
     transition: transform 0.35s ease, filter 0.35s ease;
-    filter: drop-shadow(0 4px 18px rgba(180,120,200,0.28));
   }
-  .brand:hover img { transform: scale(1.04); filter: drop-shadow(0 6px 24px rgba(232,140,220,0.45)); }
+  .brand:hover img { transform: scale(1.04); filter: url(#blackToTransparent) drop-shadow(0 6px 24px rgba(232,140,220,0.5)); }
   .brand span { display: none; }
   .brand span {
     font-family: Anton, sans-serif;
@@ -1255,6 +1255,18 @@
 </style>
 </head>
 <body>
+<!-- SVG filter: alpha = R+G+B so pure-black pixels in the logo become transparent. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="blackToTransparent">
+      <feColorMatrix type="matrix" values="
+        1 0 0 0 0
+        0 1 0 0 0
+        0 0 1 0 0
+        1 1 1 0 0" />
+    </filter>
+  </defs>
+</svg>
 <a class="whatsapp-float" href="https://wa.me/917892310080?text=Hi%20Damodar%20House%20of%20Dance%2C%20I%27d%20like%20to%20book%20a%20free%20demo%20class.%20Please%20share%20available%20batches%2C%20timings%20and%20fees." target="_blank" rel="noopener" aria-label="Chat on WhatsApp">WA</a>
 
 <header class="topbar" id="topbar">
