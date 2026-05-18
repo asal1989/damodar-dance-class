@@ -866,6 +866,167 @@
   .form-card .btn { width: 100%; margin-top: 16px; background: var(--ink); border-color: var(--ink); color: var(--paper); }
   .form-card .btn:hover { background: var(--gold-grad); color: var(--ink); border-color: var(--gold); }
 
+  /* GALLERY */
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-auto-rows: 200px;
+    gap: 14px;
+  }
+  .gallery-item {
+    position: relative;
+    overflow: hidden;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(.2,.7,.2,1), border-color 0.35s ease, box-shadow 0.35s ease;
+  }
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s cubic-bezier(.2,.7,.2,1), filter 0.4s ease;
+    filter: saturate(0.92) brightness(0.92);
+  }
+  .gallery-item::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 50%, rgba(20,21,26,0.78));
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+  .gallery-item .caption {
+    position: absolute;
+    left: 18px; right: 18px;
+    bottom: 16px;
+    z-index: 2;
+    color: var(--paper);
+    font-family: Anton, sans-serif;
+    font-size: 17px;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    transform: translateY(8px);
+    opacity: 0;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+  }
+  .gallery-item:hover { transform: translateY(-4px); border-color: var(--line-strong); box-shadow: 0 24px 50px rgba(0,0,0,0.55); }
+  .gallery-item:hover img { transform: scale(1.08); filter: saturate(1.05) brightness(1); }
+  .gallery-item:hover .caption { transform: translateY(0); opacity: 1; }
+  .gallery-item.wide { grid-column: span 3; grid-row: span 2; }
+  .gallery-item.tall { grid-column: span 2; grid-row: span 2; }
+  .gallery-item.square { grid-column: span 2; }
+  .gallery-item.small { grid-column: span 2; }
+
+  /* PRICING */
+  .pricing-wrap {
+    background: var(--paper);
+    color: var(--ink);
+    padding: clamp(28px, 5vw, 56px);
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+  }
+  .pricing-wrap::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--gold-grad);
+  }
+  .pricing-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 720px;
+  }
+  .pricing-table thead th {
+    font-family: Anton, sans-serif;
+    text-align: left;
+    padding: 18px 20px;
+    font-size: 16px;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    border-bottom: 2px solid var(--gold);
+    background: rgba(197,165,114,0.08);
+  }
+  .pricing-table thead th:first-child { color: var(--ink); }
+  .pricing-table tbody td {
+    padding: 22px 20px;
+    border-bottom: 1px solid var(--dark-line);
+    font-size: 16px;
+  }
+  .pricing-table tbody td:first-child {
+    font-family: Anton, sans-serif;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    font-size: 17px;
+    color: var(--ink);
+  }
+  .pricing-table tbody td:not(:first-child) {
+    font-family: Anton, sans-serif;
+    color: var(--gold-deep);
+    font-size: 22px;
+    letter-spacing: 0.5px;
+  }
+  .pricing-table tbody tr:hover td { background: rgba(197,165,114,0.06); }
+  .pricing-table tbody tr:last-child td { border-bottom: none; }
+  .pricing-scroll { overflow-x: auto; }
+
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-top: 40px;
+  }
+  .why-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 28px 24px;
+    text-align: center;
+    transition: transform 0.35s ease, border-color 0.35s ease;
+  }
+  .why-card:hover { transform: translateY(-6px); border-color: var(--line-strong); }
+  .why-icon {
+    width: 56px; height: 56px;
+    margin: 0 auto 16px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(197,165,114,0.18), rgba(196,68,50,0.12));
+    border: 1px solid var(--line-strong);
+    font-size: 24px;
+  }
+  .why-card h4 {
+    font-family: Anton, sans-serif;
+    font-size: 20px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    color: var(--paper);
+  }
+  .why-card p { font-size: 14px; color: var(--muted); line-height: 1.55; }
+
+  .offer-banner {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 20px 24px;
+    margin-top: 36px;
+    background: var(--gold-grad);
+    color: var(--ink);
+    border-radius: 4px;
+    box-shadow: 0 18px 40px rgba(197,165,114,0.28);
+  }
+  .offer-banner strong {
+    font-family: Anton, sans-serif;
+    font-size: 24px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .offer-banner span { font-size: 14px; font-weight: 700; line-height: 1.4; }
+
   /* FAQ */
   .faq-list { display: grid; gap: 12px; }
   .faq-item { padding: 26px 28px; transition: transform 0.3s ease, border-color 0.3s ease; }
@@ -976,6 +1137,21 @@
     .glow-blob.b1 { width: 240px; height: 240px; }
     .glow-blob.b2 { display: none; }
     .particle { display: none; }
+    /* Gallery: switch to 2 columns, equalize sizes */
+    .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 160px; gap: 10px; }
+    .gallery-item.wide, .gallery-item.tall, .gallery-item.square, .gallery-item.small {
+      grid-column: span 1; grid-row: span 1;
+    }
+    .gallery-item .caption { font-size: 13px; opacity: 1; transform: none; bottom: 12px; left: 12px; right: 12px; }
+    /* Pricing */
+    .pricing-wrap { padding: 24px 18px; }
+    .pricing-table tbody td:not(:first-child) { font-size: 18px; }
+    .pricing-table thead th, .pricing-table tbody td { padding: 14px 12px; font-size: 14px; }
+    .why-grid { grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 28px; }
+    .why-card { padding: 22px 16px; }
+    .why-card h4 { font-size: 17px; }
+    .offer-banner { flex-direction: column; align-items: flex-start; gap: 8px; padding: 18px; margin-top: 24px; }
+    .offer-banner strong { font-size: 20px; }
   }
   @media (max-width: 380px) {
     .brand span { display: none; }
@@ -1041,8 +1217,9 @@
   <nav class="nav" aria-label="Main navigation">
     <a href="#space">Space</a>
     <a href="#classes">Classes</a>
+    <a href="#gallery">Gallery</a>
     <a href="#coaches">Coaches</a>
-    <a href="#schedule">Schedule</a>
+    <a href="#pricing">Pricing</a>
     <a href="#contact">Contact</a>
   </nav>
   <a class="btn" href="https://wa.me/917892310080?text=Hi%20Damodar%20House%20of%20Dance%2C%20I%27d%20like%20to%20book%20a%20free%20demo%20class.%20Please%20share%20available%20batches%2C%20timings%20and%20fees." target="_blank" rel="noopener">Book Demo</a>
@@ -1054,7 +1231,9 @@
 <div class="nav-overlay" id="navOverlay" aria-hidden="true">
   <a href="#space">Space</a>
   <a href="#classes">Classes</a>
+  <a href="#gallery">Gallery</a>
   <a href="#coaches">Coaches</a>
+  <a href="#pricing">Pricing</a>
   <a href="#schedule">Schedule</a>
   <a href="#contact">Contact</a>
   <a class="btn" href="https://wa.me/917892310080?text=Hi%20Damodar%20House%20of%20Dance%2C%20I%27d%20like%20to%20book%20a%20free%20demo%20class.%20Please%20share%20available%20batches%2C%20timings%20and%20fees." target="_blank" rel="noopener">Book A Free Demo</a>
@@ -1148,6 +1327,100 @@
       <article class="coach-card reveal"><div class="coach-photo" role="img" aria-label="Arjun Damodar"></div><div class="coach-body"><h3>Arjun Damodar</h3><div class="coach-role">Founder &amp; Head Coach - Hip-Hop</div><p class="section-copy">Street dance experience, breaking, popping, locking, freestyle, and battle preparation.</p></div></article>
       <article class="coach-card reveal"><div class="coach-photo" role="img" aria-label="Priya Menon"></div><div class="coach-body"><h3>Priya Menon</h3><div class="coach-role">Senior Instructor - Contemporary</div><p class="section-copy">Somatic technique, floorwork, improvisation, fusion, and expressive movement vocabulary.</p></div></article>
       <article class="coach-card reveal"><div class="coach-photo" role="img" aria-label="Kiran Raj"></div><div class="coach-body"><h3>Kiran Raj</h3><div class="coach-role">Youth Coach - Groovezone</div><p class="section-copy">Kids batches with games, rhythm challenges, confidence building, and freestyle circles.</p></div></article>
+    </div>
+  </section>
+
+  <section id="gallery">
+    <div class="section-head reveal">
+      <div><div class="eyebrow">Studio Moments</div><h2 class="section-title">Gallery</h2></div>
+      <p class="section-copy">A glimpse into our classes, rehearsals, workshops, and showcases — where tiny feet create miracles and seasoned dancers sharpen their craft.</p>
+    </div>
+    <div class="gallery-grid reveal">
+      <div class="gallery-item wide">
+        <img src="https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&w=1400&q=80" alt="Hip-hop class in session" loading="lazy">
+        <div class="caption">Hip-Hop · In Session</div>
+      </div>
+      <div class="gallery-item tall">
+        <img src="https://images.unsplash.com/photo-1535525153412-5a42439a210d?auto=format&fit=crop&w=900&q=80" alt="Contemporary dancer mid-pose" loading="lazy">
+        <div class="caption">Contemporary</div>
+      </div>
+      <div class="gallery-item small">
+        <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80" alt="Bollywood choreography" loading="lazy">
+        <div class="caption">Bollywood</div>
+      </div>
+      <div class="gallery-item small">
+        <img src="https://images.unsplash.com/photo-1524594152303-9fd13543fe6e?auto=format&fit=crop&w=900&q=80" alt="Kids dance class" loading="lazy">
+        <div class="caption">Kids Batch</div>
+      </div>
+      <div class="gallery-item square">
+        <img src="https://images.unsplash.com/photo-1516731415730-0c607149933a?auto=format&fit=crop&w=1000&q=80" alt="Freestyle session" loading="lazy">
+        <div class="caption">Freestyle</div>
+      </div>
+      <div class="gallery-item square">
+        <img src="https://images.unsplash.com/photo-1508807526345-15e9b5f4eaff?auto=format&fit=crop&w=1000&q=80" alt="Workshop & masterclass" loading="lazy">
+        <div class="caption">Workshops</div>
+      </div>
+      <div class="gallery-item wide">
+        <img src="https://images.unsplash.com/photo-1518609571773-39b7d303a87b?auto=format&fit=crop&w=1400&q=80" alt="Performance showcase" loading="lazy">
+        <div class="caption">Stage Showcase</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <div class="section-head reveal">
+      <div>
+        <div class="eyebrow">Fees Structure</div>
+        <h2 class="section-title">Pricing</h2>
+      </div>
+      <p class="section-copy">Transparent pricing across all batches. Lock in a package and save — longer plans give better value per month. No registration fee on package plans.</p>
+    </div>
+    <div class="pricing-wrap reveal">
+      <div class="pricing-scroll">
+        <table class="pricing-table">
+          <thead>
+            <tr>
+              <th>Dance Batch</th>
+              <th>Monthly</th>
+              <th>3 Months</th>
+              <th>6 Months</th>
+              <th>12 Months</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Kids Batch</td><td>₹1,500</td><td>₹4,000</td><td>₹8,000</td><td>₹16,000</td></tr>
+            <tr><td>Mid Kids Batch</td><td>₹1,500</td><td>₹4,000</td><td>₹8,000</td><td>₹16,000</td></tr>
+            <tr><td>Adults Batch</td><td>₹1,800</td><td>₹4,900</td><td>₹9,800</td><td>₹19,600</td></tr>
+            <tr><td>Zumba</td><td>₹1,500</td><td>₹4,000</td><td>₹8,000</td><td>₹16,000</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="offer-banner">
+        <strong>★ Offer</strong>
+        <span>No registration fee for package plans · Note: no amount will be refundable once paid</span>
+      </div>
+    </div>
+    <div class="why-grid">
+      <div class="why-card reveal">
+        <div class="why-icon">★</div>
+        <h4>Certified Instructors</h4>
+        <p>Experienced coaches with stage and studio backgrounds.</p>
+      </div>
+      <div class="why-card reveal">
+        <div class="why-icon">◉</div>
+        <h4>Personalized Attention</h4>
+        <p>Small batches so every student is seen and guided.</p>
+      </div>
+      <div class="why-card reveal">
+        <div class="why-icon">▲</div>
+        <h4>Stage Opportunities</h4>
+        <p>Showcase, competition, and event performances throughout the year.</p>
+      </div>
+      <div class="why-card reveal">
+        <div class="why-icon">✦</div>
+        <h4>Safe &amp; Friendly</h4>
+        <p>A welcoming studio where families and dancers feel at home.</p>
+      </div>
     </div>
   </section>
 
