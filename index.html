@@ -657,73 +657,96 @@
     margin-bottom: 0;
   }
   @media (max-width: 1100px) { .styles-grid { grid-template-columns: repeat(3, 1fr); } }
-  @media (max-width: 640px)  { .styles-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; } }
+  @media (max-width: 640px)  { .styles-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } }
 
+  /* Photo cards */
   .style-item {
     position: relative;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 0;
-    padding: 32px 16px 28px;
-    border: 1px solid rgba(255,255,255,0.07);
+    justify-content: flex-end;
+    height: 340px;
     border-radius: 20px;
-    background: var(--ink-2);
     overflow: hidden;
     cursor: default;
-    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94),
+                box-shadow 0.4s ease, border-color 0.4s ease;
   }
+  @media (max-width: 640px) { .style-item { height: 220px; } }
+
+  /* Photo background via CSS custom property */
+  .style-item-photo {
+    position: absolute;
+    inset: 0;
+    background-image: var(--photo);
+    background-size: cover;
+    background-position: center top;
+    transform: scale(1);
+    transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+
+  /* Gradient overlay — dark at bottom for text legibility */
   .style-item::before {
     content: '';
     position: absolute;
     inset: 0;
-    border-radius: 20px;
-    opacity: 0;
-    transition: opacity 0.35s ease;
+    background: linear-gradient(
+      to top,
+      rgba(0,0,0,0.92) 0%,
+      rgba(0,0,0,0.55) 40%,
+      rgba(0,0,0,0.15) 75%,
+      transparent 100%
+    );
+    z-index: 1;
+    transition: background 0.4s ease;
   }
-  .style-item:nth-child(1)::before { background: radial-gradient(ellipse at 50% 0%, rgba(232,48,90,0.18) 0%, transparent 70%); }
-  .style-item:nth-child(2)::before { background: radial-gradient(ellipse at 50% 0%, rgba(245,166,35,0.2) 0%, transparent 70%); }
-  .style-item:nth-child(3)::before { background: radial-gradient(ellipse at 50% 0%, rgba(99,179,237,0.18) 0%, transparent 70%); }
-  .style-item:nth-child(4)::before { background: radial-gradient(ellipse at 50% 0%, rgba(154,117,79,0.22) 0%, transparent 70%); }
-  .style-item:nth-child(5)::before { background: radial-gradient(ellipse at 50% 0%, rgba(167,119,232,0.18) 0%, transparent 70%); }
-  .style-item:nth-child(6)::before { background: radial-gradient(ellipse at 50% 0%, rgba(72,209,130,0.15) 0%, transparent 70%); }
+
+  /* Gold top-bar accent */
+  .style-item::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--gold-grad);
+    opacity: 0;
+    z-index: 2;
+    transition: opacity 0.3s ease;
+  }
 
   .style-item:hover {
-    transform: translateY(-8px);
-    border-color: var(--gold);
-    box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(245,166,35,0.2);
+    transform: translateY(-10px);
+    box-shadow: 0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(245,166,35,0.35);
+    border-color: rgba(245,166,35,0.4);
   }
-  .style-item:hover::before { opacity: 1; }
+  .style-item:hover .style-item-photo { transform: scale(1.08); }
+  .style-item:hover::after { opacity: 1; }
 
-  .style-icon {
-    font-size: 52px;
-    line-height: 1;
-    margin-bottom: 18px;
+  /* Text content */
+  .style-content {
     position: relative;
-    filter: drop-shadow(0 4px 16px rgba(0,0,0,0.4));
-    transition: transform 0.3s ease;
+    z-index: 2;
+    padding: 0 20px 22px;
+    text-align: left;
   }
-  .style-item:hover .style-icon { transform: scale(1.15) rotate(-3deg); }
-
   .style-name {
     font-family: Anton, sans-serif;
-    font-size: clamp(15px, 1.8vw, 20px);
-    letter-spacing: 2.5px;
+    font-size: clamp(17px, 1.6vw, 22px);
+    letter-spacing: 2px;
     text-transform: uppercase;
     color: var(--paper);
-    margin-bottom: 10px;
-    position: relative;
+    line-height: 1.1;
+    margin-bottom: 6px;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.8);
   }
   .style-desc {
     font-family: Inter, sans-serif;
     font-size: 12px;
-    color: var(--muted);
-    line-height: 1.55;
-    max-width: 140px;
-    position: relative;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.5;
+    transition: color 0.3s ease;
   }
-  .style-item:hover .style-desc { color: rgba(255,255,255,0.55); }
+  .style-item:hover .style-desc { color: rgba(255,255,255,0.85); }
 
   /* Divider between cards and videos */
   .styles-divider {
@@ -1632,35 +1655,47 @@
 
     <!-- Style cards -->
     <div class="styles-grid">
-      <div class="style-item reveal">
-        <div class="style-icon">🎤</div>
-        <div class="style-name">Hip Hop</div>
-        <div class="style-desc">Raw energy, beats & street-born movement</div>
+      <div class="style-item reveal" style="--photo: url('https://images.unsplash.com/photo-1508700929628-666bc8bd84ea?w=400&h=600&fit=crop&crop=center')">
+        <div class="style-item-photo"></div>
+        <div class="style-content">
+          <div class="style-name">Hip Hop</div>
+          <div class="style-desc">Raw energy, beats & street-born movement</div>
+        </div>
       </div>
-      <div class="style-item reveal">
-        <div class="style-icon">🎬</div>
-        <div class="style-name">Bollywood</div>
-        <div class="style-desc">Cinematic flair meets expressive storytelling</div>
+      <div class="style-item reveal" style="--photo: url('https://images.unsplash.com/photo-1645264090488-a019de493023?w=400&h=600&fit=crop&crop=center')">
+        <div class="style-item-photo"></div>
+        <div class="style-content">
+          <div class="style-name">Bollywood</div>
+          <div class="style-desc">Cinematic flair meets expressive storytelling</div>
+        </div>
       </div>
-      <div class="style-item reveal">
-        <div class="style-icon">⚡</div>
-        <div class="style-name">Freestyle</div>
-        <div class="style-desc">No rules — pure improvisation & self-expression</div>
+      <div class="style-item reveal" style="--photo: url('https://images.unsplash.com/photo-1618260970135-8afc4074aad4?w=400&h=600&fit=crop&crop=center')">
+        <div class="style-item-photo"></div>
+        <div class="style-content">
+          <div class="style-name">Freestyle</div>
+          <div class="style-desc">No rules — pure improvisation & self-expression</div>
+        </div>
       </div>
-      <div class="style-item reveal">
-        <div class="style-icon">🪘</div>
-        <div class="style-name">Folk</div>
-        <div class="style-desc">Roots, culture & vibrant traditional rhythm</div>
+      <div class="style-item reveal" style="--photo: url('https://images.unsplash.com/photo-1634566520253-c6b8f84a0f60?w=400&h=600&fit=crop&crop=center')">
+        <div class="style-item-photo"></div>
+        <div class="style-content">
+          <div class="style-name">Folk</div>
+          <div class="style-desc">Roots, culture & vibrant traditional rhythm</div>
+        </div>
       </div>
-      <div class="style-item reveal">
-        <div class="style-icon">🩰</div>
-        <div class="style-name">Contemporary</div>
-        <div class="style-desc">Fluid, emotive and technically refined</div>
+      <div class="style-item reveal" style="--photo: url('https://images.unsplash.com/photo-1547153760-18fc86324498?w=400&h=600&fit=crop&crop=center')">
+        <div class="style-item-photo"></div>
+        <div class="style-content">
+          <div class="style-name">Contemporary</div>
+          <div class="style-desc">Fluid, emotive and technically refined</div>
+        </div>
       </div>
-      <div class="style-item reveal">
-        <div class="style-icon">🕺</div>
-        <div class="style-name">Zumba</div>
-        <div class="style-desc">Fun fitness fusion for all ages & levels</div>
+      <div class="style-item reveal" style="--photo: url('https://images.unsplash.com/photo-1527933053326-89d1746b76b9?w=400&h=600&fit=crop&crop=center')">
+        <div class="style-item-photo"></div>
+        <div class="style-content">
+          <div class="style-name">Zumba</div>
+          <div class="style-desc">Fun fitness fusion for all ages & levels</div>
+        </div>
       </div>
     </div>
 
