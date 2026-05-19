@@ -1360,39 +1360,6 @@
     .reveal { opacity: 1; transform: none; }
   }
 
-  /* ===== COACHES SECTION ===== */
-  .coaches-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 28px;
-    margin-top: 48px;
-  }
-  .coach-card {
-    background: var(--panel);
-    border: 1px solid var(--line-strong);
-    border-radius: 20px;
-    padding: 36px 28px;
-    text-align: center;
-    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-  }
-  .coach-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,0.5); border-color: var(--gold); }
-  .coach-avatar {
-    width: 90px; height: 90px;
-    border-radius: 50%;
-    background: var(--gold-grad);
-    color: var(--ink);
-    font-family: Anton, sans-serif;
-    font-size: 38px;
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 20px;
-    box-shadow: 0 0 0 4px rgba(245,166,35,0.2);
-  }
-  .coach-card h3 { font-family: Anton, sans-serif; font-size: 22px; letter-spacing: 2px; text-transform: uppercase; color: var(--paper); margin-bottom: 6px; }
-  .coach-role { color: var(--gold); font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 14px; display: block; }
-  .coach-bio { color: var(--muted); font-size: 15px; line-height: 1.65; }
-  @media (max-width: 1000px) { .coaches-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 640px) { .coaches-grid { grid-template-columns: 1fr; } }
-
   /* ===== SCHEDULE SECTION ===== */
   .schedule-wrap {
     overflow-x: auto;
@@ -1425,7 +1392,6 @@
   </a>
   <nav class="nav" aria-label="Main navigation">
     <a href="#styles">Dance Styles</a>
-    <a href="#coaches">Coaches</a>
     <a href="#schedule">Schedule</a>
     <a href="#pricing">Pricing</a>
     <a href="#contact">Contact</a>
@@ -1463,7 +1429,6 @@
 
 <div class="nav-overlay" id="navOverlay" aria-hidden="true">
   <a href="#styles">Dance Styles</a>
-  <a href="#coaches">Coaches</a>
   <a href="#schedule">Schedule</a>
   <a href="#pricing">Pricing</a>
   <a href="#contact">Contact</a>
@@ -1563,35 +1528,6 @@
         <div class="styles-video-wrap"><video src="IMG_1427.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
       </div>
       <button class="carousel-btn next" id="carouselNext" aria-label="Scroll right">&#8594;</button>
-    </div>
-  </section>
-
-
-  <!-- Coaches Section -->
-  <section id="coaches">
-    <div class="section-head reveal">
-      <div><div class="eyebrow">Meet The Team</div><h2 class="section-title">Our Coaches</h2></div>
-      <p class="section-copy">Passionate, certified instructors who've performed on stage and now live to train the next generation of dancers.</p>
-    </div>
-    <div class="coaches-grid">
-      <div class="coach-card tilt reveal">
-        <div class="coach-avatar">D</div>
-        <h3>Damodar</h3>
-        <span class="coach-role">Founder · Hip-Hop &amp; Freestyle</span>
-        <p class="coach-bio">Stage performer and choreographer with 10+ years of experience shaping dancers of all ages — from tiny feet to seasoned movers.</p>
-      </div>
-      <div class="coach-card tilt reveal">
-        <div class="coach-avatar">A</div>
-        <h3>Coach Asha</h3>
-        <span class="coach-role">Bollywood &amp; Folk</span>
-        <p class="coach-bio">Trained classical and Bollywood dancer bringing energy, grace, and authentic folk traditions to every batch she leads.</p>
-      </div>
-      <div class="coach-card tilt reveal">
-        <div class="coach-avatar">R</div>
-        <h3>Coach Rahul</h3>
-        <span class="coach-role">Contemporary &amp; Zumba</span>
-        <p class="coach-bio">Fitness-first instructor blending contemporary movement with high-energy Zumba — perfect for adults and teens alike.</p>
-      </div>
     </div>
   </section>
 
