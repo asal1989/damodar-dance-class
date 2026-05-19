@@ -560,56 +560,191 @@
     animation: shimmer-text 5s ease-in-out infinite;
   }
 
-  /* Dance Styles strip */
+  /* ===== DANCE STYLES SECTION ===== */
   .styles-strip {
-    background: var(--ink-2);
-    border-top: 1px solid var(--line-strong);
-    border-bottom: 1px solid var(--line-strong);
-    padding: 28px clamp(20px, 6vw, 80px);
+    background: var(--ink);
+    padding: 90px clamp(20px, 6vw, 100px) 80px;
+    position: relative;
+    overflow: hidden;
   }
-  .styles-strip-head {
-    text-align: center;
+  .styles-strip::before {
+    content: 'DANCE';
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
     font-family: Anton, sans-serif;
-    font-size: clamp(13px, 1.5vw, 16px);
+    font-size: clamp(80px, 14vw, 200px);
+    color: rgba(255,255,255,0.025);
+    letter-spacing: 20px;
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+  }
+  .styles-section-head {
+    text-align: center;
+    margin-bottom: 60px;
+    position: relative;
+  }
+  .styles-eyebrow {
+    display: inline-block;
+    font-family: Inter, sans-serif;
+    font-size: 12px;
+    font-weight: 800;
     letter-spacing: 5px;
     text-transform: uppercase;
     color: var(--gold);
-    margin-bottom: 22px;
+    margin-bottom: 14px;
+    padding: 6px 18px;
+    border: 1px solid rgba(245,166,35,0.3);
+    border-radius: 20px;
+    background: rgba(245,166,35,0.06);
   }
+  .styles-title {
+    font-family: Anton, sans-serif;
+    font-size: clamp(48px, 7vw, 96px);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--paper);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+  .styles-title span { color: var(--gold); }
+  .styles-subtitle {
+    font-family: Inter, sans-serif;
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* Marquee ticker */
+  .styles-marquee {
+    overflow: hidden;
+    white-space: nowrap;
+    margin-bottom: 56px;
+    mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+  }
+  .styles-marquee-track {
+    display: inline-flex;
+    gap: 0;
+    animation: marqueeScroll 22s linear infinite;
+  }
+  .styles-marquee-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0 36px;
+    font-family: Anton, sans-serif;
+    font-size: 15px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.18);
+  }
+  .styles-marquee-item span { color: var(--gold); font-size: 20px; }
+  @keyframes marqueeScroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* Style cards grid */
   .styles-grid {
-    display: flex;
-    justify-content: center;
-    gap: clamp(10px, 3vw, 48px);
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 16px;
+    margin-bottom: 0;
   }
+  @media (max-width: 1100px) { .styles-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 640px)  { .styles-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; } }
+
   .style-item {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
-    padding: 18px 24px;
-    border: 1px solid var(--line-strong);
-    border-radius: 14px;
-    background: rgba(255,255,255,0.03);
-    min-width: 110px;
-    transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+    text-align: center;
+    gap: 0;
+    padding: 32px 16px 28px;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 20px;
+    background: var(--ink-2);
+    overflow: hidden;
     cursor: default;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   }
+  .style-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  .style-item:nth-child(1)::before { background: radial-gradient(ellipse at 50% 0%, rgba(232,48,90,0.18) 0%, transparent 70%); }
+  .style-item:nth-child(2)::before { background: radial-gradient(ellipse at 50% 0%, rgba(245,166,35,0.2) 0%, transparent 70%); }
+  .style-item:nth-child(3)::before { background: radial-gradient(ellipse at 50% 0%, rgba(99,179,237,0.18) 0%, transparent 70%); }
+  .style-item:nth-child(4)::before { background: radial-gradient(ellipse at 50% 0%, rgba(154,117,79,0.22) 0%, transparent 70%); }
+  .style-item:nth-child(5)::before { background: radial-gradient(ellipse at 50% 0%, rgba(167,119,232,0.18) 0%, transparent 70%); }
+  .style-item:nth-child(6)::before { background: radial-gradient(ellipse at 50% 0%, rgba(72,209,130,0.15) 0%, transparent 70%); }
+
   .style-item:hover {
-    background: rgba(197,165,114,0.08);
+    transform: translateY(-8px);
     border-color: var(--gold);
-    transform: translateY(-4px);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(245,166,35,0.2);
   }
+  .style-item:hover::before { opacity: 1; }
+
   .style-icon {
-    font-size: 32px;
+    font-size: 52px;
     line-height: 1;
+    margin-bottom: 18px;
+    position: relative;
+    filter: drop-shadow(0 4px 16px rgba(0,0,0,0.4));
+    transition: transform 0.3s ease;
   }
+  .style-item:hover .style-icon { transform: scale(1.15) rotate(-3deg); }
+
   .style-name {
     font-family: Anton, sans-serif;
-    font-size: 13px;
+    font-size: clamp(15px, 1.8vw, 20px);
     letter-spacing: 2.5px;
     text-transform: uppercase;
     color: var(--paper);
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .style-desc {
+    font-family: Inter, sans-serif;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.55;
+    max-width: 140px;
+    position: relative;
+  }
+  .style-item:hover .style-desc { color: rgba(255,255,255,0.55); }
+
+  /* Divider between cards and videos */
+  .styles-divider {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 56px 0 36px;
+  }
+  .styles-divider::before, .styles-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(245,166,35,0.3), transparent);
+  }
+  .styles-divider-label {
+    font-family: Anton, sans-serif;
+    font-size: 13px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    white-space: nowrap;
   }
 
   /* Dance styles video */
@@ -1464,37 +1599,77 @@
     </aside>
   </section>
 
-  <!-- Dance Styles Strip -->
+  <!-- Dance Styles Section -->
   <section class="styles-strip" id="styles">
-    <div class="styles-strip-head">— Dance Styles —</div>
+
+    <!-- Section heading -->
+    <div class="styles-section-head reveal">
+      <div class="styles-eyebrow">What We Teach</div>
+      <h2 class="styles-title">Dance <span>Styles</span></h2>
+      <p class="styles-subtitle">From high-energy hip hop to graceful contemporary — find your rhythm with us.</p>
+    </div>
+
+    <!-- Infinite marquee ticker -->
+    <div class="styles-marquee">
+      <div class="styles-marquee-track">
+        <span class="styles-marquee-item"><span>🎤</span> Hip Hop</span>
+        <span class="styles-marquee-item"><span>🎬</span> Bollywood</span>
+        <span class="styles-marquee-item"><span>⚡</span> Freestyle</span>
+        <span class="styles-marquee-item"><span>🪘</span> Folk</span>
+        <span class="styles-marquee-item"><span>🩰</span> Contemporary</span>
+        <span class="styles-marquee-item"><span>🕺</span> Zumba</span>
+        <span class="styles-marquee-item"><span>★</span></span>
+        <!-- duplicate for seamless loop -->
+        <span class="styles-marquee-item"><span>🎤</span> Hip Hop</span>
+        <span class="styles-marquee-item"><span>🎬</span> Bollywood</span>
+        <span class="styles-marquee-item"><span>⚡</span> Freestyle</span>
+        <span class="styles-marquee-item"><span>🪘</span> Folk</span>
+        <span class="styles-marquee-item"><span>🩰</span> Contemporary</span>
+        <span class="styles-marquee-item"><span>🕺</span> Zumba</span>
+        <span class="styles-marquee-item"><span>★</span></span>
+      </div>
+    </div>
+
+    <!-- Style cards -->
     <div class="styles-grid">
       <div class="style-item reveal">
         <div class="style-icon">🎤</div>
         <div class="style-name">Hip Hop</div>
+        <div class="style-desc">Raw energy, beats & street-born movement</div>
       </div>
       <div class="style-item reveal">
         <div class="style-icon">🎬</div>
         <div class="style-name">Bollywood</div>
+        <div class="style-desc">Cinematic flair meets expressive storytelling</div>
       </div>
       <div class="style-item reveal">
         <div class="style-icon">⚡</div>
         <div class="style-name">Freestyle</div>
+        <div class="style-desc">No rules — pure improvisation & self-expression</div>
       </div>
       <div class="style-item reveal">
         <div class="style-icon">🪘</div>
         <div class="style-name">Folk</div>
+        <div class="style-desc">Roots, culture & vibrant traditional rhythm</div>
       </div>
       <div class="style-item reveal">
         <div class="style-icon">🩰</div>
         <div class="style-name">Contemporary</div>
+        <div class="style-desc">Fluid, emotive and technically refined</div>
       </div>
       <div class="style-item reveal">
         <div class="style-icon">🕺</div>
         <div class="style-name">Zumba</div>
+        <div class="style-desc">Fun fitness fusion for all ages & levels</div>
       </div>
     </div>
 
-    <!-- Dance videos row -->
+    <!-- Divider -->
+    <div class="styles-divider">
+      <div class="styles-divider-label">🎬 Studio Reels</div>
+    </div>
+
+    <!-- Dance videos carousel -->
     <div class="video-carousel-wrap">
       <button class="carousel-btn prev" id="carouselPrev" aria-label="Scroll left">&#8592;</button>
       <div class="video-carousel" id="videoCarousel">
@@ -1510,6 +1685,7 @@
       </div>
       <button class="carousel-btn next" id="carouselNext" aria-label="Scroll right">&#8594;</button>
     </div>
+
   </section>
 
   <section id="pricing">
