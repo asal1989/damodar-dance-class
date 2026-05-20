@@ -1704,19 +1704,14 @@
       <div class="styles-divider-label">🎬 Studio Reels</div>
     </div>
 
-    <!-- Dance videos carousel -->
+    <!-- Dance videos carousel — loaded dynamically from Firebase -->
     <div class="video-carousel-wrap">
       <button class="carousel-btn prev" id="carouselPrev" aria-label="Scroll left">&#8592;</button>
       <div class="video-carousel" id="videoCarousel">
-        <div class="styles-video-wrap"><video src="asa.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
-        <div class="styles-video-wrap"><video src="IMG_1418.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
-        <div class="styles-video-wrap"><video src="IMG_1420.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
-        <div class="styles-video-wrap"><video src="IMG_1421.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
-        <div class="styles-video-wrap"><video src="IMG_1422.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
-        <div class="styles-video-wrap"><video src="IMG_1424.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
-        <div class="styles-video-wrap"><video src="IMG_1425.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
-        <div class="styles-video-wrap"><video src="IMG_1426.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
-        <div class="styles-video-wrap"><video src="IMG_1427.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
+        <!-- Videos injected by Firebase loader below -->
+        <div class="carousel-loading" style="display:flex;align-items:center;gap:12px;padding:20px 40px;color:#888;font-size:14px;flex-shrink:0;">
+          <span style="font-size:24px;">🎬</span> Loading videos...
+        </div>
       </div>
       <button class="carousel-btn next" id="carouselNext" aria-label="Scroll right">&#8594;</button>
     </div>
@@ -2031,6 +2026,47 @@
       art.style.transform = `translate3d(${x * -22}px, ${y * -18}px, 0)`;
     });
     hero.addEventListener('mouseleave', () => { art.style.transform = ''; });
+  })();
+</script>
+
+<!-- ── Firebase: load videos dynamically ─────────────────────── -->
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script>
+  (function loadFirebaseVideos() {
+    try {
+      firebase.initializeApp(firebaseConfig);
+    } catch(e) {
+      // Already initialized (ignore duplicate init error)
+    }
+    const db       = firebase.firestore();
+    const carousel = document.getElementById('videoCarousel');
+
+    db.collection('videos')
+      .orderBy('uploadedAt', 'desc')
+      .get()
+      .then(snap => {
+        carousel.innerHTML = ''; // clear loading state
+        if (snap.empty) {
+          carousel.innerHTML =
+            '<div style="padding:20px 40px;color:#888;font-size:14px;flex-shrink:0;">No videos yet.</div>';
+          return;
+        }
+        snap.forEach(doc => {
+          const { url, title } = doc.data();
+          const wrap = document.createElement('div');
+          wrap.className = 'styles-video-wrap';
+          wrap.innerHTML = `<video src="${url}" controls playsinline preload="metadata"
+                              title="${title || ''}" style="background:#000;"></video>`;
+          carousel.appendChild(wrap);
+        });
+      })
+      .catch(err => {
+        console.warn('Firebase video load error:', err.message);
+        // Silently fail — carousel stays empty
+        carousel.innerHTML = '';
+      });
   })();
 </script>
 </body>

@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Damodar House of Dance</title>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-storage-compat.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:    #0d0d12;
+      --ink-2:  #16171f;
+      --panel:  #1e1f28;
+      --gold:   #f5a623;
+      --gold-2: #ffcc44;
+      --red:    #e8305a;
+      --green:  #2ecc71;
+      --muted:  #888;
+      --paper:  #ffffff;
+      --border: rgba(255,255,255,0.08);
+    }
+
+    body {
+      background: var(--ink);
+      color: var(--paper);
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── LOGIN SCREEN ── */
+    #loginScreen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+    }
+    .login-box {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+    }
+    .login-logo {
+      font-size: 56px;
+      margin-bottom: 16px;
+    }
+    .login-title {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .login-sub {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 36px;
+    }
+    .login-box input {
+      width: 100%;
+      padding: 14px 18px;
+      background: var(--ink-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--paper);
+      font-size: 16px;
+      text-align: center;
+      letter-spacing: 3px;
+      margin-bottom: 16px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .login-box input:focus { border-color: var(--gold); }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 12px;
+      border: none;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn:active { transform: translateY(0); }
+    .btn-gold  { background: var(--gold); color: var(--ink); width: 100%; }
+    .btn-gold:hover { box-shadow: 0 8px 24px rgba(245,166,35,0.4); }
+    .btn-red   { background: rgba(232,48,90,0.15); color: var(--red); border: 1px solid rgba(232,48,90,0.3); }
+    .btn-red:hover { background: rgba(232,48,90,0.25); }
+    .login-error {
+      color: var(--red);
+      font-size: 13px;
+      margin-top: 12px;
+      display: none;
+    }
+
+    /* ── MAIN ADMIN ── */
+    #adminScreen { display: none; }
+
+    .topbar {
+      background: var(--ink-2);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .topbar-brand span { font-size: 24px; }
+    .topbar-brand h1 {
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .topbar-brand p { font-size: 11px; color: var(--muted); letter-spacing: 1px; }
+
+    .admin-body {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    /* ── UPLOAD CARD ── */
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 32px;
+    }
+    .card-title {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Drop zone */
+    .drop-zone {
+      border: 2px dashed rgba(245,166,35,0.35);
+      border-radius: 16px;
+      padding: 48px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+    }
+    .drop-zone:hover, .drop-zone.dragging {
+      border-color: var(--gold);
+      background: rgba(245,166,35,0.05);
+    }
+    .drop-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .drop-icon { font-size: 48px; margin-bottom: 12px; }
+    .drop-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .drop-sub { color: var(--muted); font-size: 13px; }
+    .drop-selected {
+      margin-top: 12px;
+      color: var(--gold);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* Title input */
+    .form-group { margin-top: 20px; }
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .form-input {
+      width: 100%;
+      padding: 14px 18px;
+      background: var(--ink-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--paper);
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus { border-color: var(--gold); }
+
+    /* Progress */
+    .progress-wrap {
+      margin-top: 20px;
+      display: none;
+    }
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .progress-bar-bg {
+      background: var(--ink-2);
+      border-radius: 99px;
+      height: 8px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-2));
+      border-radius: 99px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* Upload btn */
+    .upload-actions {
+      margin-top: 24px;
+      display: flex;
+      gap: 12px;
+    }
+    .upload-actions .btn-gold { flex: 1; }
+
+    /* Status toast */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      padding: 14px 22px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 99;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { background: rgba(46,204,113,0.15); border: 1px solid rgba(46,204,113,0.4); color: var(--green); }
+    .toast.error   { background: rgba(232,48,90,0.15);  border: 1px solid rgba(232,48,90,0.4);  color: var(--red); }
+
+    /* ── VIDEO LIST ── */
+    .stats-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-chip {
+      background: var(--ink-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 18px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .stat-chip strong { color: var(--gold); font-size: 20px; display: block; }
+
+    .video-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .video-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--ink-2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      transition: border-color 0.2s;
+    }
+    .video-row:hover { border-color: rgba(245,166,35,0.3); }
+
+    .video-thumb {
+      width: 54px;
+      height: 80px;
+      border-radius: 8px;
+      background: var(--panel);
+      overflow: hidden;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .video-thumb video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .video-thumb-placeholder {
+      font-size: 24px;
+    }
+
+    .video-info { flex: 1; min-width: 0; }
+    .video-name {
+      font-size: 15px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 4px;
+    }
+    .video-meta { font-size: 12px; color: var(--muted); }
+
+    .video-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+    .btn-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .btn-icon:hover { transform: scale(1.1); }
+    .btn-delete { background: rgba(232,48,90,0.1); color: var(--red); }
+    .btn-delete:hover { background: rgba(232,48,90,0.25); }
+    .btn-view   { background: rgba(245,166,35,0.1); color: var(--gold); }
+    .btn-view:hover { background: rgba(245,166,35,0.25); }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px;
+      color: var(--muted);
+    }
+    .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
+
+    .loading-spinner {
+      text-align: center;
+      padding: 32px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* Confirm dialog */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .overlay.show { display: flex; }
+    .dialog {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+    }
+    .dialog-icon { font-size: 40px; margin-bottom: 12px; }
+    .dialog h3 { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+    .dialog p  { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+    .dialog-actions { display: flex; gap: 12px; }
+
+    @media (max-width: 600px) {
+      .topbar { padding: 0 16px; }
+      .admin-body { padding: 20px 16px 60px; }
+      .card { padding: 20px; }
+      .stats-row { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════ LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">🕺</div>
+    <h1 class="login-title">Admin Panel</h1>
+    <p class="login-sub">Damodar House of Dance</p>
+
+    <input type="password" id="passwordInput" placeholder="Enter password" />
+    <button class="btn btn-gold" onclick="login()">Login →</button>
+    <p class="login-error" id="loginError">❌ Wrong password. Try again.</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ ADMIN SCREEN -->
+<div id="adminScreen">
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="topbar-brand">
+      <span>🕺</span>
+      <div>
+        <h1>Damodar Dance</h1>
+        <p>Video Manager</p>
+      </div>
+    </div>
+    <button class="btn btn-red" onclick="logout()" style="padding:8px 16px;font-size:13px;">
+      Logout
+    </button>
+  </div>
+
+  <div class="admin-body">
+
+    <!-- Upload Card -->
+    <div class="card">
+      <div class="card-title">📤 Upload New Video</div>
+
+      <!-- Drop zone -->
+      <div class="drop-zone" id="dropZone">
+        <input type="file" id="fileInput" accept="video/*" onchange="onFileSelected(this)" />
+        <div class="drop-icon">🎬</div>
+        <div class="drop-title">Tap to select video</div>
+        <div class="drop-sub">MP4, MOV, AVI — Max 500 MB</div>
+        <div class="drop-selected" id="selectedFileName"></div>
+      </div>
+
+      <!-- Title -->
+      <div class="form-group">
+        <label class="form-label">Video Title</label>
+        <input type="text" class="form-input" id="videoTitle"
+               placeholder="e.g. Hip Hop Practice — Batch 2025" />
+      </div>
+
+      <!-- Progress -->
+      <div class="progress-wrap" id="progressWrap">
+        <div class="progress-label">
+          <span id="progressStatus">Uploading...</span>
+          <span id="progressPercent">0%</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="upload-actions">
+        <button class="btn btn-gold" id="uploadBtn" onclick="uploadVideo()">
+          ⬆️ Upload Video
+        </button>
+      </div>
+    </div>
+
+    <!-- Video List -->
+    <div class="card">
+      <div class="card-title">🎥 Uploaded Videos</div>
+
+      <div class="stats-row">
+        <div class="stat-chip">
+          <strong id="totalCount">0</strong>
+          Total Videos
+        </div>
+        <div class="stat-chip">
+          <strong id="totalSize">0 MB</strong>
+          Total Size
+        </div>
+      </div>
+
+      <div id="videoList">
+        <div class="loading-spinner">Loading videos...</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Delete confirm dialog -->
+<div class="overlay" id="deleteOverlay">
+  <div class="dialog">
+    <div class="dialog-icon">🗑️</div>
+    <h3>Delete Video?</h3>
+    <p>This will permanently remove the video from your website. This cannot be undone.</p>
+    <div class="dialog-actions">
+      <button class="btn" style="flex:1;background:var(--ink-2);color:var(--paper);"
+              onclick="closeDeleteDialog()">Cancel</button>
+      <button class="btn btn-red" style="flex:1;background:var(--red);color:white;"
+              onclick="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast"></div>
+
+<!-- Firebase Config -->
+<script src="firebase-config.js"></script>
+
+<script>
+  // ── Init Firebase ──────────────────────────────────────────
+  firebase.initializeApp(firebaseConfig);
+  const db      = firebase.firestore();
+  const storage = firebase.storage();
+
+  // ── Auth ───────────────────────────────────────────────────
+  function login() {
+    const val = document.getElementById('passwordInput').value;
+    if (val === ADMIN_PASSWORD) {
+      sessionStorage.setItem('admin_auth', '1');
+      document.getElementById('loginScreen').style.display  = 'none';
+      document.getElementById('adminScreen').style.display  = 'block';
+      loadVideos();
+    } else {
+      document.getElementById('loginError').style.display = 'block';
+      document.getElementById('passwordInput').value = '';
+    }
+  }
+
+  function logout() {
+    sessionStorage.removeItem('admin_auth');
+    location.reload();
+  }
+
+  // Auto-login if session active
+  if (sessionStorage.getItem('admin_auth') === '1') {
+    document.getElementById('loginScreen').style.display  = 'none';
+    document.getElementById('adminScreen').style.display  = 'block';
+    loadVideos();
+  }
+
+  // Enter key on password
+  document.getElementById('passwordInput')
+    .addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+
+  // ── File selection ─────────────────────────────────────────
+  let selectedFile = null;
+
+  function onFileSelected(input) {
+    if (input.files.length > 0) {
+      selectedFile = input.files[0];
+      const sizeMB = (selectedFile.size / 1024 / 1024).toFixed(1);
+      document.getElementById('selectedFileName').textContent =
+        `✅ ${selectedFile.name} (${sizeMB} MB)`;
+      // Auto-fill title from filename if empty
+      const titleInput = document.getElementById('videoTitle');
+      if (!titleInput.value) {
+        titleInput.value = selectedFile.name.replace(/\.[^.]+$/, '').replace(/[_-]/g, ' ');
+      }
+    }
+  }
+
+  // Drag & drop
+  const dropZone = document.getElementById('dropZone');
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragging'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragging'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('dragging');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('video/')) {
+      selectedFile = file;
+      document.getElementById('selectedFileName').textContent =
+        `✅ ${file.name} (${(file.size/1024/1024).toFixed(1)} MB)`;
+      if (!document.getElementById('videoTitle').value) {
+        document.getElementById('videoTitle').value = file.name.replace(/\.[^.]+$/, '').replace(/[_-]/g, ' ');
+      }
+    }
+  });
+
+  // ── Upload ─────────────────────────────────────────────────
+  function uploadVideo() {
+    if (!selectedFile) { showToast('Please select a video first', 'error'); return; }
+    const title = document.getElementById('videoTitle').value.trim() || selectedFile.name;
+
+    const btn = document.getElementById('uploadBtn');
+    btn.disabled = true;
+    btn.textContent = 'Uploading...';
+
+    const progressWrap = document.getElementById('progressWrap');
+    const progressFill = document.getElementById('progressFill');
+    const progressPct  = document.getElementById('progressPercent');
+    const progressStat = document.getElementById('progressStatus');
+    progressWrap.style.display = 'block';
+
+    // Unique filename: timestamp + original name
+    const filename = `${Date.now()}_${selectedFile.name}`;
+    const ref = storage.ref(`dance-videos/${filename}`);
+    const task = ref.put(selectedFile);
+
+    task.on('state_changed',
+      snap => {
+        const pct = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
+        progressFill.style.width  = pct + '%';
+        progressPct.textContent   = pct + '%';
+        progressStat.textContent  = `Uploading... ${pct}%`;
+      },
+      err => {
+        showToast('Upload failed: ' + err.message, 'error');
+        resetUploadUI();
+      },
+      async () => {
+        const url = await task.snapshot.ref.getDownloadURL();
+        // Save to Firestore
+        await db.collection('videos').add({
+          title:      title,
+          filename:   filename,
+          url:        url,
+          size:       selectedFile.size,
+          uploadedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        showToast('✅ Video uploaded successfully!', 'success');
+        resetUploadUI();
+        loadVideos();
+      }
+    );
+  }
+
+  function resetUploadUI() {
+    selectedFile = null;
+    document.getElementById('fileInput').value     = '';
+    document.getElementById('selectedFileName').textContent = '';
+    document.getElementById('videoTitle').value   = '';
+    document.getElementById('progressWrap').style.display = 'none';
+    document.getElementById('progressFill').style.width   = '0%';
+    const btn = document.getElementById('uploadBtn');
+    btn.disabled    = false;
+    btn.textContent = '⬆️ Upload Video';
+  }
+
+  // ── Load videos list ───────────────────────────────────────
+  async function loadVideos() {
+    const listEl = document.getElementById('videoList');
+    listEl.innerHTML = '<div class="loading-spinner">Loading videos...</div>';
+
+    try {
+      const snap = await db.collection('videos').orderBy('uploadedAt', 'desc').get();
+      const docs = snap.docs;
+
+      document.getElementById('totalCount').textContent = docs.length;
+      const totalBytes = docs.reduce((a, d) => a + (d.data().size || 0), 0);
+      document.getElementById('totalSize').textContent  = (totalBytes / 1024 / 1024).toFixed(1) + ' MB';
+
+      if (docs.length === 0) {
+        listEl.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">🎬</div>
+            <p>No videos yet. Upload your first dance video!</p>
+          </div>`;
+        return;
+      }
+
+      listEl.innerHTML = '';
+      docs.forEach(doc => {
+        const d = doc.data();
+        const date = d.uploadedAt?.toDate().toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) || 'Just now';
+        const sizeMB = ((d.size || 0) / 1024 / 1024).toFixed(1);
+
+        const row = document.createElement('div');
+        row.className = 'video-row';
+        row.innerHTML = `
+          <div class="video-thumb">
+            <video src="${d.url}" muted preload="metadata"></video>
+          </div>
+          <div class="video-info">
+            <div class="video-name">${d.title}</div>
+            <div class="video-meta">📅 ${date} &nbsp;·&nbsp; 📦 ${sizeMB} MB</div>
+          </div>
+          <div class="video-actions">
+            <button class="btn-icon btn-view" title="Preview"
+                    onclick="window.open('${d.url}','_blank')">👁️</button>
+            <button class="btn-icon btn-delete" title="Delete"
+                    onclick="openDeleteDialog('${doc.id}','${d.filename}','${d.title}')">🗑️</button>
+          </div>`;
+        listEl.appendChild(row);
+      });
+    } catch (e) {
+      listEl.innerHTML = `<div class="empty-state"><p style="color:var(--red)">Error loading videos: ${e.message}</p></div>`;
+    }
+  }
+
+  // ── Delete ─────────────────────────────────────────────────
+  let deleteTarget = null;
+
+  function openDeleteDialog(docId, filename, title) {
+    deleteTarget = { docId, filename };
+    document.getElementById('deleteOverlay').classList.add('show');
+  }
+  function closeDeleteDialog() {
+    deleteTarget = null;
+    document.getElementById('deleteOverlay').classList.remove('show');
+  }
+  async function confirmDelete() {
+    if (!deleteTarget) return;
+    closeDeleteDialog();
+    try {
+      // Delete from Storage
+      await storage.ref(`dance-videos/${deleteTarget.filename}`).delete().catch(() => {});
+      // Delete from Firestore
+      await db.collection('videos').doc(deleteTarget.docId).delete();
+      showToast('🗑️ Video deleted', 'success');
+      loadVideos();
+    } catch(e) {
+      showToast('Delete failed: ' + e.message, 'error');
+    }
+  }
+
+  // ── Toast ──────────────────────────────────────────────────
+  function showToast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    t.textContent  = msg;
+    t.className    = `toast ${type} show`;
+    setTimeout(() => t.classList.remove('show'), 3500);
+  }
+</script>
+</body>
+</html>
