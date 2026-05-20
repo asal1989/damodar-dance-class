@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Main app theme — no action bar -->
+    <style name="Theme.DamodarDance" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:statusBarColor">#0D0D12</item>
+        <item name="android:navigationBarColor">#0D0D12</item>
+        <item name="android:windowBackground">@color/ink</item>
+    </style>
+
+    <!-- Splash screen theme -->
+    <style name="Theme.DamodarDance.Splash" parent="Theme.DamodarDance">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+</resources>
