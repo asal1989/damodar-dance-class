@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- build: 1779230001 -->
+<!-- build: 1779999999 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -2041,22 +2041,22 @@
 <script src="firebase-config.js"></script>
 <script>
   (function loadFirebaseVideos() {
-    // Skip if Firebase is not configured yet (placeholder values)
-    if (!firebaseConfig.apiKey || firebaseConfig.apiKey === 'YOUR_API_KEY') {
-      console.info('Firebase not configured — showing local videos.');
-      return;
-    }
-
     try {
-      firebase.initializeApp(firebaseConfig);
-    } catch(e) { /* already initialized */ }
+      // Skip if Firebase is not configured yet (placeholder values)
+      if (typeof firebaseConfig === 'undefined' ||
+          !firebaseConfig.apiKey ||
+          firebaseConfig.apiKey === 'YOUR_API_KEY') {
+        return; // local videos stay visible
+      }
 
-    const db       = firebase.firestore();
-    const carousel = document.getElementById('videoCarousel');
+      try { firebase.initializeApp(firebaseConfig); } catch(e) { /* already init */ }
 
-    db.collection('videos')
-      .orderBy('uploadedAt', 'desc')
-      .get()
+      const db       = firebase.firestore();
+      const carousel = document.getElementById('videoCarousel');
+
+      db.collection('videos')
+        .orderBy('uploadedAt', 'desc')
+        .get()
       .then(snap => {
         // Only replace local videos if Firebase has videos uploaded
         if (snap.empty) return;
@@ -2075,6 +2075,9 @@
         // Firebase failed — local videos remain visible
         console.warn('Firebase video load error:', err.message);
       });
+    } catch(e) {
+      // Any error — local videos remain visible
+    }
   })();
 </script>
 </body>
