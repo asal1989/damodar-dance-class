@@ -1704,14 +1704,20 @@
       <div class="styles-divider-label">🎬 Studio Reels</div>
     </div>
 
-    <!-- Dance videos carousel — loaded dynamically from Firebase -->
+    <!-- Dance videos carousel — Firebase videos + local fallback -->
     <div class="video-carousel-wrap">
       <button class="carousel-btn prev" id="carouselPrev" aria-label="Scroll left">&#8592;</button>
       <div class="video-carousel" id="videoCarousel">
-        <!-- Videos injected by Firebase loader below -->
-        <div class="carousel-loading" style="display:flex;align-items:center;gap:12px;padding:20px 40px;color:#888;font-size:14px;flex-shrink:0;">
-          <span style="font-size:24px;">🎬</span> Loading videos...
-        </div>
+        <!-- Local fallback videos (shown until Firebase is configured) -->
+        <div class="styles-video-wrap"><video src="asa.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
+        <div class="styles-video-wrap"><video src="IMG_1418.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
+        <div class="styles-video-wrap"><video src="IMG_1420.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
+        <div class="styles-video-wrap"><video src="IMG_1421.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
+        <div class="styles-video-wrap"><video src="IMG_1422.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
+        <div class="styles-video-wrap"><video src="IMG_1424.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
+        <div class="styles-video-wrap"><video src="IMG_1425.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
+        <div class="styles-video-wrap"><video src="IMG_1426.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
+        <div class="styles-video-wrap"><video src="IMG_1427.MP4" controls playsinline preload="metadata" style="background:#000;"></video></div>
       </div>
       <button class="carousel-btn next" id="carouselNext" aria-label="Scroll right">&#8594;</button>
     </div>
@@ -2029,17 +2035,22 @@
   })();
 </script>
 
-<!-- ── Firebase: load videos dynamically ─────────────────────── -->
+<!-- ── Firebase: load videos dynamically (replaces local videos once configured) ── -->
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
 <script src="firebase-config.js"></script>
 <script>
   (function loadFirebaseVideos() {
+    // Skip if Firebase is not configured yet (placeholder values)
+    if (!firebaseConfig.apiKey || firebaseConfig.apiKey === 'YOUR_API_KEY') {
+      console.info('Firebase not configured — showing local videos.');
+      return;
+    }
+
     try {
       firebase.initializeApp(firebaseConfig);
-    } catch(e) {
-      // Already initialized (ignore duplicate init error)
-    }
+    } catch(e) { /* already initialized */ }
+
     const db       = firebase.firestore();
     const carousel = document.getElementById('videoCarousel');
 
@@ -2047,12 +2058,10 @@
       .orderBy('uploadedAt', 'desc')
       .get()
       .then(snap => {
-        carousel.innerHTML = ''; // clear loading state
-        if (snap.empty) {
-          carousel.innerHTML =
-            '<div style="padding:20px 40px;color:#888;font-size:14px;flex-shrink:0;">No videos yet.</div>';
-          return;
-        }
+        // Only replace local videos if Firebase has videos uploaded
+        if (snap.empty) return;
+
+        carousel.innerHTML = ''; // clear local fallback
         snap.forEach(doc => {
           const { url, title } = doc.data();
           const wrap = document.createElement('div');
@@ -2063,9 +2072,8 @@
         });
       })
       .catch(err => {
+        // Firebase failed — local videos remain visible
         console.warn('Firebase video load error:', err.message);
-        // Silently fail — carousel stays empty
-        carousel.innerHTML = '';
       });
   })();
 </script>
