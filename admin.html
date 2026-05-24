@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin — Damodar House of Dance</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>cPanel — Damodar House of Dance</title>
 
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
@@ -12,728 +12,933 @@
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
       --ink:    #0d0d12;
       --ink-2:  #16171f;
       --panel:  #1e1f28;
+      --panel-2:#272830;
       --gold:   #f5a623;
       --gold-2: #ffcc44;
       --red:    #e8305a;
       --green:  #2ecc71;
+      --blue:   #3b82f6;
+      --purple: #a855f7;
       --muted:  #888;
       --paper:  #ffffff;
-      --border: rgba(255,255,255,0.08);
+      --border: rgba(255,255,255,0.07);
+      --sidebar-w: 240px;
     }
+    body { background: var(--ink); color: var(--paper);
+           font-family: Inter, system-ui, sans-serif; min-height: 100vh; }
 
-    body {
-      background: var(--ink);
-      color: var(--paper);
-      font-family: 'Inter', system-ui, sans-serif;
-      min-height: 100vh;
-    }
-
-    /* ── LOGIN SCREEN ── */
+    /* ══════════════════════════ LOGIN ══════════════════════════ */
     #loginScreen {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 24px;
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; padding: 24px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(245,166,35,0.08) 0%, transparent 60%);
     }
-    .login-box {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 48px 40px;
-      width: 100%;
-      max-width: 420px;
-      text-align: center;
-      box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+    .login-card {
+      background: var(--panel); border: 1px solid rgba(245,166,35,0.2);
+      border-radius: 24px; padding: 52px 44px; width: 100%; max-width: 420px;
+      text-align: center; box-shadow: 0 40px 80px rgba(0,0,0,0.7);
     }
-    .login-logo {
-      font-size: 56px;
-      margin-bottom: 16px;
+    .login-logo { font-size: 56px; margin-bottom: 16px; }
+    .login-brand { font-size: 22px; font-weight: 900; letter-spacing: 3px;
+                   color: var(--gold); text-transform: uppercase; margin-bottom: 4px; }
+    .login-sub { color: var(--muted); font-size: 13px; margin-bottom: 36px; letter-spacing: 1px; }
+    .login-label { display: block; text-align: left; font-size: 11px; font-weight: 700;
+                   letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
+                   margin-bottom: 8px; }
+    .login-input {
+      width: 100%; padding: 14px 18px; background: var(--ink-2);
+      border: 1px solid var(--border); border-radius: 12px;
+      color: var(--paper); font-size: 16px; outline: none;
+      transition: border-color 0.2s; margin-bottom: 20px; letter-spacing: 2px;
     }
-    .login-title {
-      font-size: 24px;
-      font-weight: 900;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 6px;
+    .login-input:focus { border-color: var(--gold); }
+    .login-btn {
+      width: 100%; padding: 15px; background: var(--gold); color: var(--ink);
+      border: none; border-radius: 12px; font-size: 15px; font-weight: 800;
+      letter-spacing: 1px; cursor: pointer; transition: box-shadow 0.2s, transform 0.2s;
     }
-    .login-sub {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 36px;
+    .login-btn:hover { box-shadow: 0 8px 28px rgba(245,166,35,0.5); transform: translateY(-1px); }
+    .login-err { color: var(--red); font-size: 13px; margin-top: 12px; display: none; }
+
+    /* ══════════════════════════ LAYOUT ══════════════════════════ */
+    #cpanel { display: none; height: 100vh; overflow: hidden; }
+    .layout  { display: flex; height: 100vh; overflow: hidden; }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: var(--sidebar-w); background: var(--ink-2);
+      border-right: 1px solid var(--border); display: flex;
+      flex-direction: column; flex-shrink: 0; overflow-y: auto;
+      transition: transform 0.3s ease;
     }
-    .login-box input {
-      width: 100%;
-      padding: 14px 18px;
-      background: var(--ink-2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      color: var(--paper);
-      font-size: 16px;
-      text-align: center;
-      letter-spacing: 3px;
-      margin-bottom: 16px;
-      outline: none;
-      transition: border-color 0.2s;
+    .sidebar-logo {
+      padding: 24px 20px 20px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 12px;
     }
-    .login-box input:focus { border-color: var(--gold); }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 14px 28px;
-      border-radius: 12px;
-      border: none;
-      font-size: 15px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+    .sidebar-logo-icon {
+      width: 42px; height: 42px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--gold), #c47d10);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
     }
-    .btn:hover { transform: translateY(-2px); }
-    .btn:active { transform: translateY(0); }
-    .btn-gold  { background: var(--gold); color: var(--ink); width: 100%; }
-    .btn-gold:hover { box-shadow: 0 8px 24px rgba(245,166,35,0.4); }
-    .btn-red   { background: rgba(232,48,90,0.15); color: var(--red); border: 1px solid rgba(232,48,90,0.3); }
-    .btn-red:hover { background: rgba(232,48,90,0.25); }
-    .login-error {
-      color: var(--red);
-      font-size: 13px;
-      margin-top: 12px;
-      display: none;
+    .sidebar-logo-text h2 { font-size: 14px; font-weight: 800; letter-spacing: 1px; color: var(--gold); }
+    .sidebar-logo-text p  { font-size: 11px; color: var(--muted); }
+
+    .nav-section { padding: 20px 12px 8px; }
+    .nav-section-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 2.5px;
+      text-transform: uppercase; color: var(--muted); padding: 0 8px; margin-bottom: 8px;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+      border-radius: 10px; cursor: pointer; transition: background 0.2s, color 0.2s;
+      color: var(--muted); font-size: 14px; font-weight: 500; margin-bottom: 2px;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--paper); }
+    .nav-item.active { background: rgba(245,166,35,0.12); color: var(--gold); }
+    .nav-item .nav-icon { font-size: 18px; width: 24px; text-align: center; }
+    .nav-badge {
+      margin-left: auto; background: var(--red); color: #fff;
+      font-size: 10px; font-weight: 700; padding: 2px 7px;
+      border-radius: 99px; min-width: 20px; text-align: center;
     }
 
-    /* ── MAIN ADMIN ── */
-    #adminScreen { display: none; }
+    .sidebar-footer {
+      margin-top: auto; padding: 16px 12px;
+      border-top: 1px solid var(--border);
+    }
+    .logout-btn {
+      width: 100%; padding: 10px; background: rgba(232,48,90,0.1);
+      color: var(--red); border: 1px solid rgba(232,48,90,0.2);
+      border-radius: 10px; font-size: 13px; font-weight: 700;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .logout-btn:hover { background: rgba(232,48,90,0.22); }
 
+    /* ── Main ── */
+    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+    /* Top bar */
     .topbar {
-      background: var(--ink-2);
-      border-bottom: 1px solid var(--border);
-      padding: 0 32px;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      height: 60px; background: var(--ink-2); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px; flex-shrink: 0;
     }
-    .topbar-brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+    .topbar-title { font-size: 16px; font-weight: 800; letter-spacing: 0.5px; }
+    .topbar-right  { display: flex; align-items: center; gap: 12px; }
+    .topbar-badge {
+      background: rgba(245,166,35,0.12); color: var(--gold);
+      border: 1px solid rgba(245,166,35,0.25); border-radius: 20px;
+      padding: 4px 14px; font-size: 12px; font-weight: 700;
     }
-    .topbar-brand span { font-size: 24px; }
-    .topbar-brand h1 {
-      font-size: 16px;
-      font-weight: 900;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--gold);
+    .site-link {
+      color: var(--muted); font-size: 12px; text-decoration: none;
+      display: flex; align-items: center; gap: 5px;
+      padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border);
+      transition: color 0.2s, border-color 0.2s;
     }
-    .topbar-brand p { font-size: 11px; color: var(--muted); letter-spacing: 1px; }
+    .site-link:hover { color: var(--paper); border-color: rgba(255,255,255,0.2); }
 
-    .admin-body {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 40px 24px 80px;
+    /* Content area */
+    .content { flex: 1; overflow-y: auto; padding: 28px; }
+
+    /* ── Pages (hide all, show active) ── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ══════════════════════════ DASHBOARD ══════════════════════ */
+    .page-title {
+      font-size: 24px; font-weight: 900; letter-spacing: 0.5px; margin-bottom: 6px;
+    }
+    .page-sub { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px;
+    }
+    @media(max-width:900px){ .stats-grid { grid-template-columns: repeat(2,1fr); } }
+
+    .stat-card {
+      background: var(--panel); border: 1px solid var(--border); border-radius: 16px;
+      padding: 22px; display: flex; flex-direction: column; gap: 8px;
+      position: relative; overflow: hidden;
+    }
+    .stat-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    }
+    .stat-card:nth-child(1)::before { background: var(--gold); }
+    .stat-card:nth-child(2)::before { background: var(--blue); }
+    .stat-card:nth-child(3)::before { background: var(--green); }
+    .stat-card:nth-child(4)::before { background: var(--purple); }
+    .stat-icon { font-size: 28px; }
+    .stat-value { font-size: 32px; font-weight: 900; }
+    .stat-label { font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: 1px; }
+
+    .quick-actions { margin-bottom: 28px; }
+    .section-head-row {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .section-heading { font-size: 14px; font-weight: 800; letter-spacing: 1px;
+                       text-transform: uppercase; color: var(--muted); }
+    .actions-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+    @media(max-width:700px){ .actions-grid { grid-template-columns: 1fr 1fr; } }
+    .action-tile {
+      background: var(--panel); border: 1px solid var(--border); border-radius: 14px;
+      padding: 20px; cursor: pointer; transition: border-color 0.2s, transform 0.2s;
+      text-align: center;
+    }
+    .action-tile:hover { border-color: var(--gold); transform: translateY(-3px); }
+    .action-tile .t-icon { font-size: 32px; margin-bottom: 10px; }
+    .action-tile .t-name { font-size: 13px; font-weight: 700; color: var(--paper); }
+    .action-tile .t-sub  { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+    /* Recent videos */
+    .recent-list { display: flex; flex-direction: column; gap: 10px; }
+    .recent-row {
+      display: flex; align-items: center; gap: 14px;
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 12px; padding: 12px 14px;
+    }
+    .recent-thumb {
+      width: 40px; height: 58px; border-radius: 6px; background: var(--panel-2);
+      overflow: hidden; flex-shrink: 0; display: flex; align-items: center;
+      justify-content: center; font-size: 18px;
+    }
+    .recent-thumb video { width: 100%; height: 100%; object-fit: cover; }
+    .recent-info { flex: 1; min-width: 0; }
+    .recent-name { font-size: 14px; font-weight: 600; white-space: nowrap;
+                   overflow: hidden; text-overflow: ellipsis; }
+    .recent-date { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .pill {
+      font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 99px;
+      background: rgba(46,204,113,0.12); color: var(--green); border: 1px solid rgba(46,204,113,0.25);
     }
 
-    /* ── UPLOAD CARD ── */
+    /* ══════════════════════════ VIDEOS PAGE ═══════════════════ */
     .card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 32px;
-      margin-bottom: 32px;
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 18px; padding: 28px; margin-bottom: 24px;
     }
     .card-title {
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      font-size: 15px; font-weight: 800; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 22px;
+      display: flex; align-items: center; gap: 10px;
     }
 
     /* Drop zone */
     .drop-zone {
-      border: 2px dashed rgba(245,166,35,0.35);
-      border-radius: 16px;
-      padding: 48px 24px;
-      text-align: center;
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-      position: relative;
+      border: 2px dashed rgba(245,166,35,0.3); border-radius: 14px;
+      padding: 44px 24px; text-align: center; cursor: pointer;
+      transition: border-color 0.2s, background 0.2s; position: relative;
     }
     .drop-zone:hover, .drop-zone.dragging {
-      border-color: var(--gold);
-      background: rgba(245,166,35,0.05);
+      border-color: var(--gold); background: rgba(245,166,35,0.04);
     }
-    .drop-zone input[type="file"] {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-    }
-    .drop-icon { font-size: 48px; margin-bottom: 12px; }
-    .drop-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
-    .drop-sub { color: var(--muted); font-size: 13px; }
-    .drop-selected {
-      margin-top: 12px;
-      color: var(--gold);
-      font-size: 14px;
-      font-weight: 600;
-    }
+    .drop-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .dz-icon { font-size: 44px; margin-bottom: 10px; }
+    .dz-title { font-size: 17px; font-weight: 700; margin-bottom: 5px; }
+    .dz-sub   { color: var(--muted); font-size: 13px; }
+    .dz-file  { margin-top: 10px; color: var(--gold); font-size: 13px; font-weight: 600; }
 
-    /* Title input */
-    .form-group { margin-top: 20px; }
-    .form-label {
-      display: block;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 8px;
-    }
-    .form-input {
-      width: 100%;
-      padding: 14px 18px;
-      background: var(--ink-2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      color: var(--paper);
-      font-size: 15px;
-      outline: none;
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 18px; }
+    @media(max-width:600px){ .form-row { grid-template-columns: 1fr; } }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-label { font-size: 11px; font-weight: 700; letter-spacing: 2px;
+                  text-transform: uppercase; color: var(--muted); }
+    .form-input, .form-select {
+      padding: 12px 16px; background: var(--ink-2);
+      border: 1px solid var(--border); border-radius: 10px;
+      color: var(--paper); font-size: 14px; outline: none;
       transition: border-color 0.2s;
     }
-    .form-input:focus { border-color: var(--gold); }
+    .form-input:focus, .form-select:focus { border-color: var(--gold); }
+    .form-select { appearance: none; }
 
     /* Progress */
-    .progress-wrap {
-      margin-top: 20px;
-      display: none;
-    }
-    .progress-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 8px;
-    }
-    .progress-bar-bg {
-      background: var(--ink-2);
-      border-radius: 99px;
-      height: 8px;
-      overflow: hidden;
-    }
-    .progress-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--gold), var(--gold-2));
-      border-radius: 99px;
-      width: 0%;
-      transition: width 0.3s ease;
-    }
+    .prog-wrap { margin-top: 18px; display: none; }
+    .prog-top  { display: flex; justify-content: space-between;
+                 font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+    .prog-bg   { background: var(--ink-2); border-radius: 99px; height: 8px; overflow: hidden; }
+    .prog-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-2));
+                 border-radius: 99px; width: 0%; transition: width 0.3s; }
 
-    /* Upload btn */
-    .upload-actions {
-      margin-top: 24px;
-      display: flex;
-      gap: 12px;
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 8px; padding: 12px 24px; border-radius: 10px; border: none;
+      font-size: 14px; font-weight: 700; cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
     }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-gold  { background: var(--gold); color: var(--ink); }
+    .btn-gold:hover { box-shadow: 0 8px 24px rgba(245,166,35,0.4); }
+    .btn-ghost { background: rgba(255,255,255,0.06); color: var(--paper);
+                 border: 1px solid var(--border); }
+    .btn-red   { background: var(--red); color: #fff; }
+
+    .upload-actions { display: flex; gap: 12px; margin-top: 20px; }
     .upload-actions .btn-gold { flex: 1; }
 
-    /* Status toast */
-    .toast {
-      position: fixed;
-      bottom: 32px;
-      right: 32px;
-      padding: 14px 22px;
-      border-radius: 12px;
-      font-size: 14px;
-      font-weight: 600;
-      z-index: 99;
-      transform: translateY(80px);
-      opacity: 0;
-      transition: all 0.3s ease;
-      pointer-events: none;
+    /* Video grid */
+    .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
+    .vid-card {
+      background: var(--ink-2); border: 1px solid var(--border); border-radius: 14px;
+      overflow: hidden; transition: border-color 0.2s, transform 0.2s; position: relative;
     }
-    .toast.show { transform: translateY(0); opacity: 1; }
-    .toast.success { background: rgba(46,204,113,0.15); border: 1px solid rgba(46,204,113,0.4); color: var(--green); }
-    .toast.error   { background: rgba(232,48,90,0.15);  border: 1px solid rgba(232,48,90,0.4);  color: var(--red); }
-
-    /* ── VIDEO LIST ── */
-    .stats-row {
-      display: flex;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-    .stat-chip {
-      background: var(--ink-2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 18px;
-      font-size: 13px;
-      color: var(--muted);
-    }
-    .stat-chip strong { color: var(--gold); font-size: 20px; display: block; }
-
-    .video-list { display: flex; flex-direction: column; gap: 12px; }
-
-    .video-row {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      background: var(--ink-2);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 14px 16px;
-      transition: border-color 0.2s;
-    }
-    .video-row:hover { border-color: rgba(245,166,35,0.3); }
-
-    .video-thumb {
-      width: 54px;
-      height: 80px;
-      border-radius: 8px;
+    .vid-card:hover { border-color: rgba(245,166,35,0.4); transform: translateY(-3px); }
+    .vid-thumb {
+      aspect-ratio: 9/16; position: relative; overflow: hidden;
       background: var(--panel);
-      overflow: hidden;
+    }
+    .vid-thumb video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .vid-overlay {
+      position: absolute; inset: 0; background: rgba(0,0,0,0.55);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      opacity: 0; transition: opacity 0.2s;
+    }
+    .vid-card:hover .vid-overlay { opacity: 1; }
+    .vid-action {
+      width: 36px; height: 36px; border-radius: 50%; border: none;
+      cursor: pointer; font-size: 16px; display: flex; align-items: center;
+      justify-content: center; transition: transform 0.2s;
+    }
+    .vid-action:hover { transform: scale(1.1); }
+    .vid-play   { background: var(--gold); color: var(--ink); }
+    .vid-del    { background: rgba(232,48,90,0.85); color: #fff; }
+    .vid-info   { padding: 10px 12px; }
+    .vid-name   { font-size: 12px; font-weight: 700; white-space: nowrap;
+                  overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
+    .vid-meta   { font-size: 11px; color: var(--muted); }
+    .vid-tag    {
+      display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px;
+      border-radius: 5px; margin-top: 5px;
+      background: rgba(245,166,35,0.12); color: var(--gold);
+    }
+
+    .empty-state { text-align: center; padding: 52px 24px; color: var(--muted); }
+    .empty-state .ei { font-size: 48px; margin-bottom: 12px; }
+    .empty-state p   { font-size: 14px; }
+
+    /* ══════════════════════════ CONTACT ENQUIRIES ══════════════ */
+    .enquiry-list { display: flex; flex-direction: column; gap: 10px; }
+    .enquiry-card {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 14px; padding: 18px 20px;
+      display: flex; gap: 16px; align-items: flex-start;
+    }
+    .eq-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), #c47d10);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 900; color: var(--ink);
       flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
-    .video-thumb video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+    .eq-name  { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+    .eq-phone { font-size: 13px; color: var(--gold); margin-bottom: 4px; }
+    .eq-msg   { font-size: 13px; color: var(--muted); }
+    .eq-date  { font-size: 11px; color: var(--muted); margin-top: 6px; }
+    .eq-actions { margin-left: auto; display: flex; gap: 8px; flex-shrink: 0; }
+    .icon-btn {
+      width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--border);
+      background: transparent; cursor: pointer; font-size: 15px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, border-color 0.2s;
     }
-    .video-thumb-placeholder {
-      font-size: 24px;
-    }
+    .icon-btn:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.15); }
 
-    .video-info { flex: 1; min-width: 0; }
-    .video-name {
-      font-size: 15px;
-      font-weight: 700;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-bottom: 4px;
+    /* ══════════════════════════ SETTINGS ══════════════════════ */
+    .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media(max-width:700px){ .settings-grid { grid-template-columns: 1fr; } }
+    .setting-row { display: flex; align-items: center; justify-content: space-between;
+                   padding: 14px 0; border-bottom: 1px solid var(--border); }
+    .setting-row:last-child { border: none; }
+    .setting-info h4 { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+    .setting-info p  { font-size: 12px; color: var(--muted); }
+    .toggle {
+      width: 44px; height: 24px; background: var(--panel-2); border-radius: 99px;
+      position: relative; cursor: pointer; transition: background 0.2s; flex-shrink: 0;
     }
-    .video-meta { font-size: 12px; color: var(--muted); }
-
-    .video-actions { display: flex; gap: 8px; flex-shrink: 0; }
-
-    .btn-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      font-size: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.2s, background 0.2s;
+    .toggle.on { background: var(--gold); }
+    .toggle::after {
+      content: ''; position: absolute; width: 18px; height: 18px;
+      background: white; border-radius: 50%; top: 3px; left: 3px;
+      transition: transform 0.2s;
     }
-    .btn-icon:hover { transform: scale(1.1); }
-    .btn-delete { background: rgba(232,48,90,0.1); color: var(--red); }
-    .btn-delete:hover { background: rgba(232,48,90,0.25); }
-    .btn-view   { background: rgba(245,166,35,0.1); color: var(--gold); }
-    .btn-view:hover { background: rgba(245,166,35,0.25); }
+    .toggle.on::after { transform: translateX(20px); }
 
-    .empty-state {
-      text-align: center;
-      padding: 48px;
-      color: var(--muted);
+    /* ══════════════════════════ TOAST ══════════════════════════ */
+    .toast {
+      position: fixed; bottom: 28px; right: 28px;
+      padding: 14px 22px; border-radius: 12px; font-size: 14px; font-weight: 600;
+      z-index: 999; transform: translateY(80px); opacity: 0;
+      transition: all 0.3s ease; pointer-events: none; max-width: 320px;
     }
-    .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
-
-    .loading-spinner {
-      text-align: center;
-      padding: 32px;
-      color: var(--muted);
-      font-size: 14px;
-    }
+    .toast.show  { transform: translateY(0); opacity: 1; }
+    .toast.ok    { background: rgba(46,204,113,0.15); border: 1px solid rgba(46,204,113,0.4); color: var(--green); }
+    .toast.err   { background: rgba(232,48,90,0.15);  border: 1px solid rgba(232,48,90,0.4);  color: var(--red); }
 
     /* Confirm dialog */
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(4px);
-      z-index: 50;
-      display: none;
-      align-items: center;
-      justify-content: center;
-    }
+    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+               backdrop-filter: blur(4px); z-index: 50;
+               display: none; align-items: center; justify-content: center; padding: 20px; }
     .overlay.show { display: flex; }
-    .dialog {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 32px;
-      width: 100%;
-      max-width: 380px;
-      text-align: center;
-    }
-    .dialog-icon { font-size: 40px; margin-bottom: 12px; }
-    .dialog h3 { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
-    .dialog p  { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
-    .dialog-actions { display: flex; gap: 12px; }
+    .dialog { background: var(--panel); border: 1px solid var(--border);
+              border-radius: 20px; padding: 32px; width: 100%; max-width: 360px; text-align: center; }
+    .dialog .di { font-size: 40px; margin-bottom: 12px; }
+    .dialog h3  { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+    .dialog p   { color: var(--muted); font-size: 14px; margin-bottom: 24px; line-height: 1.6; }
+    .dialog-btns { display: flex; gap: 12px; }
+    .dialog-btns button { flex: 1; }
 
-    @media (max-width: 600px) {
-      .topbar { padding: 0 16px; }
-      .admin-body { padding: 20px 16px 60px; }
-      .card { padding: 20px; }
-      .stats-row { flex-wrap: wrap; }
+    /* Mobile sidebar toggle */
+    .menu-toggle {
+      display: none; width: 36px; height: 36px; border-radius: 8px;
+      background: var(--panel); border: 1px solid var(--border);
+      cursor: pointer; font-size: 18px; align-items: center; justify-content: center;
     }
+    @media(max-width:768px){
+      .menu-toggle { display: flex; }
+      .sidebar { position: fixed; left: 0; top: 0; bottom: 0; z-index: 40;
+                 transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); box-shadow: 4px 0 40px rgba(0,0,0,0.6); }
+    }
+
+    .scrollbar-thin::-webkit-scrollbar { width: 4px; }
+    .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+    .scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
   </style>
 </head>
 <body>
 
-<!-- ════════════════════════════════════ LOGIN SCREEN -->
+<!-- ════════════════════════════════════ LOGIN -->
 <div id="loginScreen">
-  <div class="login-box">
+  <div class="login-card">
     <div class="login-logo">🕺</div>
-    <h1 class="login-title">Admin Panel</h1>
-    <p class="login-sub">Damodar House of Dance</p>
-
-    <input type="password" id="passwordInput" placeholder="Enter password" />
-    <button class="btn btn-gold" onclick="login()">Login →</button>
-    <p class="login-error" id="loginError">❌ Wrong password. Try again.</p>
+    <div class="login-brand">Damodar Dance</div>
+    <div class="login-sub">Admin Control Panel</div>
+    <label class="login-label">Password</label>
+    <input type="password" class="login-input" id="pwInput" placeholder="••••••••" />
+    <button class="login-btn" onclick="doLogin()">Login to Panel →</button>
+    <div class="login-err" id="loginErr">❌ Incorrect password. Try again.</div>
   </div>
 </div>
 
-<!-- ════════════════════════════════════ ADMIN SCREEN -->
-<div id="adminScreen">
+<!-- ════════════════════════════════════ CPANEL -->
+<div id="cpanel">
+  <div class="layout">
 
-  <!-- Top bar -->
-  <div class="topbar">
-    <div class="topbar-brand">
-      <span>🕺</span>
-      <div>
-        <h1>Damodar Dance</h1>
-        <p>Video Manager</p>
-      </div>
-    </div>
-    <button class="btn btn-red" onclick="logout()" style="padding:8px 16px;font-size:13px;">
-      Logout
-    </button>
-  </div>
-
-  <div class="admin-body">
-
-    <!-- Upload Card -->
-    <div class="card">
-      <div class="card-title">📤 Upload New Video</div>
-
-      <!-- Drop zone -->
-      <div class="drop-zone" id="dropZone">
-        <input type="file" id="fileInput" accept="video/*" onchange="onFileSelected(this)" />
-        <div class="drop-icon">🎬</div>
-        <div class="drop-title">Tap to select video</div>
-        <div class="drop-sub">MP4, MOV, AVI — Max 500 MB</div>
-        <div class="drop-selected" id="selectedFileName"></div>
-      </div>
-
-      <!-- Title -->
-      <div class="form-group">
-        <label class="form-label">Video Title</label>
-        <input type="text" class="form-input" id="videoTitle"
-               placeholder="e.g. Hip Hop Practice — Batch 2025" />
-      </div>
-
-      <!-- Progress -->
-      <div class="progress-wrap" id="progressWrap">
-        <div class="progress-label">
-          <span id="progressStatus">Uploading...</span>
-          <span id="progressPercent">0%</span>
-        </div>
-        <div class="progress-bar-bg">
-          <div class="progress-bar-fill" id="progressFill"></div>
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar scrollbar-thin" id="sidebar">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-icon">🕺</div>
+        <div class="sidebar-logo-text">
+          <h2>Damodar</h2>
+          <p>Admin Panel</p>
         </div>
       </div>
 
-      <!-- Buttons -->
-      <div class="upload-actions">
-        <button class="btn btn-gold" id="uploadBtn" onclick="uploadVideo()">
-          ⬆️ Upload Video
-        </button>
-      </div>
-    </div>
-
-    <!-- Video List -->
-    <div class="card">
-      <div class="card-title">🎥 Uploaded Videos</div>
-
-      <div class="stats-row">
-        <div class="stat-chip">
-          <strong id="totalCount">0</strong>
-          Total Videos
+      <div class="nav-section">
+        <div class="nav-section-label">Main</div>
+        <div class="nav-item active" onclick="showPage('dashboard',this)">
+          <span class="nav-icon">🏠</span> Dashboard
         </div>
-        <div class="stat-chip">
-          <strong id="totalSize">0 MB</strong>
-          Total Size
+        <div class="nav-item" onclick="showPage('videos',this)">
+          <span class="nav-icon">🎬</span> Videos
+          <span class="nav-badge" id="videoBadge">0</span>
+        </div>
+        <div class="nav-item" onclick="showPage('enquiries',this)">
+          <span class="nav-icon">📩</span> Enquiries
         </div>
       </div>
 
-      <div id="videoList">
-        <div class="loading-spinner">Loading videos...</div>
+      <div class="nav-section">
+        <div class="nav-section-label">Website</div>
+        <div class="nav-item" onclick="window.open('index.html','_blank')">
+          <span class="nav-icon">🌐</span> View Website ↗
+        </div>
+        <div class="nav-item" onclick="showPage('settings',this)">
+          <span class="nav-icon">⚙️</span> Settings
+        </div>
       </div>
-    </div>
 
-  </div>
-</div>
+      <div class="sidebar-footer">
+        <button class="logout-btn" onclick="doLogout()">🚪 Logout</button>
+      </div>
+    </aside>
+
+    <!-- ── Main ── -->
+    <div class="main">
+
+      <!-- Topbar -->
+      <div class="topbar">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+          <div class="topbar-title" id="topbarTitle">Dashboard</div>
+        </div>
+        <div class="topbar-right">
+          <span class="topbar-badge">🟢 Live</span>
+          <a href="index.html" target="_blank" class="site-link">🌐 View Site</a>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="content scrollbar-thin">
+
+        <!-- ╔══════════════ DASHBOARD PAGE ══════════════╗ -->
+        <div class="page active" id="page-dashboard">
+          <div class="page-title">Welcome back 👋</div>
+          <div class="page-sub">Here's what's happening with Damodar House of Dance.</div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon">🎬</div>
+              <div class="stat-value" id="ds-videos">0</div>
+              <div class="stat-label">Total Videos</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">📦</div>
+              <div class="stat-value" id="ds-size">0 MB</div>
+              <div class="stat-label">Storage Used</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">🌐</div>
+              <div class="stat-value">Live</div>
+              <div class="stat-label">Site Status</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">📩</div>
+              <div class="stat-value" id="ds-enquiries">—</div>
+              <div class="stat-label">Enquiries</div>
+            </div>
+          </div>
+
+          <!-- Quick actions -->
+          <div class="quick-actions">
+            <div class="section-head-row">
+              <div class="section-heading">Quick Actions</div>
+            </div>
+            <div class="actions-grid">
+              <div class="action-tile" onclick="showPage('videos', document.querySelector('.nav-item:nth-child(2)'))">
+                <div class="t-icon">📤</div>
+                <div class="t-name">Upload Video</div>
+                <div class="t-sub">Add new dance video</div>
+              </div>
+              <div class="action-tile" onclick="showPage('enquiries', document.querySelectorAll('.nav-item')[2])">
+                <div class="t-icon">📩</div>
+                <div class="t-name">Enquiries</div>
+                <div class="t-sub">View form submissions</div>
+              </div>
+              <div class="action-tile" onclick="window.open('index.html','_blank')">
+                <div class="t-icon">🌐</div>
+                <div class="t-name">View Website</div>
+                <div class="t-sub">Open live site</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent uploads -->
+          <div>
+            <div class="section-head-row">
+              <div class="section-heading">Recent Videos</div>
+            </div>
+            <div class="recent-list" id="recentList">
+              <div style="color:var(--muted);font-size:13px;">Loading...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ╔══════════════ VIDEOS PAGE ══════════════╗ -->
+        <div class="page" id="page-videos">
+          <div class="page-title">Video Manager</div>
+          <div class="page-sub">Upload and manage all dance videos shown on the website.</div>
+
+          <!-- Upload card -->
+          <div class="card">
+            <div class="card-title">📤 Upload New Video</div>
+            <div class="drop-zone" id="dropZone">
+              <input type="file" id="fileInput" accept="video/*" onchange="onFile(this)"/>
+              <div class="dz-icon">🎬</div>
+              <div class="dz-title">Tap to select video</div>
+              <div class="dz-sub">MP4, MOV — Max 500 MB</div>
+              <div class="dz-file" id="dzFile"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Video Title</label>
+                <input type="text" class="form-input" id="vTitle" placeholder="e.g. Hip Hop Batch 2025"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Dance Style</label>
+                <select class="form-select" id="vCategory">
+                  <option value="">Select style...</option>
+                  <option>Hip Hop</option>
+                  <option>Bollywood</option>
+                  <option>Freestyle</option>
+                  <option>Folk</option>
+                  <option>Contemporary</option>
+                  <option>Zumba</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="prog-wrap" id="progWrap">
+              <div class="prog-top">
+                <span id="progStatus">Uploading...</span>
+                <span id="progPct">0%</span>
+              </div>
+              <div class="prog-bg"><div class="prog-fill" id="progFill"></div></div>
+            </div>
+            <div class="upload-actions">
+              <button class="btn btn-gold" id="uploadBtn" onclick="doUpload()">⬆️ Upload Video</button>
+              <button class="btn btn-ghost" onclick="resetUpload()">✕ Clear</button>
+            </div>
+          </div>
+
+          <!-- Video library -->
+          <div class="card">
+            <div class="card-title" style="justify-content:space-between;">
+              <span>🎥 Video Library</span>
+              <span style="font-size:12px;color:var(--muted);font-weight:500;letter-spacing:0;text-transform:none;">
+                <span id="libCount">0</span> videos · <span id="libSize">0 MB</span>
+              </span>
+            </div>
+            <div id="videoGrid" class="video-grid">
+              <div class="empty-state" style="grid-column:1/-1;">
+                <div class="ei">🎬</div><p>Loading videos...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ╔══════════════ ENQUIRIES PAGE ══════════════╗ -->
+        <div class="page" id="page-enquiries">
+          <div class="page-title">Enquiries</div>
+          <div class="page-sub">Contact form submissions from your website visitors.</div>
+          <div class="card">
+            <div class="card-title">📩 Form Submissions</div>
+            <div class="enquiry-list" id="enquiryList">
+              <div class="empty-state">
+                <div class="ei">📩</div>
+                <p>No enquiries yet.<br>When visitors fill your contact form, they'll appear here.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ╔══════════════ SETTINGS PAGE ══════════════╗ -->
+        <div class="page" id="page-settings">
+          <div class="page-title">Settings</div>
+          <div class="page-sub">Manage your admin panel preferences.</div>
+          <div class="settings-grid">
+            <div class="card">
+              <div class="card-title">🔐 Security</div>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <h4>Admin Password</h4>
+                  <p>Current: ••••••••</p>
+                </div>
+                <button class="btn btn-ghost" style="padding:8px 14px;font-size:12px;" onclick="alert('Edit the ADMIN_PASSWORD value in firebase-config.js to change the password.')">Change</button>
+              </div>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <h4>Auto-logout</h4>
+                  <p>Session expires on tab close</p>
+                </div>
+                <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-title">🌐 Website</div>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <h4>Site URL</h4>
+                  <p>asal1989.github.io/damodar-dance-class</p>
+                </div>
+                <button class="btn btn-ghost" style="padding:8px 14px;font-size:12px;"
+                  onclick="window.open('https://asal1989.github.io/damodar-dance-class/','_blank')">Open ↗</button>
+              </div>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <h4>Video Source</h4>
+                  <p>Firebase Storage</p>
+                </div>
+                <span style="font-size:12px;color:var(--green);">🟢 Active</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /content -->
+    </div><!-- /main -->
+  </div><!-- /layout -->
+</div><!-- /cpanel -->
 
 <!-- Delete confirm dialog -->
-<div class="overlay" id="deleteOverlay">
+<div class="overlay" id="delOverlay">
   <div class="dialog">
-    <div class="dialog-icon">🗑️</div>
+    <div class="di">🗑️</div>
     <h3>Delete Video?</h3>
     <p>This will permanently remove the video from your website. This cannot be undone.</p>
-    <div class="dialog-actions">
-      <button class="btn" style="flex:1;background:var(--ink-2);color:var(--paper);"
-              onclick="closeDeleteDialog()">Cancel</button>
-      <button class="btn btn-red" style="flex:1;background:var(--red);color:white;"
-              onclick="confirmDelete()">Delete</button>
+    <div class="dialog-btns">
+      <button class="btn btn-ghost" onclick="closeDelDialog()">Cancel</button>
+      <button class="btn btn-red"   onclick="doDelete()">Delete</button>
     </div>
   </div>
 </div>
 
-<!-- Toast notification -->
 <div class="toast" id="toast"></div>
 
-<!-- Firebase Config -->
 <script src="firebase-config.js"></script>
-
 <script>
-  // ── Init Firebase ──────────────────────────────────────────
-  firebase.initializeApp(firebaseConfig);
-  const db      = firebase.firestore();
-  const storage = firebase.storage();
+// ── Firebase init ──────────────────────────────────────────────
+let db, storage, fbReady = false;
+try {
+  if (typeof firebaseConfig !== 'undefined' && firebaseConfig.apiKey !== 'YOUR_API_KEY') {
+    firebase.initializeApp(firebaseConfig);
+    db       = firebase.firestore();
+    storage  = firebase.storage();
+    fbReady  = true;
+  }
+} catch(e) {}
 
-  // ── Auth ───────────────────────────────────────────────────
-  function login() {
-    const val = document.getElementById('passwordInput').value;
-    if (val === ADMIN_PASSWORD) {
-      sessionStorage.setItem('admin_auth', '1');
-      document.getElementById('loginScreen').style.display  = 'none';
-      document.getElementById('adminScreen').style.display  = 'block';
-      loadVideos();
-    } else {
-      document.getElementById('loginError').style.display = 'block';
-      document.getElementById('passwordInput').value = '';
+// ── Auth ───────────────────────────────────────────────────────
+function doLogin() {
+  const pw = document.getElementById('pwInput').value;
+  const correct = (typeof ADMIN_PASSWORD !== 'undefined') ? ADMIN_PASSWORD : 'damodar2024';
+  if (pw === correct) {
+    sessionStorage.setItem('dmd_admin', '1');
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('cpanel').style.display = 'block';
+    initPanel();
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+    document.getElementById('pwInput').value = '';
+  }
+}
+function doLogout() {
+  sessionStorage.removeItem('dmd_admin');
+  location.reload();
+}
+document.getElementById('pwInput').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+if (sessionStorage.getItem('dmd_admin') === '1') {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('cpanel').style.display = 'block';
+  initPanel();
+}
+
+// ── Sidebar / Nav ──────────────────────────────────────────────
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+const pageTitles = {
+  dashboard:'Dashboard', videos:'Video Manager',
+  enquiries:'Enquiries', settings:'Settings'
+};
+function showPage(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if (el) el.classList.add('active');
+  document.getElementById('topbarTitle').textContent = pageTitles[id] || id;
+  document.getElementById('sidebar').classList.remove('open');
+  if (id === 'videos') loadVideos();
+}
+
+// ── Init panel ─────────────────────────────────────────────────
+function initPanel() {
+  loadDashboard();
+}
+
+// ── Dashboard ──────────────────────────────────────────────────
+async function loadDashboard() {
+  if (!fbReady) {
+    document.getElementById('recentList').innerHTML =
+      '<div style="color:var(--muted);font-size:13px;padding:12px 0;">Firebase not configured yet. Videos will appear here once set up.</div>';
+    return;
+  }
+  try {
+    const snap = await db.collection('videos').orderBy('uploadedAt','desc').get();
+    const docs = snap.docs;
+    const totalBytes = docs.reduce((a,d) => a+(d.data().size||0), 0);
+    document.getElementById('ds-videos').textContent  = docs.length;
+    document.getElementById('ds-size').textContent    = (totalBytes/1024/1024).toFixed(1)+' MB';
+    document.getElementById('videoBadge').textContent = docs.length;
+
+    // Recent list (top 4)
+    const recentList = document.getElementById('recentList');
+    if (docs.length === 0) {
+      recentList.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:12px 0;">No videos uploaded yet.</div>';
+      return;
     }
+    recentList.innerHTML = '';
+    docs.slice(0,4).forEach(doc => {
+      const d = doc.data();
+      const date = d.uploadedAt?.toDate().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) || 'Just now';
+      const row = document.createElement('div');
+      row.className = 'recent-row';
+      row.innerHTML = `
+        <div class="recent-thumb"><video src="${d.url}" muted preload="metadata"></video></div>
+        <div class="recent-info">
+          <div class="recent-name">${d.title}</div>
+          <div class="recent-date">📅 ${date}${d.category ? ' · '+d.category : ''}</div>
+        </div>
+        <span class="pill">Live</span>`;
+      recentList.appendChild(row);
+    });
+  } catch(e) {
+    document.getElementById('recentList').innerHTML =
+      `<div style="color:var(--red);font-size:13px;">${e.message}</div>`;
   }
+}
 
-  function logout() {
-    sessionStorage.removeItem('admin_auth');
-    location.reload();
+// ── Upload ─────────────────────────────────────────────────────
+let selFile = null;
+
+function onFile(input) {
+  if (!input.files.length) return;
+  selFile = input.files[0];
+  const mb = (selFile.size/1024/1024).toFixed(1);
+  document.getElementById('dzFile').textContent = `✅ ${selFile.name} (${mb} MB)`;
+  if (!document.getElementById('vTitle').value)
+    document.getElementById('vTitle').value = selFile.name.replace(/\.[^.]+$/,'').replace(/[_-]/g,' ');
+}
+
+const dz = document.getElementById('dropZone');
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragging'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('dragging'));
+dz.addEventListener('drop', e => {
+  e.preventDefault(); dz.classList.remove('dragging');
+  const f = e.dataTransfer.files[0];
+  if (f?.type.startsWith('video/')) {
+    selFile = f;
+    document.getElementById('dzFile').textContent = `✅ ${f.name} (${(f.size/1024/1024).toFixed(1)} MB)`;
+    if (!document.getElementById('vTitle').value)
+      document.getElementById('vTitle').value = f.name.replace(/\.[^.]+$/,'').replace(/[_-]/g,' ');
   }
+});
 
-  // Auto-login if session active
-  if (sessionStorage.getItem('admin_auth') === '1') {
-    document.getElementById('loginScreen').style.display  = 'none';
-    document.getElementById('adminScreen').style.display  = 'block';
-    loadVideos();
-  }
+function doUpload() {
+  if (!selFile) { showToast('Please select a video first','err'); return; }
+  if (!fbReady) { showToast('Firebase not configured yet','err'); return; }
+  const title    = document.getElementById('vTitle').value.trim() || selFile.name;
+  const category = document.getElementById('vCategory').value;
+  const btn = document.getElementById('uploadBtn');
+  btn.disabled = true; btn.textContent = 'Uploading...';
+  document.getElementById('progWrap').style.display = 'block';
 
-  // Enter key on password
-  document.getElementById('passwordInput')
-    .addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+  const filename = `${Date.now()}_${selFile.name}`;
+  const ref  = storage.ref(`dance-videos/${filename}`);
+  const task = ref.put(selFile);
 
-  // ── File selection ─────────────────────────────────────────
-  let selectedFile = null;
-
-  function onFileSelected(input) {
-    if (input.files.length > 0) {
-      selectedFile = input.files[0];
-      const sizeMB = (selectedFile.size / 1024 / 1024).toFixed(1);
-      document.getElementById('selectedFileName').textContent =
-        `✅ ${selectedFile.name} (${sizeMB} MB)`;
-      // Auto-fill title from filename if empty
-      const titleInput = document.getElementById('videoTitle');
-      if (!titleInput.value) {
-        titleInput.value = selectedFile.name.replace(/\.[^.]+$/, '').replace(/[_-]/g, ' ');
-      }
-    }
-  }
-
-  // Drag & drop
-  const dropZone = document.getElementById('dropZone');
-  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragging'); });
-  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragging'));
-  dropZone.addEventListener('drop', e => {
-    e.preventDefault();
-    dropZone.classList.remove('dragging');
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('video/')) {
-      selectedFile = file;
-      document.getElementById('selectedFileName').textContent =
-        `✅ ${file.name} (${(file.size/1024/1024).toFixed(1)} MB)`;
-      if (!document.getElementById('videoTitle').value) {
-        document.getElementById('videoTitle').value = file.name.replace(/\.[^.]+$/, '').replace(/[_-]/g, ' ');
-      }
-    }
-  });
-
-  // ── Upload ─────────────────────────────────────────────────
-  function uploadVideo() {
-    if (!selectedFile) { showToast('Please select a video first', 'error'); return; }
-    const title = document.getElementById('videoTitle').value.trim() || selectedFile.name;
-
-    const btn = document.getElementById('uploadBtn');
-    btn.disabled = true;
-    btn.textContent = 'Uploading...';
-
-    const progressWrap = document.getElementById('progressWrap');
-    const progressFill = document.getElementById('progressFill');
-    const progressPct  = document.getElementById('progressPercent');
-    const progressStat = document.getElementById('progressStatus');
-    progressWrap.style.display = 'block';
-
-    // Unique filename: timestamp + original name
-    const filename = `${Date.now()}_${selectedFile.name}`;
-    const ref = storage.ref(`dance-videos/${filename}`);
-    const task = ref.put(selectedFile);
-
-    task.on('state_changed',
-      snap => {
-        const pct = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
-        progressFill.style.width  = pct + '%';
-        progressPct.textContent   = pct + '%';
-        progressStat.textContent  = `Uploading... ${pct}%`;
-      },
-      err => {
-        showToast('Upload failed: ' + err.message, 'error');
-        resetUploadUI();
-      },
-      async () => {
-        const url = await task.snapshot.ref.getDownloadURL();
-        // Save to Firestore
-        await db.collection('videos').add({
-          title:      title,
-          filename:   filename,
-          url:        url,
-          size:       selectedFile.size,
-          uploadedAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        showToast('✅ Video uploaded successfully!', 'success');
-        resetUploadUI();
-        loadVideos();
-      }
-    );
-  }
-
-  function resetUploadUI() {
-    selectedFile = null;
-    document.getElementById('fileInput').value     = '';
-    document.getElementById('selectedFileName').textContent = '';
-    document.getElementById('videoTitle').value   = '';
-    document.getElementById('progressWrap').style.display = 'none';
-    document.getElementById('progressFill').style.width   = '0%';
-    const btn = document.getElementById('uploadBtn');
-    btn.disabled    = false;
-    btn.textContent = '⬆️ Upload Video';
-  }
-
-  // ── Load videos list ───────────────────────────────────────
-  async function loadVideos() {
-    const listEl = document.getElementById('videoList');
-    listEl.innerHTML = '<div class="loading-spinner">Loading videos...</div>';
-
-    try {
-      const snap = await db.collection('videos').orderBy('uploadedAt', 'desc').get();
-      const docs = snap.docs;
-
-      document.getElementById('totalCount').textContent = docs.length;
-      const totalBytes = docs.reduce((a, d) => a + (d.data().size || 0), 0);
-      document.getElementById('totalSize').textContent  = (totalBytes / 1024 / 1024).toFixed(1) + ' MB';
-
-      if (docs.length === 0) {
-        listEl.innerHTML = `
-          <div class="empty-state">
-            <div class="empty-icon">🎬</div>
-            <p>No videos yet. Upload your first dance video!</p>
-          </div>`;
-        return;
-      }
-
-      listEl.innerHTML = '';
-      docs.forEach(doc => {
-        const d = doc.data();
-        const date = d.uploadedAt?.toDate().toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) || 'Just now';
-        const sizeMB = ((d.size || 0) / 1024 / 1024).toFixed(1);
-
-        const row = document.createElement('div');
-        row.className = 'video-row';
-        row.innerHTML = `
-          <div class="video-thumb">
-            <video src="${d.url}" muted preload="metadata"></video>
-          </div>
-          <div class="video-info">
-            <div class="video-name">${d.title}</div>
-            <div class="video-meta">📅 ${date} &nbsp;·&nbsp; 📦 ${sizeMB} MB</div>
-          </div>
-          <div class="video-actions">
-            <button class="btn-icon btn-view" title="Preview"
-                    onclick="window.open('${d.url}','_blank')">👁️</button>
-            <button class="btn-icon btn-delete" title="Delete"
-                    onclick="openDeleteDialog('${doc.id}','${d.filename}','${d.title}')">🗑️</button>
-          </div>`;
-        listEl.appendChild(row);
+  task.on('state_changed',
+    snap => {
+      const pct = Math.round(snap.bytesTransferred/snap.totalBytes*100);
+      document.getElementById('progFill').style.width = pct+'%';
+      document.getElementById('progPct').textContent  = pct+'%';
+      document.getElementById('progStatus').textContent = `Uploading ${pct}%...`;
+    },
+    err => { showToast('Upload failed: '+err.message,'err'); resetUpload(); },
+    async () => {
+      const url = await task.snapshot.ref.getDownloadURL();
+      await db.collection('videos').add({
+        title, category, url, filename,
+        size: selFile.size,
+        uploadedAt: firebase.firestore.FieldValue.serverTimestamp()
       });
-    } catch (e) {
-      listEl.innerHTML = `<div class="empty-state"><p style="color:var(--red)">Error loading videos: ${e.message}</p></div>`;
+      showToast('✅ Video uploaded successfully!','ok');
+      resetUpload(); loadVideos(); loadDashboard();
     }
-  }
+  );
+}
 
-  // ── Delete ─────────────────────────────────────────────────
-  let deleteTarget = null;
+function resetUpload() {
+  selFile = null;
+  document.getElementById('fileInput').value = '';
+  document.getElementById('dzFile').textContent = '';
+  document.getElementById('vTitle').value = '';
+  document.getElementById('vCategory').value = '';
+  document.getElementById('progWrap').style.display = 'none';
+  document.getElementById('progFill').style.width = '0%';
+  const btn = document.getElementById('uploadBtn');
+  btn.disabled = false; btn.textContent = '⬆️ Upload Video';
+}
 
-  function openDeleteDialog(docId, filename, title) {
-    deleteTarget = { docId, filename };
-    document.getElementById('deleteOverlay').classList.add('show');
+// ── Video grid ─────────────────────────────────────────────────
+async function loadVideos() {
+  const grid = document.getElementById('videoGrid');
+  grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="ei">⏳</div><p>Loading...</p></div>';
+  if (!fbReady) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="ei">⚙️</div><p>Firebase not configured yet.</p></div>';
+    return;
   }
-  function closeDeleteDialog() {
-    deleteTarget = null;
-    document.getElementById('deleteOverlay').classList.remove('show');
-  }
-  async function confirmDelete() {
-    if (!deleteTarget) return;
-    closeDeleteDialog();
-    try {
-      // Delete from Storage
-      await storage.ref(`dance-videos/${deleteTarget.filename}`).delete().catch(() => {});
-      // Delete from Firestore
-      await db.collection('videos').doc(deleteTarget.docId).delete();
-      showToast('🗑️ Video deleted', 'success');
-      loadVideos();
-    } catch(e) {
-      showToast('Delete failed: ' + e.message, 'error');
+  try {
+    const snap = await db.collection('videos').orderBy('uploadedAt','desc').get();
+    const totalBytes = snap.docs.reduce((a,d)=>a+(d.data().size||0),0);
+    document.getElementById('libCount').textContent = snap.size;
+    document.getElementById('libSize').textContent  = (totalBytes/1024/1024).toFixed(1)+' MB';
+    document.getElementById('videoBadge').textContent = snap.size;
+
+    if (snap.empty) {
+      grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="ei">🎬</div><p>No videos yet. Upload your first video!</p></div>';
+      return;
     }
+    grid.innerHTML = '';
+    snap.forEach(doc => {
+      const d = doc.data();
+      const mb = ((d.size||0)/1024/1024).toFixed(1);
+      const date = d.uploadedAt?.toDate().toLocaleDateString('en-IN',{day:'numeric',month:'short'}) || '';
+      const card = document.createElement('div');
+      card.className = 'vid-card';
+      card.innerHTML = `
+        <div class="vid-thumb">
+          <video src="${d.url}" muted preload="metadata"></video>
+          <div class="vid-overlay">
+            <button class="vid-action vid-play" onclick="window.open('${d.url}','_blank')">▶</button>
+            <button class="vid-action vid-del"  onclick="openDelDialog('${doc.id}','${d.filename}')">🗑</button>
+          </div>
+        </div>
+        <div class="vid-info">
+          <div class="vid-name">${d.title}</div>
+          <div class="vid-meta">📦 ${mb} MB · ${date}</div>
+          ${d.category ? `<span class="vid-tag">${d.category}</span>` : ''}
+        </div>`;
+      grid.appendChild(card);
+    });
+  } catch(e) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;color:var(--red);">${e.message}</div>`;
   }
+}
 
-  // ── Toast ──────────────────────────────────────────────────
-  function showToast(msg, type = 'success') {
-    const t = document.getElementById('toast');
-    t.textContent  = msg;
-    t.className    = `toast ${type} show`;
-    setTimeout(() => t.classList.remove('show'), 3500);
-  }
+// ── Delete ─────────────────────────────────────────────────────
+let delTarget = null;
+function openDelDialog(id, filename) {
+  delTarget = {id, filename};
+  document.getElementById('delOverlay').classList.add('show');
+}
+function closeDelDialog() {
+  delTarget = null;
+  document.getElementById('delOverlay').classList.remove('show');
+}
+async function doDelete() {
+  if (!delTarget) return;
+  closeDelDialog();
+  try {
+    await storage.ref(`dance-videos/${delTarget.filename}`).delete().catch(()=>{});
+    await db.collection('videos').doc(delTarget.id).delete();
+    showToast('🗑️ Video deleted','ok');
+    loadVideos(); loadDashboard();
+  } catch(e) { showToast('Delete failed: '+e.message,'err'); }
+}
+
+// ── Toast ──────────────────────────────────────────────────────
+function showToast(msg, type='ok') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = `toast ${type} show`;
+  setTimeout(()=>t.classList.remove('show'), 3500);
+}
 </script>
 </body>
 </html>
