@@ -2101,9 +2101,11 @@ function buildBillBookHTML(bill) {
       .bb-table .bb-center { text-align: center; }
       .bb-total-label { text-align: right; background: #f4f4f4; font-weight: 900; color: #09254b; }
       .bb-bottom { display: grid; grid-template-columns: 58mm 1fr 58mm; gap: 8mm; align-items: stretch; margin-top: 4mm; }
-      .bb-pay, .bb-sign { border: 0.5mm solid #1c3049; border-radius: 2mm; min-height: 25mm; padding: 7mm 5mm 4mm; position: relative; }
+      .bb-pay { border: 0.5mm solid #1c3049; border-radius: 2mm; min-height: 28mm; padding: 12mm 5mm 4mm; position: relative; }
+      .bb-sign { border: 0.5mm solid #1c3049; border-radius: 2mm; min-height: 28mm; padding: 7mm 5mm 4mm; position: relative; }
       .bb-pay-title { position: absolute; top: -4mm; left: 8mm; background: #d00661; color: #fff; border-radius: 1mm; padding: 2mm 8mm; font-size: 4mm; font-weight: 900; letter-spacing: 0.6mm; }
-      .bb-pay-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm 5mm; font-size: 4mm; font-weight: 800; color: #111; }
+      .bb-pay-grid { display: flex; flex-direction: column; gap: 3mm; font-size: 4mm; font-weight: 800; color: #111; }
+      .bb-pay-row { display: flex; align-items: center; gap: 2mm; white-space: nowrap; }
       .bb-thanks { text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
       .bb-thanks .script { font-family: Georgia, serif; font-style: italic; font-size: 12mm; color: #d00661; line-height: 1; }
       .bb-thanks .family { margin-top: 3mm; font-size: 4mm; font-weight: 800; color: #1c3049; letter-spacing: 0.4mm; }
@@ -2155,8 +2157,9 @@ function buildBillBookHTML(bill) {
       <div class="bb-pay">
         <div class="bb-pay-title">PAYMENT MODE</div>
         <div class="bb-pay-grid">
-          <div>💵 CASH ${check('Cash')}</div><div>📱 UPI ${check('UPI')}</div>
-          <div style="grid-column:1/-1;">🏦 BANK TRANSFER ${check('Bank Transfer')}</div>
+          <div class="bb-pay-row">${check('Cash')} 💵 CASH</div>
+          <div class="bb-pay-row">${check('UPI')} 📱 UPI</div>
+          <div class="bb-pay-row">${check('Bank Transfer')} 🏦 BANK TRANSFER</div>
         </div>
       </div>
       <div class="bb-thanks">
