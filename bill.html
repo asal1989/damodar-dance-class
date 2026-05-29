@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bill Book — Damodar House of Dance</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,900;1,400&family=Dancing+Script:wght@700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #111;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 24px;
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  .bill-page {
+    width: 210mm;
+    min-height: 297mm;
+    background: #000;
+    color: #fff;
+    padding: 18px 20px 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ─── HEADER ─── */
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 10px;
+  }
+
+  .logo-wrap {
+    flex-shrink: 0;
+    width: 110px;
+    height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo-wrap img {
+    width: 110px;
+    height: 110px;
+    object-fit: contain;
+  }
+
+  .brand {
+    flex: 1;
+  }
+
+  .brand-name {
+    font-family: 'Bebas Neue', 'Montserrat', sans-serif;
+    font-size: 58px;
+    line-height: 1;
+    letter-spacing: 3px;
+    background: linear-gradient(90deg, #fff 0%, #a259ff 40%, #ff2d78 70%, #fff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .brand-name span.da {
+    background: linear-gradient(135deg, #a259ff, #ff2d78);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .brand-sub {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 6px;
+    color: #ccc;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 2px;
+  }
+
+  .brand-sub::before, .brand-sub::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #a259ff, #ff2d78, transparent);
+  }
+
+  .tagline {
+    margin-top: 6px;
+    font-family: 'Dancing Script', cursive;
+    font-size: 17px;
+    color: #ff2d78;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tagline .star { color: #ff2d78; font-size: 13px; }
+  .tagline em { color: #45caff; font-style: italic; }
+
+  /* ─── BILL BOOK BANNER ─── */
+  .bill-banner {
+    text-align: center;
+    margin: 10px 0 12px;
+  }
+
+  .bill-banner-inner {
+    display: inline-block;
+    background: linear-gradient(90deg, #ff1b6b, #a259ff, #45caff);
+    padding: 6px 60px;
+    border-radius: 4px;
+  }
+
+  .bill-banner-inner span {
+    font-family: 'Bebas Neue', 'Montserrat', sans-serif;
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: 6px;
+    color: #fff;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  }
+
+  /* ─── META ROW (Bill No / Date) ─── */
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 12px;
+  }
+
+  .meta-box {
+    border: 1.5px solid #a259ff;
+    border-radius: 6px;
+    padding: 5px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 190px;
+  }
+
+  .meta-box .field-line {
+    flex: 1;
+    border-bottom: 1.5px solid #a259ff;
+    min-width: 80px;
+    height: 20px;
+  }
+
+  .meta-date {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .meta-date .slash { color: #a259ff; font-weight: 900; }
+
+  .date-seg {
+    border-bottom: 1.5px solid #a259ff;
+    width: 28px;
+    height: 20px;
+    display: inline-block;
+  }
+
+  .date-seg.year { width: 48px; }
+
+  /* ─── CUSTOMER INFO BOX ─── */
+  .customer-box {
+    border: 1.5px solid #a259ff;
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+    margin-bottom: 12px;
+    background: rgba(162, 89, 255, 0.04);
+  }
+
+  .customer-fields {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .field-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .field-row label {
+    white-space: nowrap;
+    color: #fff;
+    min-width: 90px;
+  }
+
+  .field-row .line {
+    flex: 1;
+    border-bottom: 1.5px solid #a259ff;
+    height: 20px;
+  }
+
+  .address-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+  }
+
+  .address-lines .line {
+    border-bottom: 1.5px solid #a259ff;
+    height: 20px;
+    flex: unset;
+  }
+
+  .dancer-img {
+    width: 120px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .dancer-img img {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 12px rgba(255, 45, 120, 0.6));
+  }
+
+  /* ─── ITEMS TABLE ─── */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 12px;
+    font-size: 13px;
+  }
+
+  .items-table thead tr th {
+    background: linear-gradient(90deg, #ff1b6b, #a259ff, #3b5cff);
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    padding: 8px 10px;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .items-table thead tr th:first-child { width: 56px; }
+  .items-table thead tr th:nth-child(2) { text-align: left; }
+  .items-table thead tr th:nth-child(3) { width: 100px; }
+  .items-table thead tr th:nth-child(4) { width: 120px; }
+
+  .items-table tbody tr td {
+    border: 1px solid #2a1a4a;
+    padding: 9px 10px;
+    text-align: center;
+    height: 36px;
+    color: #fff;
+    background: #060010;
+  }
+
+  .items-table tbody tr:nth-child(odd) td { background: #080012; }
+  .items-table tbody tr:nth-child(even) td { background: #030008; }
+
+  .sno-cell { color: #a259ff; font-weight: 700; }
+
+  .items-table tfoot tr td {
+    border: 1px solid #2a1a4a;
+    padding: 8px 10px;
+    background: #060010;
+  }
+
+  .total-label {
+    background: linear-gradient(90deg, #a259ff, #3b5cff) !important;
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #fff !important;
+  }
+
+  .total-value {
+    background: linear-gradient(90deg, #1a2a6c, #3b5cff) !important;
+    height: 36px;
+  }
+
+  /* ─── BOTTOM ROW ─── */
+  .bottom-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+    align-items: stretch;
+  }
+
+  .payment-box {
+    border: 1.5px solid #a259ff;
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+
+  .payment-label {
+    background: linear-gradient(90deg, #ff1b6b, #a259ff);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+
+  .payment-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .pay-opt {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #ddd;
+  }
+
+  .pay-opt .checkbox {
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid #a259ff;
+    border-radius: 2px;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  .thankyou-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 6px;
+  }
+
+  .thankyou-script {
+    font-family: 'Dancing Script', cursive;
+    font-size: 26px;
+    color: #ff2d78;
+  }
+
+  .thankyou-body {
+    font-size: 11px;
+    font-weight: 600;
+    color: #ccc;
+    letter-spacing: 0.5px;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .thankyou-body .star { color: #ff2d78; }
+
+  .signatory-box {
+    border: 1.5px solid #a259ff;
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+  }
+
+  .sig-line {
+    width: 100%;
+    border-bottom: 1.5px solid #a259ff;
+    margin-bottom: 4px;
+  }
+
+  .sig-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #ccc;
+    letter-spacing: 1px;
+    text-align: center;
+  }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    border: 1.5px solid #2a1a4a;
+    border-radius: 8px;
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr 1px 1fr;
+    background: #0a0010;
+    overflow: hidden;
+  }
+
+  .footer-divider {
+    background: #2a1a4a;
+    width: 1px;
+  }
+
+  .footer-col {
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .footer-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .footer-text {
+    font-size: 10.5px;
+    line-height: 1.6;
+    color: #ccc;
+  }
+
+  .footer-text strong {
+    display: block;
+    color: #fff;
+    font-weight: 800;
+    font-size: 11px;
+    margin-bottom: 2px;
+  }
+
+  .footer-text .wa-num {
+    color: #25D366;
+    font-weight: 700;
+    font-size: 12px;
+    display: block;
+  }
+
+  .footer-text .ig-handle {
+    color: #ff2d78;
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  .footer-text .ig-sub {
+    color: #aaa;
+    font-size: 9.5px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ─── PRINT ─── */
+  @media print {
+    body { background: #000; padding: 0; margin: 0; }
+    .bill-page {
+      width: 100%;
+      min-height: 100vh;
+      margin: 0;
+      padding: 14px 16px;
+    }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    @page { size: A4 portrait; margin: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="bill-page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo-wrap">
+      <img src="damodar-house-of-dance-logo.png" alt="Damodar House of Dance Logo">
+    </div>
+    <div class="brand">
+      <div class="brand-name"><span class="da">DA</span>MODAR</div>
+      <div class="brand-sub">HOUSE OF DANCE</div>
+      <div class="tagline">
+        <span class="star">★</span>
+        Where <em>Tiny Feet</em> Create <em>Miracles</em>
+        <span class="star">★</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BILL BOOK BANNER -->
+  <div class="bill-banner">
+    <div class="bill-banner-inner">
+      <span>BILL BOOK</span>
+    </div>
+  </div>
+
+  <!-- META ROW -->
+  <div class="meta-row">
+    <div class="meta-box">
+      Bill No. :&nbsp;<span class="field-line"></span>
+    </div>
+    <div class="meta-box">
+      Date :&nbsp;
+      <span class="meta-date">
+        <span class="date-seg"></span>
+        <span class="slash">/</span>
+        <span class="date-seg"></span>
+        <span class="slash">/</span>
+        20<span class="date-seg year"></span>
+      </span>
+    </div>
+  </div>
+
+  <!-- CUSTOMER INFO -->
+  <div class="customer-box">
+    <div class="customer-fields">
+      <div class="field-row">
+        <label>Name :</label>
+        <div class="line"></div>
+      </div>
+      <div class="field-row" style="align-items: flex-start; margin-top: 4px;">
+        <label style="padding-top: 2px;">Address :</label>
+        <div class="address-lines" style="width: 100%;">
+          <div class="line" style="width: 100%; border-bottom: 1.5px solid #a259ff; height: 20px; margin-bottom: 6px;"></div>
+          <div class="line" style="width: 100%; border-bottom: 1.5px solid #a259ff; height: 20px;"></div>
+        </div>
+      </div>
+      <div class="field-row">
+        <label>Phone :</label>
+        <div class="line" style="max-width: 160px;"></div>
+      </div>
+      <div class="field-row">
+        <label>Batch / Class :</label>
+        <div class="line" style="max-width: 160px;"></div>
+      </div>
+    </div>
+    <div class="dancer-img">
+      <img src="IMG_1416.PNG" alt="Dancer">
+    </div>
+  </div>
+
+  <!-- ITEMS TABLE -->
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th>S. No.</th>
+        <th>PARTICULARS</th>
+        <th>MONTH</th>
+        <th>AMOUNT (₹)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="sno-cell">1.</td><td></td><td></td><td></td></tr>
+      <tr><td class="sno-cell">2.</td><td></td><td></td><td></td></tr>
+      <tr><td class="sno-cell">3.</td><td></td><td></td><td></td></tr>
+      <tr><td class="sno-cell">4.</td><td></td><td></td><td></td></tr>
+      <tr><td class="sno-cell">5.</td><td></td><td></td><td></td></tr>
+      <tr><td class="sno-cell">6.</td><td></td><td></td><td></td></tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="2"></td>
+        <td class="total-label">TOTAL</td>
+        <td class="total-value"></td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <!-- BOTTOM ROW -->
+  <div class="bottom-row">
+
+    <!-- Payment Mode -->
+    <div class="payment-box">
+      <div class="payment-label">PAYMENT MODE</div>
+      <div class="payment-options">
+        <div class="pay-opt"><span class="checkbox"></span> CASH</div>
+        <div class="pay-opt"><span class="checkbox"></span> UPI</div>
+        <div class="pay-opt"><span class="checkbox"></span> BANK TRANSFER</div>
+      </div>
+    </div>
+
+    <!-- Thank You -->
+    <div class="thankyou-box">
+      <div class="thankyou-script">Thank You!</div>
+      <div class="thankyou-body">
+        <span class="star">★</span>
+        FOR BEING A PART OF<br>OUR DANCE FAMILY!
+        <span class="star">★</span>
+      </div>
+    </div>
+
+    <!-- Authorised Signatory -->
+    <div class="signatory-box">
+      <div class="sig-line"></div>
+      <div class="sig-label">Authorised Signatory</div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-col">
+      <div class="footer-icon">📍</div>
+      <div class="footer-text">
+        <strong>DAMODAR HOUSE OF DANCE,</strong>
+        HOSAPALYA 11TH MAIN,<br>
+        BESIDE GANESH CYCLE SHOP,<br>
+        BANGALORE 560068
+      </div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-col" style="justify-content: center; text-align: center; flex-direction: column; gap: 4px;">
+      <div style="font-size: 26px;">💬</div>
+      <div class="footer-text" style="text-align: center;">
+        <span style="font-size: 11px; color: #aaa; letter-spacing: 0.5px;">WhatsApp No :</span>
+        <span class="wa-num">7892310080</span>
+        <span class="wa-num">8553335121</span>
+      </div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-col" style="justify-content: center; flex-direction: column; align-items: center; gap: 4px;">
+      <div style="font-size: 26px;">📸</div>
+      <div class="footer-text" style="text-align: center;">
+        <span class="ig-handle">Damodar.dancer</span><br>
+        <span class="ig-sub">FOLLOW FOR DANCE<br>UPDATES & FUN!</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
