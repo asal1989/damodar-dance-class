@@ -1728,6 +1728,10 @@ function saveStudent() {
 function syncStudentsFromBills() {
   getBills().slice().reverse().forEach(upsertStudentFromBill);
   showToast('Students synced from bills', 'ok');
+  const searchEl = document.getElementById('studentSearch');
+  const filterEl = document.getElementById('studentStatusFilter');
+  if (searchEl) searchEl.value = '';
+  if (filterEl) filterEl.value = '';
   loadReminders();
   loadDashboard();
 }
