@@ -1,15 +1,11 @@
-// ============================================================
-//  FILL IN YOUR FIREBASE CONFIG BELOW
-//  Get these values from:
-//  Firebase Console → Your Project → Project Settings → Your Apps
-// ============================================================
 const firebaseConfig = {
-  apiKey:            "YOUR_API_KEY",
-  authDomain:        "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId:         "YOUR_PROJECT_ID",
-  storageBucket:     "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId:             "YOUR_APP_ID"
+  apiKey:            "AIzaSyANN8dScIfqFmTbv5TewhxlSodNmfj_Icw",
+  authDomain:        "damodar-studi0.firebaseapp.com",
+  projectId:         "damodar-studi0",
+  storageBucket:     "damodar-studi0.firebasestorage.app",
+  messagingSenderId: "829312413816",
+  appId:             "1:829312413816:web:6e918356f07c20026bbd8d",
+  measurementId:     "G-4WHGYBBR1X"
 };
 
 // Admin password — client uses this to log in to admin panel
