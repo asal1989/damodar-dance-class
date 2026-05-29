@@ -1819,7 +1819,7 @@ function updateMonthFilter(bills) {
 // Bill preview
 function openBillPreview(bill) {
   if (!bill) return;
-  document.getElementById('billPreviewContent').innerHTML = buildBillHTML(bill);
+  document.getElementById('billPreviewContent').innerHTML = buildBillBookHTML(bill);
   document.getElementById('billPreviewOverlay').classList.add('show');
   document.body.style.overflow = 'hidden';
 }
@@ -1838,7 +1838,7 @@ async function downloadBillPDF() {
     const el = content.firstElementChild;
     const canvas = await html2canvas(el, {
       scale: 2, useCORS: true, allowTaint: true,
-      backgroundColor: '#000000', logging: false,
+      backgroundColor: '#ffffff', logging: false,
       width: el.scrollWidth, height: el.scrollHeight
     });
     const { jsPDF } = window.jspdf;
@@ -1870,7 +1870,7 @@ function printBill() {
   win.document.write(`<!DOCTYPE html><html><head>
     <title>Bill — Damodar House of Dance</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,900;1,400&family=Dancing+Script:wght@700&family=Bebas+Neue&display=swap" rel="stylesheet">
-    <style>*{box-sizing:border-box;margin:0;padding:0;}body{background:#000;display:flex;justify-content:center;padding:20px;font-family:'Montserrat',sans-serif;}
+    <style>*{box-sizing:border-box;margin:0;padding:0;}body{background:#fff;display:flex;justify-content:center;padding:20px;font-family:'Montserrat',sans-serif;}
     @media print{body{padding:0;}@page{size:A4 portrait;margin:0;}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}}</style>
     </head><body>${content}</body></html>`);
   win.document.close();
@@ -2020,6 +2020,143 @@ function buildBillHTML(bill) {
         <div style="color:#ff2d78;font-weight:700;font-size:12px;">Damodar.dancer</div>
         <div style="color:#aaa;font-size:9px;letter-spacing:0.5px;">FOLLOW FOR DANCE<br>UPDATES &amp; FUN!</div>
       </div>
+    </div>
+  </div>`;
+}
+
+function buildBillBookHTML(bill) {
+  const base = location.href.replace(/[^/]*$/, '');
+  const logoUrl = base + 'damodar-house-of-dance-logo.png';
+  const dancerUrl = base + 'IMG_1416.PNG';
+  const dateStr = bill.date
+    ? new Date(bill.date + 'T00:00:00').toLocaleDateString('en-IN', {day:'2-digit',month:'2-digit',year:'numeric'})
+    : '';
+  const [dd = '', mm = '', yyyy = ''] = dateStr.split('/');
+  const yy = yyyy.slice(2);
+  const items = (bill.items || []).slice(0, 6);
+  const rows = Array.from({length: 6}, (_, i) => {
+    const item = items[i] || {};
+    return `
+      <tr>
+        <td class="bb-center">${i + 1}.</td>
+        <td>${escHtml(item.particulars || '')}</td>
+        <td class="bb-center">${escHtml(item.month || '')}</td>
+        <td class="bb-center">${item.amount ? Number(item.amount).toLocaleString('en-IN') : ''}</td>
+      </tr>`;
+  }).join('');
+  const pm = bill.paymentMode || '';
+  const check = value => pm === value ? '☑' : '☐';
+
+  return `
+  <div class="bill-book-page">
+    <style>
+      .bill-book-page {
+        width: 210mm;
+        min-height: 297mm;
+        background: #fff;
+        color: #081f3f;
+        padding: 12mm 7mm 8mm;
+        font-family: Arial, Helvetica, sans-serif;
+        box-sizing: border-box;
+      }
+      .bill-book-page * { box-sizing: border-box; }
+      .bb-header { display: grid; grid-template-columns: 72mm 1fr; align-items: center; gap: 8mm; }
+      .bb-logo-wrap { height: 48mm; display: flex; align-items: center; justify-content: center; position: relative; }
+      .bb-logo-mark { width: 45mm; height: 45mm; object-fit: contain; }
+      .bb-brand { font-size: 26mm; font-weight: 900; letter-spacing: 1.2mm; line-height: 0.9; color: #09254b; }
+      .bb-sub { font-size: 7mm; letter-spacing: 3.2mm; font-weight: 700; margin-top: 5mm; color: #09254b; }
+      .bb-tag { margin-top: 4mm; font-family: Georgia, serif; font-style: italic; font-size: 5.2mm; color: #111; }
+      .bb-tag .blue { color: #13a8d8; } .bb-tag .pink { color: #d80d63; }
+      .bb-title-row { display: flex; align-items: center; justify-content: center; gap: 0; margin: 6mm 0 5mm; }
+      .bb-title-line { width: 34mm; border-top: 1mm solid #c7075d; }
+      .bb-title { background: #d00661; color: white; font-size: 10mm; font-weight: 900; letter-spacing: 1.5mm; padding: 3mm 18mm; border-radius: 3mm; }
+      .bb-meta { display: flex; justify-content: space-between; gap: 12mm; margin-bottom: 4mm; }
+      .bb-pill { border: 0.5mm solid #1c3049; border-radius: 2mm; min-height: 13mm; padding: 3mm 5mm; display: flex; align-items: center; gap: 3mm; font-size: 4.4mm; font-weight: 800; color: #111; min-width: 66mm; }
+      .bb-pill.right { justify-content: flex-end; min-width: 68mm; }
+      .bb-icon { color: #d00661; font-size: 6mm; min-width: 7mm; text-align: center; }
+      .bb-line { flex: 1; border-bottom: 0.45mm solid #333; min-height: 6mm; padding: 0 2mm; font-weight: 700; color: #09254b; }
+      .bb-details { border: 0.5mm solid #1c3049; border-radius: 2mm; padding: 6mm 5mm; min-height: 54mm; display: grid; grid-template-columns: 1fr 62mm; gap: 6mm; margin-bottom: 4mm; }
+      .bb-field { display: grid; grid-template-columns: 42mm 1fr; align-items: end; gap: 2mm; margin-bottom: 6mm; font-size: 4.4mm; font-weight: 800; color: #111; }
+      .bb-field .bb-icon { font-size: 5mm; }
+      .bb-label { display: flex; align-items: center; gap: 3mm; white-space: nowrap; }
+      .bb-dancer { opacity: 0.22; width: 54mm; height: 45mm; object-fit: contain; align-self: center; justify-self: center; filter: grayscale(1); }
+      .bb-table { width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 4mm; color: #111; }
+      .bb-table th { background: #09254b; color: #fff; border: 0.35mm solid #8090a5; padding: 3mm 2mm; font-size: 4.2mm; letter-spacing: 0.4mm; }
+      .bb-table td { border: 0.35mm solid #b9c0c9; height: 11.2mm; padding: 2mm 3mm; font-size: 4.2mm; font-weight: 600; }
+      .bb-table .bb-center { text-align: center; }
+      .bb-total-label { text-align: right; background: #f4f4f4; font-weight: 900; color: #09254b; }
+      .bb-bottom { display: grid; grid-template-columns: 58mm 1fr 58mm; gap: 8mm; align-items: stretch; margin-top: 4mm; }
+      .bb-pay, .bb-sign { border: 0.5mm solid #1c3049; border-radius: 2mm; min-height: 25mm; padding: 7mm 5mm 4mm; position: relative; }
+      .bb-pay-title { position: absolute; top: -4mm; left: 8mm; background: #d00661; color: #fff; border-radius: 1mm; padding: 2mm 8mm; font-size: 4mm; font-weight: 900; letter-spacing: 0.6mm; }
+      .bb-pay-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm 5mm; font-size: 4mm; font-weight: 800; color: #111; }
+      .bb-thanks { text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+      .bb-thanks .script { font-family: Georgia, serif; font-style: italic; font-size: 12mm; color: #d00661; line-height: 1; }
+      .bb-thanks .family { margin-top: 3mm; font-size: 4mm; font-weight: 800; color: #1c3049; letter-spacing: 0.4mm; }
+      .bb-sign { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; }
+      .bb-sign-line { width: 42mm; border-bottom: 0.5mm solid #2a79c5; min-height: 10mm; color: #2a79c5; font-family: Georgia, serif; font-style: italic; font-size: 8mm; text-align: center; }
+      .bb-sign-label { font-size: 3.4mm; font-weight: 900; color: #1c3049; margin-top: 2mm; text-transform: uppercase; }
+      .bb-footer { border-top: 0.35mm solid #7f8791; margin-top: 5mm; padding-top: 5mm; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5mm; color: #111; }
+      .bb-foot-card { display: grid; grid-template-columns: 14mm 1fr; gap: 3mm; align-items: center; border-right: 0.35mm solid #c1c7d0; min-height: 24mm; padding-right: 4mm; }
+      .bb-foot-card:last-child { border-right: none; }
+      .bb-foot-icon { font-size: 12mm; color: #d00661; text-align: center; }
+      .bb-foot-text { font-size: 3.8mm; font-weight: 800; line-height: 1.35; }
+      .bb-foot-text span { display: block; color: #09254b; }
+    </style>
+
+    <div class="bb-header">
+      <div class="bb-logo-wrap"><img class="bb-logo-mark" src="${logoUrl}" alt="Damodar House of Dance"></div>
+      <div>
+        <div class="bb-brand">DAMODAR</div>
+        <div class="bb-sub">HOUSE OF DANCE</div>
+        <div class="bb-tag">☆ Where <span class="blue">Tiny Feet</span> Create <span class="pink">Miracles</span> ☆</div>
+      </div>
+    </div>
+
+    <div class="bb-title-row"><div class="bb-title-line"></div><div class="bb-title">BILL BOOK</div><div class="bb-title-line"></div></div>
+
+    <div class="bb-meta">
+      <div class="bb-pill"><span class="bb-icon">▣</span> BILL NO. : <span class="bb-line">${escHtml(bill.billNo)}</span></div>
+      <div class="bb-pill right"><span class="bb-icon">▦</span> DATE : <span class="bb-line">${dd}</span> / <span class="bb-line">${mm}</span> / 20<span class="bb-line">${yy}</span></div>
+    </div>
+
+    <div class="bb-details">
+      <div>
+        <div class="bb-field"><div class="bb-label"><span class="bb-icon">●</span> STUDENT NAME :</div><div class="bb-line">${escHtml(bill.name)}</div></div>
+        <div class="bb-field"><div class="bb-label"><span class="bb-icon">♟</span> PARENT NAME :</div><div class="bb-line">${escHtml(bill.parentName || '')}</div></div>
+        <div class="bb-field"><div class="bb-label"><span class="bb-icon">☎</span> PHONE :</div><div class="bb-line">${escHtml(bill.phone || '')}</div></div>
+        <div class="bb-field"><div class="bb-label"><span class="bb-icon">♚</span> BATCH / CLASS :</div><div class="bb-line">${escHtml(bill.batch || '')}</div></div>
+      </div>
+      <img class="bb-dancer" src="${dancerUrl}" alt="">
+    </div>
+
+    <table class="bb-table">
+      <thead><tr><th style="width:18mm;">S. NO.</th><th>PARTICULARS</th><th style="width:36mm;">MONTH</th><th style="width:38mm;">AMOUNT (&#8377;)</th></tr></thead>
+      <tbody>${rows}</tbody>
+      <tfoot><tr><td colspan="3" class="bb-total-label">TOTAL (&#8377;)</td><td class="bb-center"><strong>${Number(bill.total || 0).toLocaleString('en-IN')}</strong></td></tr></tfoot>
+    </table>
+
+    <div class="bb-bottom">
+      <div class="bb-pay">
+        <div class="bb-pay-title">PAYMENT MODE</div>
+        <div class="bb-pay-grid">
+          <div>${check('Cash')} CASH</div><div>${check('UPI')} UPI</div>
+          <div>${check('Bank Transfer')} BANK TRANSFER</div>
+        </div>
+      </div>
+      <div class="bb-thanks">
+        <div class="script">Thank You!</div>
+        <div class="family">☆ FOR BEING A PART OF<br>OUR DANCE FAMILY! ☆</div>
+      </div>
+      <div class="bb-sign">
+        <div class="bb-sign-line">Damodar</div>
+        <div class="bb-sign-label">Authorised Signatory</div>
+      </div>
+    </div>
+
+    <div class="bb-footer">
+      <div class="bb-foot-card"><div class="bb-foot-icon">●</div><div class="bb-foot-text"><span>DAMODAR HOUSE OF DANCE</span>HOSAPALYA 11TH MAIN,<br>BESIDE GANESH CYCLE SHOP,<br>BANGALORE 560068</div></div>
+      <div class="bb-foot-card"><div class="bb-foot-icon">☏</div><div class="bb-foot-text"><span>WHATSAPP NO.</span>7892310080<br>8553335121</div></div>
+      <div class="bb-foot-card"><div class="bb-foot-icon">◎</div><div class="bb-foot-text"><span>Damodar.dancer</span>FOLLOW FOR DANCE<br>UPDATES &amp; FUN!</div></div>
     </div>
   </div>`;
 }
