@@ -1055,27 +1055,26 @@
               </div>
             </div>
             <input type="password" class="form-input" id="fast2smsKey" placeholder="Paste your Fast2SMS API key here"
-              style="margin-bottom:12px;" value="${localStorage.getItem('fast2sms_key')||''}"/>
+              style="margin-bottom:12px;"/>
             <div class="setting-row">
               <div class="setting-info">
                 <h4>Send reminder how many days before due?</h4>
                 <p>e.g. 2 = reminder sent 2 days before due date</p>
               </div>
               <input type="number" class="form-input" id="smsLeadDays" min="1" max="10"
-                style="width:70px;text-align:center;"
-                value="${localStorage.getItem('sms_lead_days')||'2'}"/>
+                style="width:70px;text-align:center;" value="2"/>
             </div>
             <div class="setting-row" style="margin-top:8px;">
               <div class="setting-info">
                 <h4>Auto-send on panel open</h4>
                 <p>Automatically sends SMS to due students when you open the admin panel</p>
               </div>
-              <div class="toggle ${localStorage.getItem('sms_auto')==='1'?'on':''}" id="smsAutoToggle"
+              <div class="toggle" id="smsAutoToggle"
                 onclick="this.classList.toggle('on'); localStorage.setItem('sms_auto', this.classList.contains('on')?'1':'0')"></div>
             </div>
             <textarea class="form-input" id="smsTemplate" rows="3"
               style="margin-top:10px;margin-bottom:10px;"
-              placeholder="SMS message template...">${localStorage.getItem('sms_template')||'Dear {name}, your dance class fee of Rs.{amount} is due on {duedate}. Please pay at the earliest. - Damodar House of Dance'}</textarea>
+              placeholder="SMS message template...">Dear {name}, your dance class fee of Rs.{amount} is due on {duedate}. Please pay at the earliest. - Damodar House of Dance</textarea>
             <div style="display:flex;gap:10px;flex-wrap:wrap;">
               <button class="btn btn-gold" onclick="saveSMSSettings()">💾 Save Settings</button>
               <button class="btn btn-ghost" onclick="sendAllDueSMS()">📤 Send SMS to All Due Students Now</button>
@@ -1176,6 +1175,7 @@ function showPage(id, el) {
   if (id === 'videos') loadVideos();
   if (id === 'billing') { loadBills(); showBillTab('list', document.getElementById('tab-list')); }
   if (id === 'reminders') loadReminders();
+  if (id === 'settings')  loadSMSSettings();
 }
 
 // ── Init panel ─────────────────────────────────────────────────
@@ -2235,6 +2235,18 @@ function formatDate(d) {
 }
 
 // ── Fast2SMS ────────────────────────────────────────────────────
+function loadSMSSettings() {
+  const keyEl  = document.getElementById('fast2smsKey');
+  const daysEl = document.getElementById('smsLeadDays');
+  const tmplEl = document.getElementById('smsTemplate');
+  const autoEl = document.getElementById('smsAutoToggle');
+  if (keyEl)  keyEl.value  = localStorage.getItem('fast2sms_key') || '';
+  if (daysEl) daysEl.value = localStorage.getItem('sms_lead_days') || '2';
+  if (tmplEl) tmplEl.value = localStorage.getItem('sms_template') ||
+    'Dear {name}, your dance class fee of Rs.{amount} is due on {duedate}. Please pay at the earliest. - Damodar House of Dance';
+  if (autoEl) autoEl.classList.toggle('on', localStorage.getItem('sms_auto') === '1');
+}
+
 function saveSMSSettings() {
   const key  = document.getElementById('fast2smsKey')?.value.trim();
   const days = document.getElementById('smsLeadDays')?.value || '2';
