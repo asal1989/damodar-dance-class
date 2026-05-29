@@ -1082,12 +1082,15 @@
 let db, storage, fbReady = false;
 try {
   if (typeof firebaseConfig !== 'undefined' && firebaseConfig.apiKey !== 'YOUR_API_KEY') {
-    firebase.initializeApp(firebaseConfig);
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     db       = firebase.firestore();
     storage  = firebase.storage();
     fbReady  = true;
+    console.log('Firebase ready ✅');
+  } else {
+    console.warn('Firebase config missing or placeholder values');
   }
-} catch(e) {}
+} catch(e) { console.error('Firebase init error:', e); }
 
 // ── Auth ───────────────────────────────────────────────────────
 function doLogin() {
