@@ -409,6 +409,79 @@
     .scrollbar-thin::-webkit-scrollbar { width: 4px; }
     .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
     .scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
+
+    /* ══════════════════════════ BILLING ══════════════════════════ */
+    .bill-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+    .bill-tab {
+      padding: 9px 20px; border-radius: 10px; border: 1px solid var(--border);
+      background: var(--panel); color: var(--muted); font-size: 13px; font-weight: 700;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .bill-tab.active { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+    .bill-tab:hover:not(.active) { border-color: rgba(255,255,255,0.2); color: var(--paper); }
+
+    .bill-search-row { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .bill-search-row .form-input { flex: 1; min-width: 180px; }
+    .bill-search-row .form-select { width: 180px; }
+
+    .bills-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .bills-table th {
+      background: var(--ink-2); padding: 10px 14px; text-align: left;
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--muted); border-bottom: 1px solid var(--border);
+    }
+    .bills-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .bills-table tr:last-child td { border: none; }
+    .bills-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .bill-no-badge {
+      font-size: 12px; font-weight: 700; color: var(--gold);
+      background: rgba(245,166,35,0.1); padding: 3px 8px; border-radius: 6px;
+    }
+    .pay-badge {
+      font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 99px;
+      background: rgba(46,204,113,0.12); color: var(--green); border: 1px solid rgba(46,204,113,0.25);
+    }
+
+    .bill-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media(max-width:600px){ .bill-form-grid { grid-template-columns: 1fr; } }
+
+    .bill-item-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+    .bill-item-table th {
+      background: var(--ink-2); padding: 8px 10px; text-align: left;
+      font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted);
+    }
+    .bill-item-table td { padding: 6px 4px; }
+    .bill-item-table .form-input { padding: 8px 10px; font-size: 13px; }
+
+    .bill-total-row {
+      display: flex; justify-content: flex-end; align-items: center; gap: 16px;
+      margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);
+    }
+    .bill-total-label { font-size: 14px; font-weight: 700; color: var(--muted); }
+    .bill-total-amount { font-size: 22px; font-weight: 900; color: var(--gold); }
+
+    .pay-mode-row { display: flex; gap: 24px; margin-top: 8px; flex-wrap: wrap; }
+    .pay-mode-opt { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    .pay-mode-opt input { accent-color: var(--gold); width: 16px; height: 16px; cursor: pointer; }
+    .pay-mode-opt span { font-size: 14px; font-weight: 600; }
+
+    .bill-preview-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.88);
+      backdrop-filter: blur(6px); z-index: 100;
+      display: none; align-items: flex-start; justify-content: center;
+      padding: 60px 20px 20px; overflow-y: auto;
+    }
+    .bill-preview-overlay.show { display: flex; }
+    .bill-preview-close {
+      position: fixed; top: 14px; right: 14px; z-index: 101;
+      background: var(--red); color: #fff; border: none; border-radius: 10px;
+      padding: 8px 16px; font-size: 14px; font-weight: 700; cursor: pointer;
+    }
+    .bill-print-btn {
+      position: fixed; top: 14px; right: 104px; z-index: 101;
+      background: var(--gold); color: var(--ink); border: none; border-radius: 10px;
+      padding: 8px 16px; font-size: 14px; font-weight: 700; cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -452,6 +525,10 @@
         <div class="nav-item" onclick="showPage('enquiries',this)">
           <span class="nav-icon">📩</span> Enquiries
         </div>
+        <div class="nav-item" onclick="showPage('billing',this)">
+          <span class="nav-icon">🧾</span> Billing
+          <span class="nav-badge" id="billBadge" style="background:var(--green);display:none">0</span>
+        </div>
       </div>
 
       <div class="nav-section">
@@ -492,16 +569,11 @@
           <div class="page-title">Welcome back 👋</div>
           <div class="page-sub">Here's what's happening with Damodar House of Dance.</div>
 
-          <div class="stats-grid">
+          <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);">
             <div class="stat-card">
               <div class="stat-icon">🎬</div>
               <div class="stat-value" id="ds-videos">0</div>
               <div class="stat-label">Total Videos</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon">📦</div>
-              <div class="stat-value" id="ds-size">0 MB</div>
-              <div class="stat-label">Storage Used</div>
             </div>
             <div class="stat-card">
               <div class="stat-icon">🌐</div>
@@ -512,6 +584,18 @@
               <div class="stat-icon">📩</div>
               <div class="stat-value" id="ds-enquiries">—</div>
               <div class="stat-label">Enquiries</div>
+            </div>
+          </div>
+          <div class="stats-grid" style="grid-template-columns:repeat(2,1fr);margin-top:0;">
+            <div class="stat-card">
+              <div class="stat-icon">💰</div>
+              <div class="stat-value" id="ds-revenue">₹0</div>
+              <div class="stat-label">Revenue This Month</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">🧾</div>
+              <div class="stat-value" id="ds-bills">0</div>
+              <div class="stat-label">Total Bills</div>
             </div>
           </div>
 
@@ -535,6 +619,11 @@
                 <div class="t-icon">🌐</div>
                 <div class="t-name">View Website</div>
                 <div class="t-sub">Open live site</div>
+              </div>
+              <div class="action-tile" onclick="showPage('billing',document.querySelector('[onclick*=billing]'));showBillTab('create',document.getElementById('tab-create'))">
+                <div class="t-icon">🧾</div>
+                <div class="t-name">New Bill</div>
+                <div class="t-sub">Create a payment receipt</div>
               </div>
             </div>
           </div>
@@ -628,6 +717,132 @@
           </div>
         </div>
 
+        <!-- ╔══════════════ BILLING PAGE ══════════════╗ -->
+        <div class="page" id="page-billing">
+          <div class="page-title">Billing System</div>
+          <div class="page-sub">Create and manage payment receipts for dance students.</div>
+
+          <div class="bill-tabs">
+            <button class="bill-tab active" id="tab-list" onclick="showBillTab('list',this)">📋 All Bills</button>
+            <button class="bill-tab" id="tab-create" onclick="showBillTab('create',this)">➕ New Bill</button>
+          </div>
+
+          <!-- ALL BILLS -->
+          <div id="bill-view-list">
+            <div class="card">
+              <div class="card-title" style="justify-content:space-between;">
+                <span>🧾 Bills History</span>
+                <button class="btn btn-gold" style="padding:8px 16px;font-size:12px;" onclick="showBillTab('create',document.getElementById('tab-create'))">+ New Bill</button>
+              </div>
+              <div class="bill-search-row">
+                <input type="text" class="form-input" id="billSearch" placeholder="Search by name, phone, bill no..." oninput="filterBills()"/>
+                <select class="form-select" id="billMonthFilter" onchange="filterBills()">
+                  <option value="">All Months</option>
+                </select>
+              </div>
+              <div style="overflow-x:auto;">
+                <table class="bills-table">
+                  <thead>
+                    <tr>
+                      <th>Bill No.</th><th>Date</th><th>Name</th><th>Batch</th>
+                      <th>Amount</th><th>Payment</th><th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="billsTbody">
+                    <tr><td colspan="7" style="padding:40px;text-align:center;color:var(--muted);">
+                      <div style="font-size:36px;margin-bottom:8px;">🧾</div>No bills yet. Create your first bill!
+                    </td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div style="margin-top:12px;font-size:12px;color:var(--muted);" id="billsCount"></div>
+            </div>
+          </div>
+
+          <!-- CREATE BILL -->
+          <div id="bill-view-create" style="display:none">
+            <div class="card">
+              <div class="card-title">📝 New Bill</div>
+
+              <div class="bill-form-grid" style="margin-bottom:16px;">
+                <div class="form-group">
+                  <label class="form-label">Bill Number</label>
+                  <input type="text" class="form-input" id="bBillNo" readonly style="color:var(--gold);font-weight:700;"/>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Date</label>
+                  <input type="date" class="form-input" id="bDate"/>
+                </div>
+              </div>
+
+              <div class="card-title" style="font-size:13px;margin-bottom:14px;">👤 Student Details</div>
+              <div class="bill-form-grid" style="margin-bottom:16px;">
+                <div class="form-group">
+                  <label class="form-label">Name *</label>
+                  <input type="text" class="form-input" id="bName" placeholder="Student full name"/>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Phone</label>
+                  <input type="tel" class="form-input" id="bPhone" placeholder="Mobile number"/>
+                </div>
+              </div>
+              <div class="form-group" style="margin-bottom:16px;">
+                <label class="form-label">Address</label>
+                <input type="text" class="form-input" id="bAddress" placeholder="Student address"/>
+              </div>
+              <div class="form-group" style="margin-bottom:24px;">
+                <label class="form-label">Batch / Class</label>
+                <select class="form-select" id="bBatch">
+                  <option value="">Select batch...</option>
+                  <option>Hip Hop — Morning</option>
+                  <option>Hip Hop — Evening</option>
+                  <option>Bollywood — Morning</option>
+                  <option>Bollywood — Evening</option>
+                  <option>Freestyle</option><option>Folk</option>
+                  <option>Contemporary</option><option>Zumba</option>
+                  <option>Kids Batch</option><option>Other</option>
+                </select>
+              </div>
+
+              <div class="card-title" style="font-size:13px;margin-bottom:14px;">📋 Bill Items</div>
+              <div style="overflow-x:auto;">
+                <table class="bill-item-table">
+                  <thead>
+                    <tr>
+                      <th style="width:32px;">#</th>
+                      <th>Particulars</th>
+                      <th style="width:150px;">Month</th>
+                      <th style="width:120px;">Amount (₹)</th>
+                      <th style="width:40px;"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="billItemsBody"></tbody>
+                </table>
+              </div>
+              <button class="btn btn-ghost" style="margin-top:10px;padding:8px 16px;font-size:12px;" onclick="addBillItem()">+ Add Row</button>
+
+              <div class="bill-total-row">
+                <span class="bill-total-label">TOTAL</span>
+                <span class="bill-total-amount" id="billTotalDisplay">₹ 0</span>
+              </div>
+
+              <div style="margin-top:20px;">
+                <div class="form-label" style="margin-bottom:10px;">Payment Mode</div>
+                <div class="pay-mode-row">
+                  <label class="pay-mode-opt"><input type="radio" name="payMode" value="Cash" checked/><span>💵 Cash</span></label>
+                  <label class="pay-mode-opt"><input type="radio" name="payMode" value="UPI"/><span>📱 UPI</span></label>
+                  <label class="pay-mode-opt"><input type="radio" name="payMode" value="Bank Transfer"/><span>🏦 Bank Transfer</span></label>
+                </div>
+              </div>
+
+              <div style="display:flex;gap:12px;margin-top:24px;">
+                <button class="btn btn-gold" onclick="saveBill()" style="flex:1;">💾 Save & Print Bill</button>
+                <button class="btn btn-ghost" onclick="resetBillForm()">✕ Clear</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- ╔══════════════ SETTINGS PAGE ══════════════╗ -->
         <div class="page" id="page-settings">
           <div class="page-title">Settings</div>
@@ -689,6 +904,13 @@
   </div>
 </div>
 
+<!-- Bill Print Preview Overlay -->
+<div class="bill-preview-overlay" id="billPreviewOverlay">
+  <button class="bill-preview-close" onclick="closeBillPreview()">✕ Close</button>
+  <button class="bill-print-btn" onclick="printBill()">🖨️ Print</button>
+  <div id="billPreviewContent"></div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script src="firebase-config.js"></script>
@@ -735,7 +957,7 @@ function toggleSidebar() {
 }
 const pageTitles = {
   dashboard:'Dashboard', videos:'Video Manager',
-  enquiries:'Enquiries', settings:'Settings'
+  enquiries:'Enquiries', billing:'Billing System', settings:'Settings'
 };
 function showPage(id, el) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -745,15 +967,27 @@ function showPage(id, el) {
   document.getElementById('topbarTitle').textContent = pageTitles[id] || id;
   document.getElementById('sidebar').classList.remove('open');
   if (id === 'videos') loadVideos();
+  if (id === 'billing') { loadBills(); showBillTab('list', document.getElementById('tab-list')); }
 }
 
 // ── Init panel ─────────────────────────────────────────────────
 function initPanel() {
   loadDashboard();
+  updateBillBadge();
 }
 
 // ── Dashboard ──────────────────────────────────────────────────
 async function loadDashboard() {
+  // Billing stats (always from localStorage)
+  const allBills = getBills();
+  const thisMonth = new Date().toISOString().slice(0, 7);
+  const monthRevenue = allBills.filter(b => b.date?.startsWith(thisMonth))
+    .reduce((a, b) => a + (b.total || 0), 0);
+  const dsRev = document.getElementById('ds-revenue');
+  const dsBills = document.getElementById('ds-bills');
+  if (dsRev) dsRev.textContent = '₹' + monthRevenue.toLocaleString('en-IN');
+  if (dsBills) dsBills.textContent = allBills.length;
+
   if (!fbReady) {
     document.getElementById('recentList').innerHTML =
       '<div style="color:var(--muted);font-size:13px;padding:12px 0;">Firebase not configured yet. Videos will appear here once set up.</div>';
@@ -938,6 +1172,367 @@ function showToast(msg, type='ok') {
   const t = document.getElementById('toast');
   t.textContent = msg; t.className = `toast ${type} show`;
   setTimeout(()=>t.classList.remove('show'), 3500);
+}
+
+// ══════════════════════════════════════════════════════════════
+// BILLING SYSTEM
+// ══════════════════════════════════════════════════════════════
+
+function showBillTab(tab, el) {
+  document.getElementById('bill-view-list').style.display   = tab === 'list'   ? 'block' : 'none';
+  document.getElementById('bill-view-create').style.display = tab === 'create' ? 'block' : 'none';
+  document.querySelectorAll('.bill-tab').forEach(t => t.classList.remove('active'));
+  if (el) el.classList.add('active');
+  if (tab === 'list') loadBills();
+  if (tab === 'create') resetBillForm();
+}
+
+// LocalStorage helpers
+function getBills() {
+  try { return JSON.parse(localStorage.getItem('dmd_bills') || '[]'); } catch { return []; }
+}
+function setBills(arr) { localStorage.setItem('dmd_bills', JSON.stringify(arr)); }
+
+// Auto bill number
+function generateBillNo() {
+  const bills = getBills();
+  const year  = new Date().getFullYear();
+  const count = bills.filter(b => b.billNo?.startsWith('DHD-' + year)).length;
+  return 'DHD-' + year + '-' + String(count + 1).padStart(3, '0');
+}
+
+// Bill form init
+function initBillItems() {
+  document.getElementById('billItemsBody').innerHTML = '';
+  for (let i = 0; i < 3; i++) addBillItem();
+}
+
+function addBillItem() {
+  const tbody = document.getElementById('billItemsBody');
+  const idx = tbody.children.length + 1;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td style="color:var(--muted);font-weight:700;padding:6px 8px;text-align:center;">${idx}</td>
+    <td><input type="text" class="form-input bill-particular" placeholder="e.g. Monthly Fees" oninput="calcTotal()"/></td>
+    <td><input type="text" class="form-input bill-month" placeholder="e.g. May 2025" oninput="calcTotal()"/></td>
+    <td><input type="number" class="form-input bill-amount" placeholder="0" min="0" oninput="calcTotal()"/></td>
+    <td><button class="btn btn-ghost" style="padding:6px 10px;font-size:12px;" onclick="removeBillItem(this)">✕</button></td>`;
+  tbody.appendChild(tr);
+  calcTotal();
+}
+
+function removeBillItem(btn) {
+  const tbody = document.getElementById('billItemsBody');
+  if (tbody.children.length <= 1) return;
+  btn.closest('tr').remove();
+  Array.from(tbody.children).forEach((tr, i) => { tr.firstElementChild.textContent = i + 1; });
+  calcTotal();
+}
+
+function calcTotal() {
+  const total = Array.from(document.querySelectorAll('.bill-amount'))
+    .reduce((a, i) => a + (parseFloat(i.value) || 0), 0);
+  document.getElementById('billTotalDisplay').textContent = '₹ ' + total.toLocaleString('en-IN');
+  return total;
+}
+
+function resetBillForm() {
+  document.getElementById('bBillNo').value  = generateBillNo();
+  document.getElementById('bDate').value    = new Date().toISOString().split('T')[0];
+  document.getElementById('bName').value    = '';
+  document.getElementById('bPhone').value   = '';
+  document.getElementById('bAddress').value = '';
+  document.getElementById('bBatch').value   = '';
+  const cash = document.querySelector('[name=payMode][value=Cash]');
+  if (cash) cash.checked = true;
+  initBillItems();
+}
+
+function saveBill() {
+  const name = document.getElementById('bName').value.trim();
+  if (!name) { showToast('Please enter student name', 'err'); return; }
+
+  const items = Array.from(document.getElementById('billItemsBody').children).map(tr => ({
+    particulars: tr.querySelector('.bill-particular').value.trim(),
+    month:       tr.querySelector('.bill-month').value.trim(),
+    amount:      parseFloat(tr.querySelector('.bill-amount').value) || 0,
+  })).filter(it => it.particulars || it.amount);
+
+  if (!items.length) { showToast('Add at least one item', 'err'); return; }
+
+  const bill = {
+    id:          Date.now().toString(),
+    billNo:      document.getElementById('bBillNo').value,
+    date:        document.getElementById('bDate').value,
+    name,
+    phone:       document.getElementById('bPhone').value.trim(),
+    address:     document.getElementById('bAddress').value.trim(),
+    batch:       document.getElementById('bBatch').value,
+    items,
+    total:       items.reduce((a, b) => a + b.amount, 0),
+    paymentMode: (document.querySelector('[name=payMode]:checked') || {}).value || 'Cash',
+    createdAt:   Date.now(),
+  };
+
+  const bills = getBills();
+  bills.unshift(bill);
+  setBills(bills);
+  if (fbReady) db.collection('bills').add(bill).catch(() => {});
+
+  showToast('✅ Bill saved!', 'ok');
+  openBillPreview(bill);
+  updateBillBadge();
+  loadDashboard();
+}
+
+function loadBills() {
+  const bills = getBills();
+  renderBills(bills);
+  updateMonthFilter(bills);
+  updateBillBadge();
+}
+
+function updateBillBadge() {
+  const badge = document.getElementById('billBadge');
+  if (!badge) return;
+  const n = getBills().length;
+  badge.textContent = n;
+  badge.style.display = n ? 'inline' : 'none';
+}
+
+function renderBills(bills) {
+  const tbody = document.getElementById('billsTbody');
+  const count = document.getElementById('billsCount');
+  if (!bills.length) {
+    tbody.innerHTML = `<tr><td colspan="7" style="padding:40px;text-align:center;color:var(--muted);">
+      <div style="font-size:36px;margin-bottom:8px;">🧾</div>No bills found.</td></tr>`;
+    if (count) count.textContent = '';
+    return;
+  }
+  if (count) count.textContent = bills.length + ' bill' + (bills.length > 1 ? 's' : '');
+  tbody.innerHTML = bills.map(b => `
+    <tr>
+      <td><span class="bill-no-badge">${escHtml(b.billNo)}</span></td>
+      <td style="color:var(--muted);font-size:12px;">${formatDate(b.date)}</td>
+      <td style="font-weight:700;">${escHtml(b.name)}</td>
+      <td style="font-size:12px;color:var(--muted);">${escHtml(b.batch || '—')}</td>
+      <td style="font-weight:800;color:var(--green);">₹${(b.total || 0).toLocaleString('en-IN')}</td>
+      <td><span class="pay-badge">${escHtml(b.paymentMode || '—')}</span></td>
+      <td>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-ghost" style="padding:6px 10px;font-size:12px;" onclick="openBillPreview(getBillById('${b.id}'))">👁 View</button>
+          <button class="btn btn-ghost" style="padding:6px 10px;font-size:12px;color:var(--red);border-color:rgba(232,48,90,0.3);" onclick="deleteBill('${b.id}')">🗑</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+function getBillById(id) { return getBills().find(b => b.id === id) || null; }
+
+function deleteBill(id) {
+  if (!confirm('Delete this bill? This cannot be undone.')) return;
+  setBills(getBills().filter(b => b.id !== id));
+  if (fbReady) db.collection('bills').where('id','==',id).get()
+    .then(s => s.forEach(d => d.ref.delete())).catch(() => {});
+  loadBills();
+  loadDashboard();
+  showToast('🗑️ Bill deleted', 'ok');
+}
+
+function filterBills() {
+  const q     = (document.getElementById('billSearch').value || '').toLowerCase();
+  const month = document.getElementById('billMonthFilter').value;
+  let bills = getBills();
+  if (month) bills = bills.filter(b => b.date?.startsWith(month));
+  if (q) bills = bills.filter(b =>
+    b.name?.toLowerCase().includes(q) ||
+    b.phone?.includes(q) ||
+    b.billNo?.toLowerCase().includes(q)
+  );
+  renderBills(bills);
+}
+
+function updateMonthFilter(bills) {
+  const sel = document.getElementById('billMonthFilter');
+  const cur = sel.value;
+  const months = [...new Set(bills.map(b => b.date?.slice(0,7)).filter(Boolean))].sort().reverse();
+  sel.innerHTML = '<option value="">All Months</option>' +
+    months.map(m => {
+      const [y, mo] = m.split('-');
+      const label = new Date(y, mo - 1).toLocaleDateString('en-IN', {month:'long', year:'numeric'});
+      return `<option value="${m}" ${m === cur ? 'selected' : ''}>${label}</option>`;
+    }).join('');
+}
+
+// Bill preview
+function openBillPreview(bill) {
+  if (!bill) return;
+  document.getElementById('billPreviewContent').innerHTML = buildBillHTML(bill);
+  document.getElementById('billPreviewOverlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeBillPreview() {
+  document.getElementById('billPreviewOverlay').classList.remove('show');
+  document.body.style.overflow = '';
+}
+function printBill() {
+  const content = document.getElementById('billPreviewContent').innerHTML;
+  const win = window.open('', '_blank', 'width=900,height=750');
+  win.document.write(`<!DOCTYPE html><html><head>
+    <title>Bill — Damodar House of Dance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,900;1,400&family=Dancing+Script:wght@700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <style>*{box-sizing:border-box;margin:0;padding:0;}body{background:#000;display:flex;justify-content:center;padding:20px;font-family:'Montserrat',sans-serif;}
+    @media print{body{padding:0;}@page{size:A4 portrait;margin:0;}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}}</style>
+    </head><body>${content}</body></html>`);
+  win.document.close();
+  win.focus();
+  setTimeout(() => win.print(), 900);
+}
+
+function buildBillHTML(bill) {
+  const dateStr = bill.date
+    ? new Date(bill.date + 'T00:00:00').toLocaleDateString('en-IN', {day:'2-digit',month:'2-digit',year:'numeric'})
+    : '';
+  const parts = dateStr.split('/');
+  const dd = parts[0] || '', mm = parts[1] || '', yy = (parts[2] || '').slice(2);
+
+  const itemRows = (bill.items || []).map((it, i) => `
+    <tr>
+      <td style="color:#a259ff;font-weight:700;text-align:center;border:1px solid #2a1a4a;padding:9px 10px;background:#060010;">${i+1}.</td>
+      <td style="border:1px solid #2a1a4a;padding:9px 10px;background:#060010;">${escHtml(it.particulars||'')}</td>
+      <td style="text-align:center;border:1px solid #2a1a4a;padding:9px 10px;background:#060010;">${escHtml(it.month||'')}</td>
+      <td style="text-align:center;border:1px solid #2a1a4a;padding:9px 10px;background:#060010;">${it.amount ? '₹'+Number(it.amount).toLocaleString('en-IN') : ''}</td>
+    </tr>`).join('');
+
+  const extraCount = Math.max(0, 6 - (bill.items||[]).length);
+  const emptyRows = Array.from({length: extraCount}, (_, i) => `
+    <tr>
+      <td style="color:#a259ff;font-weight:700;text-align:center;border:1px solid #2a1a4a;padding:9px 10px;background:#060010;height:36px;">${(bill.items||[]).length+i+1}.</td>
+      <td style="border:1px solid #2a1a4a;padding:9px 10px;background:#060010;"></td>
+      <td style="border:1px solid #2a1a4a;padding:9px 10px;background:#060010;"></td>
+      <td style="border:1px solid #2a1a4a;padding:9px 10px;background:#060010;"></td>
+    </tr>`).join('');
+
+  const pm = bill.paymentMode || '';
+  return `
+  <div style="width:210mm;min-height:297mm;background:#000;color:#fff;padding:18px 20px 16px;font-family:'Montserrat',sans-serif;">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;">
+      <img src="damodar-house-of-dance-logo.png" style="width:100px;height:100px;object-fit:contain;" alt="Logo">
+      <div style="flex:1;">
+        <div style="font-family:'Bebas Neue','Montserrat',sans-serif;font-size:54px;line-height:1;letter-spacing:3px;background:linear-gradient(90deg,#fff 0%,#a259ff 40%,#ff2d78 70%,#fff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">DAMODAR</div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:6px;color:#ccc;margin-top:2px;">── HOUSE OF DANCE ──</div>
+        <div style="margin-top:5px;font-family:'Dancing Script',cursive;font-size:15px;color:#ff2d78;">★ Where <span style="color:#45caff;">Tiny Feet</span> Create <span style="color:#45caff;">Miracles</span> ★</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin:8px 0 12px;">
+      <span style="display:inline-block;background:linear-gradient(90deg,#ff1b6b,#a259ff,#45caff);padding:5px 56px;border-radius:4px;font-family:'Bebas Neue','Montserrat',sans-serif;font-size:24px;font-weight:900;letter-spacing:6px;color:#fff;">BILL BOOK</span>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;margin-bottom:10px;gap:12px;">
+      <div style="border:1.5px solid #a259ff;border-radius:6px;padding:5px 14px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;">
+        Bill No. : <span style="color:#f5a623;font-weight:800;">${escHtml(bill.billNo)}</span>
+      </div>
+      <div style="border:1.5px solid #a259ff;border-radius:6px;padding:5px 14px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:4px;">
+        Date : <span style="border-bottom:1.5px solid #a259ff;padding:0 4px;min-width:26px;">${dd}</span>
+        <span style="color:#a259ff;">/</span>
+        <span style="border-bottom:1.5px solid #a259ff;padding:0 4px;min-width:26px;">${mm}</span>
+        <span style="color:#a259ff;">/</span> 20<span style="border-bottom:1.5px solid #a259ff;padding:0 4px;min-width:30px;">${yy}</span>
+      </div>
+    </div>
+
+    <div style="border:1.5px solid #a259ff;border-radius:10px;padding:12px 14px;margin-bottom:12px;background:rgba(162,89,255,0.04);">
+      <div style="font-size:13px;font-weight:600;margin-bottom:10px;display:flex;align-items:flex-end;gap:8px;">
+        <span style="min-width:90px;white-space:nowrap;">Name :</span>
+        <span style="flex:1;border-bottom:1.5px solid #a259ff;padding-bottom:2px;font-weight:800;">${escHtml(bill.name)}</span>
+      </div>
+      <div style="font-size:13px;font-weight:600;margin-bottom:10px;display:flex;gap:8px;">
+        <span style="min-width:90px;white-space:nowrap;padding-top:2px;">Address :</span>
+        <div style="flex:1;">
+          <div style="border-bottom:1.5px solid #a259ff;padding-bottom:2px;margin-bottom:6px;">${escHtml(bill.address||'')}</div>
+          <div style="border-bottom:1.5px solid #a259ff;padding-bottom:2px;">&nbsp;</div>
+        </div>
+      </div>
+      <div style="font-size:13px;font-weight:600;margin-bottom:10px;display:flex;align-items:flex-end;gap:8px;">
+        <span style="min-width:90px;white-space:nowrap;">Phone :</span>
+        <span style="border-bottom:1.5px solid #a259ff;padding-bottom:2px;min-width:160px;">${escHtml(bill.phone||'')}</span>
+      </div>
+      <div style="font-size:13px;font-weight:600;display:flex;align-items:flex-end;gap:8px;">
+        <span style="min-width:90px;white-space:nowrap;">Batch / Class :</span>
+        <span style="border-bottom:1.5px solid #a259ff;padding-bottom:2px;min-width:160px;">${escHtml(bill.batch||'')}</span>
+      </div>
+    </div>
+
+    <table style="width:100%;border-collapse:collapse;margin-bottom:12px;font-size:13px;">
+      <thead>
+        <tr>
+          <th style="background:linear-gradient(90deg,#ff1b6b,#a259ff);color:#fff;font-weight:700;letter-spacing:1.5px;padding:8px 10px;text-align:center;border:1px solid rgba(255,255,255,0.15);width:56px;">S. No.</th>
+          <th style="background:linear-gradient(90deg,#a259ff,#3b5cff);color:#fff;font-weight:700;letter-spacing:1.5px;padding:8px 10px;text-align:left;border:1px solid rgba(255,255,255,0.15);">PARTICULARS</th>
+          <th style="background:linear-gradient(90deg,#3b5cff,#2244cc);color:#fff;font-weight:700;letter-spacing:1.5px;padding:8px 10px;text-align:center;border:1px solid rgba(255,255,255,0.15);width:100px;">MONTH</th>
+          <th style="background:linear-gradient(90deg,#2244cc,#1a3ab0);color:#fff;font-weight:700;letter-spacing:1.5px;padding:8px 10px;text-align:center;border:1px solid rgba(255,255,255,0.15);width:120px;">AMOUNT (₹)</th>
+        </tr>
+      </thead>
+      <tbody>${itemRows}${emptyRows}</tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2" style="border:1px solid #2a1a4a;background:#060010;"></td>
+          <td style="background:linear-gradient(90deg,#a259ff,#3b5cff);text-align:center;font-weight:700;letter-spacing:2px;color:#fff;padding:8px 10px;border:1px solid #2a1a4a;">TOTAL</td>
+          <td style="background:linear-gradient(90deg,#1a2a6c,#3b5cff);text-align:center;font-weight:800;font-size:15px;color:#fff;padding:8px 10px;border:1px solid #2a1a4a;">${bill.total ? '₹'+Number(bill.total).toLocaleString('en-IN') : ''}</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;align-items:stretch;">
+      <div style="border:1.5px solid #a259ff;border-radius:8px;padding:10px 12px;">
+        <div style="background:linear-gradient(90deg,#ff1b6b,#a259ff);color:#fff;font-size:10px;font-weight:800;letter-spacing:2px;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:10px;">PAYMENT MODE</div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:12px;font-weight:600;color:#ddd;">
+          <div>${pm==='Cash'?'☑':'☐'} CASH</div>
+          <div>${pm==='UPI'?'☑':'☐'} UPI</div>
+          <div>${pm==='Bank Transfer'?'☑':'☐'} BANK TRANSFER</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px;">
+        <div style="font-family:'Dancing Script',cursive;font-size:24px;color:#ff2d78;">Thank You!</div>
+        <div style="font-size:11px;font-weight:600;color:#ccc;letter-spacing:0.5px;line-height:1.5;">★ FOR BEING A PART OF<br>OUR DANCE FAMILY! ★</div>
+      </div>
+      <div style="border:1.5px solid #a259ff;border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px;">
+        <div style="width:100%;border-bottom:1.5px solid #a259ff;margin-bottom:4px;">&nbsp;</div>
+        <div style="font-size:11px;font-weight:600;color:#ccc;letter-spacing:1px;">Authorised Signatory</div>
+      </div>
+    </div>
+
+    <div style="border:1.5px solid #2a1a4a;border-radius:8px;display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;background:#0a0010;overflow:hidden;">
+      <div style="padding:12px 14px;display:flex;align-items:center;gap:10px;">
+        <div style="font-size:20px;">📍</div>
+        <div style="font-size:10px;line-height:1.7;color:#ccc;">
+          <strong style="display:block;color:#fff;font-weight:800;">DAMODAR HOUSE OF DANCE,</strong>
+          HOSAPALYA 11TH MAIN,<br>BESIDE GANESH CYCLE SHOP,<br>BANGALORE 560068
+        </div>
+      </div>
+      <div style="background:#2a1a4a;"></div>
+      <div style="padding:12px 14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;">
+        <div style="font-size:22px;">💬</div>
+        <div style="font-size:10px;color:#aaa;">WhatsApp No :</div>
+        <div style="color:#25D366;font-weight:700;font-size:11px;">7892310080</div>
+        <div style="color:#25D366;font-weight:700;font-size:11px;">8553335121</div>
+      </div>
+      <div style="background:#2a1a4a;"></div>
+      <div style="padding:12px 14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;">
+        <div style="font-size:22px;">📸</div>
+        <div style="color:#ff2d78;font-weight:700;font-size:12px;">Damodar.dancer</div>
+        <div style="color:#aaa;font-size:9px;letter-spacing:0.5px;">FOLLOW FOR DANCE<br>UPDATES &amp; FUN!</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function escHtml(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function formatDate(d) {
+  if (!d) return '—';
+  try { return new Date(d + 'T00:00:00').toLocaleDateString('en-IN', {day:'numeric',month:'short',year:'numeric'}); }
+  catch { return d; }
 }
 </script>
 </body>
