@@ -491,6 +491,38 @@
       padding: 8px 16px; font-size: 14px; font-weight: 700; cursor: pointer;
     }
     .bill-dl-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* Fee reminders */
+    .reminder-grid { display: grid; grid-template-columns: 1.35fr 0.85fr; gap: 20px; }
+    @media(max-width:900px){ .reminder-grid { grid-template-columns: 1fr; } }
+    .reminder-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 20px; }
+    @media(max-width:700px){ .reminder-stats { grid-template-columns: 1fr; } }
+    .mini-stat {
+      background: var(--ink-2); border: 1px solid var(--border); border-radius: 14px;
+      padding: 16px;
+    }
+    .mini-stat-value { font-size: 26px; font-weight: 900; margin-bottom: 4px; }
+    .mini-stat-label {
+      color: var(--muted); font-size: 11px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+    }
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 800; padding: 4px 9px; border-radius: 99px;
+      border: 1px solid var(--border);
+    }
+    .status-badge.due { color: var(--red); background: rgba(232,48,90,0.12); border-color: rgba(232,48,90,0.28); }
+    .status-badge.upcoming { color: var(--gold); background: rgba(245,166,35,0.12); border-color: rgba(245,166,35,0.28); }
+    .status-badge.paid { color: var(--green); background: rgba(46,204,113,0.12); border-color: rgba(46,204,113,0.25); }
+    .status-badge.inactive { color: var(--muted); background: rgba(255,255,255,0.05); }
+    .reminder-note { color: var(--muted); font-size: 12px; line-height: 1.6; margin-top: 10px; }
+    .student-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+    .student-actions .btn { padding: 6px 10px; font-size: 12px; }
+    .reminder-table { min-width: 760px; }
+    .reminder-message {
+      width: 100%; min-height: 132px; resize: vertical; margin-top: 8px;
+      font-family: inherit; line-height: 1.5;
+    }
   </style>
 </head>
 <body>
@@ -538,6 +570,10 @@
           <span class="nav-icon">🧾</span> Billing
           <span class="nav-badge" id="billBadge" style="background:var(--green);display:none">0</span>
         </div>
+        <div class="nav-item" onclick="showPage('reminders',this)">
+          <span class="nav-icon">⏰</span> Fee Reminders
+          <span class="nav-badge" id="reminderBadge" style="display:none">0</span>
+        </div>
       </div>
 
       <div class="nav-section">
@@ -578,7 +614,7 @@
           <div class="page-title">Welcome back 👋</div>
           <div class="page-sub">Here's what's happening with Damodar House of Dance.</div>
 
-          <div class="stats-grid" style="grid-template-columns:repeat(2,1fr);">
+          <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);">
             <div class="stat-card">
               <div class="stat-icon">💰</div>
               <div class="stat-value" id="ds-revenue">₹0</div>
@@ -588,6 +624,11 @@
               <div class="stat-icon">🧾</div>
               <div class="stat-value" id="ds-bills">0</div>
               <div class="stat-label">Total Bills</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">⏰</div>
+              <div class="stat-value" id="ds-reminders">0</div>
+              <div class="stat-label">Fees Due</div>
             </div>
           </div>
 
@@ -616,6 +657,11 @@
                 <div class="t-icon">🧾</div>
                 <div class="t-name">New Bill</div>
                 <div class="t-sub">Create a payment receipt</div>
+              </div>
+              <div class="action-tile" onclick="showPage('reminders',document.querySelector('[onclick*=reminders]'))">
+                <div class="t-icon">⏰</div>
+                <div class="t-name">Fee Reminders</div>
+                <div class="t-sub">Follow up pending fees</div>
               </div>
             </div>
           </div>
@@ -844,6 +890,112 @@
           </div>
         </div>
 
+        <!-- ╔══════════════ FEE REMINDERS PAGE ══════════════╗ -->
+        <div class="page" id="page-reminders">
+          <div class="page-title">Fee Reminders</div>
+          <div class="page-sub">Track joined students, see pending monthly fees, and send WhatsApp reminders.</div>
+
+          <div class="reminder-stats">
+            <div class="mini-stat">
+              <div class="mini-stat-value" id="rs-students">0</div>
+              <div class="mini-stat-label">Joined Students</div>
+            </div>
+            <div class="mini-stat">
+              <div class="mini-stat-value" id="rs-due">0</div>
+              <div class="mini-stat-label">Due Now</div>
+            </div>
+            <div class="mini-stat">
+              <div class="mini-stat-value" id="rs-amount">₹0</div>
+              <div class="mini-stat-label">Expected Fees</div>
+            </div>
+          </div>
+
+          <div class="reminder-grid">
+            <div class="card">
+              <div class="card-title" style="justify-content:space-between;">
+                <span>👥 Joined Students</span>
+                <button class="btn btn-ghost" style="padding:8px 14px;font-size:12px;" onclick="syncStudentsFromBills()">Sync From Bills</button>
+              </div>
+              <div class="bill-search-row">
+                <input type="text" class="form-input" id="studentSearch" placeholder="Search name, phone, batch..." oninput="loadReminders()"/>
+                <select class="form-select" id="studentStatusFilter" onchange="loadReminders()">
+                  <option value="">All Status</option>
+                  <option value="due">Due</option>
+                  <option value="upcoming">Upcoming</option>
+                  <option value="paid">Paid</option>
+                </select>
+              </div>
+              <div style="overflow-x:auto;">
+                <table class="bills-table reminder-table">
+                  <thead>
+                    <tr>
+                      <th>Student</th><th>Batch</th><th>Due Date</th><th>Fee</th><th>Status</th><th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="studentsTbody">
+                    <tr><td colspan="6" style="padding:40px;text-align:center;color:var(--muted);">
+                      <div style="font-size:36px;margin-bottom:8px;">⏰</div>No joined students yet.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="reminder-note">Tip: click “Sync From Bills” to build the joined-student list from existing receipts.</div>
+            </div>
+
+            <div>
+              <div class="card">
+                <div class="card-title">➕ Add Joined Student</div>
+                <div class="form-group" style="margin-bottom:12px;">
+                  <label class="form-label">Student Name *</label>
+                  <input type="text" class="form-input" id="sName" placeholder="Student full name"/>
+                </div>
+                <div class="form-group" style="margin-bottom:12px;">
+                  <label class="form-label">Phone *</label>
+                  <input type="tel" class="form-input" id="sPhone" placeholder="Mobile number"/>
+                </div>
+                <div class="form-group" style="margin-bottom:12px;">
+                  <label class="form-label">Batch / Class</label>
+                  <input type="text" class="form-input" id="sBatch" placeholder="e.g. Kids Batch"/>
+                </div>
+                <div class="bill-form-grid" style="margin-bottom:12px;">
+                  <div class="form-group">
+                    <label class="form-label">Joined Date</label>
+                    <input type="date" class="form-input" id="sJoined"/>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Monthly Fee (₹)</label>
+                    <input type="number" class="form-input" id="sFee" min="0" placeholder="1500"/>
+                  </div>
+                </div>
+                <div class="bill-form-grid" style="margin-bottom:18px;">
+                  <div class="form-group">
+                    <label class="form-label">Due Day</label>
+                    <input type="number" class="form-input" id="sDueDay" min="1" max="28" value="5"/>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <select class="form-select" id="sStatus">
+                      <option value="active">Active</option>
+                      <option value="inactive">Inactive</option>
+                    </select>
+                  </div>
+                </div>
+                <button class="btn btn-gold" style="width:100%;" onclick="saveStudent()">Save Student</button>
+              </div>
+
+              <div class="card">
+                <div class="card-title">💬 Reminder Message</div>
+                <label class="form-label">Template</label>
+                <textarea class="form-input reminder-message" id="reminderTemplate">Namaste {name}, this is a gentle reminder that your {month} dance class fee of ₹{amount} is due. Please complete the payment when convenient. - Damodar House of Dance</textarea>
+                <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
+                  <button class="btn btn-gold" onclick="saveReminderTemplate()">Save Template</button>
+                  <button class="btn btn-ghost" onclick="copyDueReminderList()">Copy Due List</button>
+                </div>
+                <div class="reminder-note">WhatsApp opens with the message filled in. You choose Send inside WhatsApp.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- ╔══════════════ SETTINGS PAGE ══════════════╗ -->
         <div class="page" id="page-settings">
           <div class="page-title">Settings</div>
@@ -959,7 +1111,8 @@ function toggleSidebar() {
 }
 const pageTitles = {
   dashboard:'Dashboard', videos:'Video Manager',
-  enquiries:'Enquiries', billing:'Billing System', settings:'Settings'
+  enquiries:'Enquiries', billing:'Billing System',
+  reminders:'Fee Reminders', settings:'Settings'
 };
 function showPage(id, el) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -970,12 +1123,14 @@ function showPage(id, el) {
   document.getElementById('sidebar').classList.remove('open');
   if (id === 'videos') loadVideos();
   if (id === 'billing') { loadBills(); showBillTab('list', document.getElementById('tab-list')); }
+  if (id === 'reminders') loadReminders();
 }
 
 // ── Init panel ─────────────────────────────────────────────────
 function initPanel() {
   loadDashboard();
   updateBillBadge();
+  updateReminderBadge();
 }
 
 // ── Dashboard ──────────────────────────────────────────────────
@@ -987,8 +1142,10 @@ async function loadDashboard() {
     .reduce((a, b) => a + (b.total || 0), 0);
   const dsRev = document.getElementById('ds-revenue');
   const dsBills = document.getElementById('ds-bills');
+  const dsReminders = document.getElementById('ds-reminders');
   if (dsRev) dsRev.textContent = '₹' + monthRevenue.toLocaleString('en-IN');
   if (dsBills) dsBills.textContent = allBills.length;
+  if (dsReminders) dsReminders.textContent = getReminderRows().filter(r => r.status === 'due').length;
 
   if (!fbReady) {
     document.getElementById('recentList').innerHTML =
@@ -1190,6 +1347,95 @@ function getBills() {
 }
 function setBills(arr) { localStorage.setItem('dmd_bills', JSON.stringify(arr)); }
 
+function getStudents() {
+  try { return JSON.parse(localStorage.getItem('dmd_students') || '[]'); } catch { return []; }
+}
+function setStudents(arr) { localStorage.setItem('dmd_students', JSON.stringify(arr)); }
+function getReminderTemplate() {
+  return localStorage.getItem('dmd_reminder_template') ||
+    'Namaste {name}, this is a gentle reminder that your {month} dance class fee of ₹{amount} is due. Please complete the payment when convenient. - Damodar House of Dance';
+}
+
+function normalizePhone(phone) {
+  return (phone || '').replace(/\D/g, '').replace(/^91(?=\d{10}$)/, '');
+}
+function studentKey(name, phone) {
+  const p = normalizePhone(phone);
+  return p || (name || '').trim().toLowerCase().replace(/\s+/g, '-');
+}
+function monthLabel(monthKey) {
+  const [y, m] = monthKey.split('-');
+  return new Date(Number(y), Number(m) - 1, 1)
+    .toLocaleDateString('en-IN', {month:'long', year:'numeric'});
+}
+function currentMonthKey() { return new Date().toISOString().slice(0, 7); }
+function clampDueDay(day) {
+  return Math.min(28, Math.max(1, parseInt(day, 10) || 5));
+}
+function inferFeeFromBill(bill) {
+  const monthly = (bill.items || []).find(it => /fee|month/i.test(it.particulars || ''));
+  return monthly?.amount || bill.total || 0;
+}
+function upsertStudentFromBill(bill) {
+  if (!bill?.name) return;
+  const students = getStudents();
+  const key = studentKey(bill.name, bill.phone);
+  const existing = students.find(s => s.key === key);
+  const fee = inferFeeFromBill(bill);
+  if (existing) {
+    existing.name = existing.name || bill.name;
+    existing.phone = existing.phone || bill.phone || '';
+    existing.batch = existing.batch || bill.batch || '';
+    existing.monthlyFee = existing.monthlyFee || fee;
+    existing.status = existing.status || 'active';
+    existing.updatedAt = Date.now();
+  } else {
+    students.unshift({
+      id: Date.now().toString() + Math.random().toString(16).slice(2),
+      key,
+      name: bill.name,
+      phone: bill.phone || '',
+      batch: bill.batch || '',
+      joinedDate: bill.date || new Date().toISOString().split('T')[0],
+      monthlyFee: fee,
+      dueDay: 5,
+      status: 'active',
+      createdAt: Date.now()
+    });
+  }
+  setStudents(students);
+}
+
+function billMatchesStudent(bill, student) {
+  const bp = normalizePhone(bill.phone);
+  const sp = normalizePhone(student.phone);
+  if (bp && sp && bp === sp) return true;
+  return (bill.name || '').trim().toLowerCase() === (student.name || '').trim().toLowerCase();
+}
+function billCoversMonth(bill, monthKey) {
+  if (bill.date?.startsWith(monthKey)) return true;
+  return (bill.items || []).some(it => {
+    const raw = (it.month || '').trim();
+    if (!raw) return false;
+    const d = new Date(raw + ' 1');
+    return !isNaN(d) && d.toISOString().slice(0, 7) === monthKey;
+  });
+}
+function getStudentStatus(student) {
+  const monthKey = currentMonthKey();
+  const bills = getBills();
+  const paid = bills.some(b => billMatchesStudent(b, student) && billCoversMonth(b, monthKey));
+  const dueDay = clampDueDay(student.dueDay);
+  const now = new Date();
+  const dueDate = new Date(now.getFullYear(), now.getMonth(), dueDay);
+  if (student.status === 'inactive') return {status:'inactive', dueDate, monthKey, paid:false};
+  if (paid) return {status:'paid', dueDate, monthKey, paid:true};
+  return {status: now > dueDate ? 'due' : 'upcoming', dueDate, monthKey, paid:false};
+}
+function getReminderRows() {
+  return getStudents().map(student => ({student, ...getStudentStatus(student)}));
+}
+
 // Auto bill number — uses max existing number to avoid duplicates
 function generateBillNo() {
   const year = new Date().getFullYear();
@@ -1281,11 +1527,13 @@ function saveBill() {
   const bills = getBills();
   bills.unshift(bill);
   setBills(bills);
+  upsertStudentFromBill(bill);
   if (fbReady) db.collection('bills').add(bill).catch(() => {});
 
   showToast('✅ Bill saved!', 'ok');
   openBillPreview(bill);
   updateBillBadge();
+  updateReminderBadge();
   loadDashboard();
   // Reset form so next bill gets a fresh number
   document.getElementById('bBillNo').value = generateBillNo();
@@ -1302,6 +1550,7 @@ function loadBills() {
   renderBills(bills);
   updateMonthFilter(bills);
   updateBillBadge();
+  updateReminderBadge();
 }
 
 function updateBillBadge() {
@@ -1310,6 +1559,14 @@ function updateBillBadge() {
   const n = getBills().length;
   badge.textContent = n;
   badge.style.display = n ? 'inline' : 'none';
+}
+
+function updateReminderBadge() {
+  const badge = document.getElementById('reminderBadge');
+  if (!badge) return;
+  const due = getReminderRows().filter(r => r.status === 'due').length;
+  badge.textContent = due;
+  badge.style.display = due ? 'inline' : 'none';
 }
 
 function renderBills(bills) {
@@ -1348,8 +1605,173 @@ function deleteBill(id) {
   if (fbReady) db.collection('bills').where('id','==',id).get()
     .then(s => s.forEach(d => d.ref.delete())).catch(() => {});
   loadBills();
+  updateReminderBadge();
   loadDashboard();
   showToast('🗑️ Bill deleted', 'ok');
+}
+
+function loadReminders() {
+  const template = document.getElementById('reminderTemplate');
+  if (template) template.value = getReminderTemplate();
+  const searchEl = document.getElementById('studentSearch');
+  const filterEl = document.getElementById('studentStatusFilter');
+  const q = (searchEl?.value || '').toLowerCase();
+  const statusFilter = filterEl?.value || '';
+  let rows = getReminderRows();
+  if (statusFilter) rows = rows.filter(r => r.status === statusFilter);
+  if (q) rows = rows.filter(r =>
+    r.student.name?.toLowerCase().includes(q) ||
+    r.student.phone?.includes(q) ||
+    r.student.batch?.toLowerCase().includes(q)
+  );
+
+  const allRows = getReminderRows();
+  const activeRows = allRows.filter(r => r.student.status !== 'inactive');
+  const dueRows = allRows.filter(r => r.status === 'due');
+  const expected = dueRows.reduce((sum, r) => sum + (Number(r.student.monthlyFee) || 0), 0);
+  const rsStudents = document.getElementById('rs-students');
+  const rsDue = document.getElementById('rs-due');
+  const rsAmount = document.getElementById('rs-amount');
+  if (rsStudents) rsStudents.textContent = activeRows.length;
+  if (rsDue) rsDue.textContent = dueRows.length;
+  if (rsAmount) rsAmount.textContent = '₹' + expected.toLocaleString('en-IN');
+
+  const tbody = document.getElementById('studentsTbody');
+  if (!tbody) return;
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="6" style="padding:40px;text-align:center;color:var(--muted);">
+      <div style="font-size:36px;margin-bottom:8px;">⏰</div>No students match this view.</td></tr>`;
+    updateReminderBadge();
+    return;
+  }
+  tbody.innerHTML = rows.map(({student, status, dueDate, monthKey}) => {
+    const fee = Number(student.monthlyFee) || 0;
+    const due = dueDate.toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'});
+    return `
+      <tr>
+        <td>
+          <div style="font-weight:800;">${escHtml(student.name)}</div>
+          <div style="font-size:12px;color:var(--muted);">${escHtml(student.phone || 'No phone')}</div>
+        </td>
+        <td style="font-size:12px;color:var(--muted);">${escHtml(student.batch || '—')}</td>
+        <td style="font-size:12px;">${due}</td>
+        <td style="font-weight:800;color:var(--green);">₹${fee.toLocaleString('en-IN')}</td>
+        <td><span class="status-badge ${status}">${statusLabel(status)}</span></td>
+        <td>
+          <div class="student-actions">
+            <button class="btn btn-ghost" onclick="sendFeeReminder('${student.id}')" ${status === 'paid' || status === 'inactive' ? 'disabled' : ''}>WhatsApp</button>
+            <button class="btn btn-ghost" onclick="prefillBillFromStudent('${student.id}', '${monthKey}')">Bill</button>
+            <button class="btn btn-ghost" style="color:var(--red);border-color:rgba(232,48,90,0.3);" onclick="deleteStudent('${student.id}')">Delete</button>
+          </div>
+        </td>
+      </tr>`;
+  }).join('');
+  updateReminderBadge();
+}
+
+function statusLabel(status) {
+  if (status === 'due') return 'Due';
+  if (status === 'upcoming') return 'Upcoming';
+  if (status === 'paid') return 'Paid';
+  return 'Inactive';
+}
+
+function saveStudent() {
+  const name = document.getElementById('sName').value.trim();
+  const phone = document.getElementById('sPhone').value.trim();
+  if (!name) { showToast('Please enter student name', 'err'); return; }
+  if (!phone) { showToast('Please enter phone number', 'err'); return; }
+  const students = getStudents();
+  const key = studentKey(name, phone);
+  const existing = students.find(s => s.key === key);
+  const data = {
+    key,
+    name,
+    phone,
+    batch: document.getElementById('sBatch').value.trim(),
+    joinedDate: document.getElementById('sJoined').value || new Date().toISOString().split('T')[0],
+    monthlyFee: parseFloat(document.getElementById('sFee').value) || 0,
+    dueDay: clampDueDay(document.getElementById('sDueDay').value),
+    status: document.getElementById('sStatus').value || 'active',
+    updatedAt: Date.now()
+  };
+  if (existing) Object.assign(existing, data);
+  else students.unshift({id: Date.now().toString(), createdAt: Date.now(), ...data});
+  setStudents(students);
+  ['sName','sPhone','sBatch','sFee'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('sJoined').value = '';
+  document.getElementById('sDueDay').value = '5';
+  document.getElementById('sStatus').value = 'active';
+  showToast('Student saved', 'ok');
+  loadReminders();
+  loadDashboard();
+}
+
+function syncStudentsFromBills() {
+  getBills().slice().reverse().forEach(upsertStudentFromBill);
+  showToast('Students synced from bills', 'ok');
+  loadReminders();
+  loadDashboard();
+}
+
+function deleteStudent(id) {
+  if (!confirm('Delete this student from reminders? Bills will remain untouched.')) return;
+  setStudents(getStudents().filter(s => s.id !== id));
+  loadReminders();
+  loadDashboard();
+}
+
+function buildReminderMessage(student, monthKey) {
+  const amount = Number(student.monthlyFee) || 0;
+  return getReminderTemplate()
+    .replaceAll('{name}', student.name || 'Student')
+    .replaceAll('{month}', monthLabel(monthKey))
+    .replaceAll('{amount}', amount.toLocaleString('en-IN'))
+    .replaceAll('{batch}', student.batch || 'your batch');
+}
+
+function sendFeeReminder(id) {
+  const student = getStudents().find(s => s.id === id);
+  if (!student) return;
+  const phone = normalizePhone(student.phone);
+  if (!phone) { showToast('Phone number is missing', 'err'); return; }
+  const {monthKey} = getStudentStatus(student);
+  const msg = buildReminderMessage(student, monthKey);
+  window.open(`https://wa.me/91${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+function saveReminderTemplate() {
+  const val = document.getElementById('reminderTemplate').value.trim();
+  if (!val) { showToast('Template cannot be empty', 'err'); return; }
+  localStorage.setItem('dmd_reminder_template', val);
+  showToast('Reminder template saved', 'ok');
+}
+
+async function copyDueReminderList() {
+  const dueRows = getReminderRows().filter(r => r.status === 'due');
+  if (!dueRows.length) { showToast('No due reminders to copy', 'ok'); return; }
+  const text = dueRows.map(({student, monthKey}) =>
+    `${student.name} (${student.phone || 'no phone'}): ${buildReminderMessage(student, monthKey)}`
+  ).join('\n\n');
+  await navigator.clipboard.writeText(text).catch(() => {});
+  showToast('Due reminder list copied', 'ok');
+}
+
+function prefillBillFromStudent(id, monthKey) {
+  const student = getStudents().find(s => s.id === id);
+  if (!student) return;
+  showPage('billing', document.querySelector('[onclick*=billing]'));
+  showBillTab('create', document.getElementById('tab-create'));
+  document.getElementById('bName').value = student.name || '';
+  document.getElementById('bPhone').value = student.phone || '';
+  document.getElementById('bBatch').value = student.batch || '';
+  const first = document.querySelector('#billItemsBody tr');
+  if (first) {
+    first.querySelector('.bill-particular').value = 'Monthly Fees';
+    first.querySelector('.bill-month').value = monthLabel(monthKey || currentMonthKey());
+    first.querySelector('.bill-amount').value = Number(student.monthlyFee) || 0;
+  }
+  calcTotal();
 }
 
 function filterBills() {
