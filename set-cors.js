@@ -33,7 +33,7 @@ if (!token) {
   process.exit(1);
 }
 
-const bucket = 'damodar-studi0.firebasestorage.app';
+const bucket = 'damodar-studi0.appspot.com'; // try damodar-studi0.firebasestorage.app if this fails
 const corsConfig = JSON.stringify([{
   origin: ['https://asal1989.github.io', 'http://localhost:3000', 'http://127.0.0.1:3000'],
   method: ['GET', 'POST', 'PUT', 'DELETE', 'HEAD'],
