@@ -1390,6 +1390,10 @@ function printBill() {
 }
 
 function buildBillHTML(bill) {
+  const base = location.href.replace(/[^/]*$/, '');
+  const logoUrl   = base + 'damodar-house-of-dance-logo.png';
+  const dancerUrl = base + 'IMG_1416.PNG';
+
   const dateStr = bill.date
     ? new Date(bill.date + 'T00:00:00').toLocaleDateString('en-IN', {day:'2-digit',month:'2-digit',year:'numeric'})
     : '';
@@ -1417,7 +1421,7 @@ function buildBillHTML(bill) {
   return `
   <div style="width:210mm;min-height:297mm;background:#000;color:#fff;padding:18px 20px 16px;font-family:'Montserrat',sans-serif;">
     <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;">
-      <img src="damodar-house-of-dance-logo.png" style="width:100px;height:100px;object-fit:contain;" alt="Logo">
+      <img src="${logoUrl}" style="width:100px;height:100px;object-fit:contain;" alt="Logo">
       <div style="flex:1;">
         <div style="font-family:'Bebas Neue','Montserrat',sans-serif;font-size:54px;line-height:1;letter-spacing:3px;background:linear-gradient(90deg,#fff 0%,#a259ff 40%,#ff2d78 70%,#fff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">DAMODAR</div>
         <div style="font-size:12px;font-weight:700;letter-spacing:6px;color:#ccc;margin-top:2px;">── HOUSE OF DANCE ──</div>
@@ -1441,25 +1445,30 @@ function buildBillHTML(bill) {
       </div>
     </div>
 
-    <div style="border:1.5px solid #a259ff;border-radius:10px;padding:12px 14px;margin-bottom:12px;background:rgba(162,89,255,0.04);">
-      <div style="font-size:13px;font-weight:600;margin-bottom:10px;display:flex;align-items:flex-end;gap:8px;">
-        <span style="min-width:90px;white-space:nowrap;">Name :</span>
-        <span style="flex:1;border-bottom:1.5px solid #a259ff;padding-bottom:2px;font-weight:800;">${escHtml(bill.name)}</span>
-      </div>
-      <div style="font-size:13px;font-weight:600;margin-bottom:10px;display:flex;gap:8px;">
-        <span style="min-width:90px;white-space:nowrap;padding-top:2px;">Address :</span>
-        <div style="flex:1;">
-          <div style="border-bottom:1.5px solid #a259ff;padding-bottom:2px;margin-bottom:6px;">${escHtml(bill.address||'')}</div>
-          <div style="border-bottom:1.5px solid #a259ff;padding-bottom:2px;">&nbsp;</div>
+    <div style="border:1.5px solid #a259ff;border-radius:10px;padding:12px 14px;margin-bottom:12px;background:rgba(162,89,255,0.04);display:flex;gap:10px;align-items:stretch;">
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:600;margin-bottom:10px;display:flex;align-items:flex-end;gap:8px;">
+          <span style="min-width:90px;white-space:nowrap;">Name :</span>
+          <span style="flex:1;border-bottom:1.5px solid #a259ff;padding-bottom:2px;font-weight:800;">${escHtml(bill.name)}</span>
+        </div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:10px;display:flex;gap:8px;">
+          <span style="min-width:90px;white-space:nowrap;padding-top:2px;">Address :</span>
+          <div style="flex:1;">
+            <div style="border-bottom:1.5px solid #a259ff;padding-bottom:2px;margin-bottom:6px;">${escHtml(bill.address||'')}</div>
+            <div style="border-bottom:1.5px solid #a259ff;padding-bottom:2px;">&nbsp;</div>
+          </div>
+        </div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:10px;display:flex;align-items:flex-end;gap:8px;">
+          <span style="min-width:90px;white-space:nowrap;">Phone :</span>
+          <span style="border-bottom:1.5px solid #a259ff;padding-bottom:2px;min-width:160px;">${escHtml(bill.phone||'')}</span>
+        </div>
+        <div style="font-size:13px;font-weight:600;display:flex;align-items:flex-end;gap:8px;">
+          <span style="min-width:90px;white-space:nowrap;">Batch / Class :</span>
+          <span style="border-bottom:1.5px solid #a259ff;padding-bottom:2px;min-width:160px;">${escHtml(bill.batch||'')}</span>
         </div>
       </div>
-      <div style="font-size:13px;font-weight:600;margin-bottom:10px;display:flex;align-items:flex-end;gap:8px;">
-        <span style="min-width:90px;white-space:nowrap;">Phone :</span>
-        <span style="border-bottom:1.5px solid #a259ff;padding-bottom:2px;min-width:160px;">${escHtml(bill.phone||'')}</span>
-      </div>
-      <div style="font-size:13px;font-weight:600;display:flex;align-items:flex-end;gap:8px;">
-        <span style="min-width:90px;white-space:nowrap;">Batch / Class :</span>
-        <span style="border-bottom:1.5px solid #a259ff;padding-bottom:2px;min-width:160px;">${escHtml(bill.batch||'')}</span>
+      <div style="width:130px;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+        <img src="${dancerUrl}" style="width:130px;height:130px;object-fit:contain;filter:drop-shadow(0 0 14px rgba(255,45,120,0.7));" alt="Dancer">
       </div>
     </div>
 
