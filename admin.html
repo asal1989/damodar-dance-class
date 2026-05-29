@@ -1045,7 +1045,47 @@
                 <span style="font-size:12px;color:var(--green);">🟢 Active</span>
               </div>
             </div>
+          <!-- Fast2SMS card -->
+          <div class="card" style="margin-top:20px;">
+            <div class="card-title">📱 Fast2SMS — Auto Reminders</div>
+            <div class="setting-row">
+              <div class="setting-info">
+                <h4>Fast2SMS API Key</h4>
+                <p>Get it from fast2sms.com → Dev API</p>
+              </div>
+            </div>
+            <input type="password" class="form-input" id="fast2smsKey" placeholder="Paste your Fast2SMS API key here"
+              style="margin-bottom:12px;" value="${localStorage.getItem('fast2sms_key')||''}"/>
+            <div class="setting-row">
+              <div class="setting-info">
+                <h4>Send reminder how many days before due?</h4>
+                <p>e.g. 2 = reminder sent 2 days before due date</p>
+              </div>
+              <input type="number" class="form-input" id="smsLeadDays" min="1" max="10"
+                style="width:70px;text-align:center;"
+                value="${localStorage.getItem('sms_lead_days')||'2'}"/>
+            </div>
+            <div class="setting-row" style="margin-top:8px;">
+              <div class="setting-info">
+                <h4>Auto-send on panel open</h4>
+                <p>Automatically sends SMS to due students when you open the admin panel</p>
+              </div>
+              <div class="toggle ${localStorage.getItem('sms_auto')==='1'?'on':''}" id="smsAutoToggle"
+                onclick="this.classList.toggle('on'); localStorage.setItem('sms_auto', this.classList.contains('on')?'1':'0')"></div>
+            </div>
+            <textarea class="form-input" id="smsTemplate" rows="3"
+              style="margin-top:10px;margin-bottom:10px;"
+              placeholder="SMS message template...">${localStorage.getItem('sms_template')||'Dear {name}, your dance class fee of Rs.{amount} is due on {duedate}. Please pay at the earliest. - Damodar House of Dance'}</textarea>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button class="btn btn-gold" onclick="saveSMSSettings()">💾 Save Settings</button>
+              <button class="btn btn-ghost" onclick="sendAllDueSMS()">📤 Send SMS to All Due Students Now</button>
+            </div>
+            <div class="reminder-note" style="margin-top:10px;">
+              Use <strong>{name}</strong>, <strong>{amount}</strong>, <strong>{duedate}</strong>, <strong>{batch}</strong> as placeholders.
+              Phone numbers are taken from student records.
+            </div>
           </div>
+        </div>
         </div>
 
       </div><!-- /content -->
@@ -1143,6 +1183,7 @@ function initPanel() {
   loadDashboard();
   updateBillBadge();
   updateReminderBadge();
+  setTimeout(autoSendSMSIfEnabled, 3000);
 }
 
 // ── Dashboard ──────────────────────────────────────────────────
@@ -1677,6 +1718,7 @@ function loadReminders() {
         <td>
           <div class="student-actions">
             <button class="btn btn-ghost" onclick="sendFeeReminder('${student.id}')" ${status === 'paid' || status === 'inactive' ? 'disabled' : ''}>WhatsApp</button>
+            <button class="btn btn-ghost" style="color:var(--green);border-color:rgba(46,204,113,0.3);" onclick="sendFeeReminderSMS('${student.id}')" ${status === 'paid' || status === 'inactive' ? 'disabled' : ''}>SMS</button>
             <button class="btn btn-ghost" onclick="prefillBillFromStudent('${student.id}', '${monthKey}')">Bill</button>
             <button class="btn btn-ghost" style="color:var(--red);border-color:rgba(232,48,90,0.3);" onclick="deleteStudent('${student.id}')">Delete</button>
           </div>
@@ -2190,6 +2232,98 @@ function formatDate(d) {
   if (!d) return '—';
   try { return new Date(d + 'T00:00:00').toLocaleDateString('en-IN', {day:'numeric',month:'short',year:'numeric'}); }
   catch { return d; }
+}
+
+// ── Fast2SMS ────────────────────────────────────────────────────
+function saveSMSSettings() {
+  const key  = document.getElementById('fast2smsKey')?.value.trim();
+  const days = document.getElementById('smsLeadDays')?.value || '2';
+  const tmpl = document.getElementById('smsTemplate')?.value.trim();
+  if (key)  localStorage.setItem('fast2sms_key', key);
+  if (tmpl) localStorage.setItem('sms_template', tmpl);
+  localStorage.setItem('sms_lead_days', days);
+  showToast('✅ SMS settings saved', 'ok');
+}
+
+async function sendSMS(phone, message) {
+  const apiKey = localStorage.getItem('fast2sms_key');
+  if (!apiKey) { showToast('❌ Add Fast2SMS API key in Settings first', 'err'); return false; }
+  const cleanPhone = phone.replace(/\D/g, '').slice(-10);
+  if (cleanPhone.length !== 10) { showToast('❌ Invalid phone: ' + phone, 'err'); return false; }
+  try {
+    const res = await fetch('https://www.fast2sms.com/dev/bulkV2', {
+      method: 'POST',
+      headers: { 'authorization': apiKey, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ route: 'q', numbers: cleanPhone, message, flash: 0 })
+    });
+    const data = await res.json();
+    if (data.return) return true;
+    showToast('❌ SMS failed: ' + (data.message || 'Unknown error'), 'err');
+    return false;
+  } catch(e) {
+    showToast('❌ SMS error: ' + e.message, 'err');
+    return false;
+  }
+}
+
+function buildSMSMessage(student, dueDate) {
+  const tmpl = localStorage.getItem('sms_template') ||
+    'Dear {name}, your dance class fee of Rs.{amount} is due on {duedate}. Please pay at the earliest. - Damodar House of Dance';
+  const amount = Number(student.monthlyFee) || 0;
+  const dueDateStr = dueDate.toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'});
+  return tmpl
+    .replace(/{name}/g, student.name || 'Student')
+    .replace(/{amount}/g, amount.toLocaleString('en-IN'))
+    .replace(/{duedate}/g, dueDateStr)
+    .replace(/{batch}/g, student.batch || 'your batch');
+}
+
+async function sendFeeReminderSMS(id) {
+  const rows = getReminderRows();
+  const row  = rows.find(r => r.student.id === id);
+  if (!row) return;
+  if (!row.student.phone) { showToast('❌ No phone number for this student', 'err'); return; }
+  const msg = buildSMSMessage(row.student, row.dueDate);
+  const ok  = await sendSMS(row.student.phone, msg);
+  if (ok) showToast('✅ SMS sent to ' + row.student.name, 'ok');
+}
+
+async function sendAllDueSMS() {
+  const dueRows = getReminderRows().filter(r => r.status === 'due');
+  if (!dueRows.length) { showToast('No due students found', 'err'); return; }
+  showToast('📤 Sending SMS to ' + dueRows.length + ' students...', 'ok');
+  let sent = 0;
+  for (const row of dueRows) {
+    if (!row.student.phone) continue;
+    const msg = buildSMSMessage(row.student, row.dueDate);
+    const ok  = await sendSMS(row.student.phone, msg);
+    if (ok) sent++;
+  }
+  showToast(`✅ SMS sent to ${sent}/${dueRows.length} students`, 'ok');
+}
+
+async function autoSendSMSIfEnabled() {
+  if (localStorage.getItem('sms_auto') !== '1') return;
+  if (!localStorage.getItem('fast2sms_key')) return;
+  const today    = new Date(); today.setHours(0,0,0,0);
+  const leadDays = parseInt(localStorage.getItem('sms_lead_days') || '2');
+  const lastRun  = localStorage.getItem('sms_last_run');
+  const todayStr = today.toISOString().slice(0,10);
+  if (lastRun === todayStr) return;
+  const upcoming = getReminderRows().filter(r => {
+    const diff = Math.ceil((r.dueDate - today) / 86400000);
+    return diff >= 0 && diff <= leadDays && r.status !== 'paid' && r.status !== 'inactive';
+  });
+  if (!upcoming.length) return;
+  localStorage.setItem('sms_last_run', todayStr);
+  let sent = 0;
+  for (const row of upcoming) {
+    if (!row.student.phone) continue;
+    const msg = buildSMSMessage(row.student, row.dueDate);
+    const ok  = await sendSMS(row.student.phone, msg);
+    if (ok) sent++;
+  }
+  if (sent > 0) showToast(`📱 Auto-sent ${sent} fee reminder SMS`, 'ok');
 }
 </script>
 </body>
